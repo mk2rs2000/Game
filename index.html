@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="Mimi & Me">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <title>Mimi & Me — The Kitty Playhouse</title>
+  <title>Mimi & Me — The Kitty Playhouse (Fixed V3)</title>
   <style>
     :root {
       color-scheme: light;
@@ -163,7 +163,7 @@
 <body>
   <main class="app">
     <header class="top"><div class="logo"><span class="logo-star" aria-hidden="true">🐾</span> Mimi &amp; Me</div><span class="private-pill">🔒 Voice stays here</span></header>
-    <section class="stage" aria-label="Play with Mimi the cat">
+    <section id="stage" class="stage" aria-label="Play with Mimi the cat">
       <span class="sparkle sp1" aria-hidden="true">✦</span><span class="sparkle sp2" aria-hidden="true">✳</span><span class="sparkle sp3" aria-hidden="true">✦</span>
       <h1>Say hello to Mimi! <span aria-hidden="true">💖</span></h1>
       <p class="subhead">Your silly, giggly talking kitty</p>
@@ -276,7 +276,7 @@
       </div><div style="text-align:center;margin-top:14px"><button type="button" class="again" id="dress-clear">Take it off 🐱</button></div></div>
     </section>
     <div class="choices" aria-label="Pick Mimi's colour"><span>Pick a colour:</span><button class="colour" type="button" data-colour="purple" style="background:#d4a9ff" aria-pressed="true" aria-label="Lavender cat"></button><button class="colour" type="button" data-colour="pink" style="background:#ffacd0" aria-pressed="false" aria-label="Pink cat"></button><button class="colour" type="button" data-colour="orange" style="background:#ffd18c" aria-pressed="false" aria-label="Ginger cat"></button></div>
-    <div class="replay-row"><button id="replay" type="button" class="replay" hidden>🔊 Tap to hear Mimi</button></div>
+    <div class="replay-row"><button id="replay" type="button" class="replay" hidden>🔊 Hear Mimi!</button></div>
     <footer class="privacy"><strong>Little voices stay private.</strong> No sign-in, no adverts, no tracking, no saved conversations.
       <details><summary>How it protects your voice</summary><p>Microphone audio is processed inside this browser, replayed once, then discarded. It is never sent to a server. Safari will ask before using your microphone. You can stop access in Safari settings. The app itself does not save your recordings, use cookies or send analytics. Your web host may still receive ordinary website requests when the page loads.</p></details>
     </footer>
@@ -293,7 +293,7 @@
     let state = 'idle', ctx = null, stream = null, recorder = null, chunks = [];
     let isFallback = false, proc = null, micSource = null, silentGain = null, pcmParts = [], sampleCount = 0;
     let startedAt = 0, stopTimer = 0, raf = 0, activeSource = null, fallbackAudio = null, objectUrl = null;
-    let replayBlob = null, memeTimer = 0, moodTimer = 0;
+    let replayBlob = null, waitingBuffer = null, memeTimer = 0, moodTimer = 0;
     let voiceMode='squeaky', effectsMuted=false, currentPanel='', starClock=0, starSeconds=15, starScore=0;
     let giftAnswer=0, giftOpened=false, partyTimer=0, partyBeat=0, lastOpenButton=null;
     const voiceRates={squeaky:1.42,alien:1.85,giant:0.78};
@@ -359,7 +359,7 @@
       if(activeSource){try{activeSource.onended=null;activeSource.stop();activeSource.disconnect();}catch{}activeSource=null;}
       if(fallbackAudio){fallbackAudio.pause();fallbackAudio.src='';fallbackAudio=null;}
       if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}
-      replayBlob=null;replayButton.hidden=true;
+      replayBlob=null;waitingBuffer=null;replayButton.hidden=true;
       try{memeAudio.pause();memeAudio.currentTime=0;}catch{}
     }
     function dismissMood(){if(moodTimer)clearTimeout(moodTimer);moodTimer=0;if(memeTimer)clearTimeout(memeTimer);memeTimer=0;$('numbers').classList.remove('show');}
@@ -385,15 +385,19 @@
         if(recorder){
           recorder.ondataavailable=(evt)=>{if(evt.data && evt.data.size)chunks.push(evt.data);};
           recorder.onerror=()=>{setMessage('Oops! Try the mic again.','A recording error occurred.');cancelCapture();};
+          // Safari is more dependable when it emits one complete recording on stop.
+          const recorderType = recorder.mimeType || 'audio/mp4';
           recorder.onstop=async()=>{
             const parts=chunks; chunks=[];
-            const type=(parts[0] && parts[0].type) || (recorder && recorder.mimeType) || 'audio/mp4';
             recorder=null;
+            clearStream();
+            if(state!=='processing')return;
+            const type=(parts[0] && parts[0].type) || recorderType;
             const blob=new Blob(parts,{type});
             if(blob.size>0)await playCapturedBlob(blob);
             else {ready();setMessage('I missed that! 🐱','Try speaking a little longer.');}
           };
-          recorder.start(200);
+          recorder.start();
         } else {
           // Browser compatibility fallback: sample mic into RAM only. No saved WAV/file.
           isFallback=true;
@@ -429,9 +433,10 @@
         if(total){const buffer=ctx.createBuffer(1,total,ctx.sampleRate),data=buffer.getChannelData(0);let offset=0;for(const p of parts){data.set(p,offset);offset+=p.length;}playBuffer(buffer);}
         else{ready();setMessage('I missed that! 🐱','Please try again.');}
       } else if(recorder && recorder.state!=='inactive') {
+        // Keep the audio session awake while Safari finalises the recording.
+        if(ctx && ctx.state==='suspended')ctx.resume().catch(()=>{});
         try {recorder.stop();}catch{cancelCapture();}
-        // The audio was recorded locally; close microphone permission immediately.
-        clearStream();
+        // The onstop event stops the mic after the final data arrives.
       } else {cancelCapture();}
     }
     function cancelCapture(){
@@ -448,32 +453,52 @@
       confetti(9);
     }
     function donePlaying(){if(state!=='playing')return;dropPlayback();ready();setMessage('That was funny! 💕','Tap the mic for another go.');}
+    function askToPlay(message='Tap to hear Mimi! 🔊') {
+      state='needs-tap';recordButton.disabled=false;
+      recordLabel.textContent='Tap to talk';recordDetail.textContent='Or hear your voice';
+      face('');replayButton.hidden=false;replayButton.textContent='🔊 Hear Mimi!';
+      setMessage(message,'Tap the white Hear Mimi button to listen.');
+    }
     function playBuffer(buffer){
-      if(!ctx){ready();return;}
-      dropPlayback();markPlaying();
-      const source=ctx.createBufferSource();source.buffer=buffer;source.playbackRate.value=voiceRates[voiceMode];
-      source.connect(ctx.destination);activeSource=source;source.onended=()=>{if(activeSource===source)donePlaying();};
-      try{source.start();}catch{donePlaying();}
+      if(!ctx){askToPlay();return;}
+      // Do not discard the recorded buffer until playback has actually begun.
+      waitingBuffer=buffer;
+      if(ctx.state!=='running'){askToPlay();return;}
+      const source=ctx.createBufferSource();source.buffer=buffer;
+      source.playbackRate.value=voiceRates[voiceMode];
+      source.connect(ctx.destination);
+      activeSource=source;
+      source.onended=()=>{if(activeSource===source)donePlaying();};
+      try{
+        source.start(0);
+        markPlaying();
+        // Audio is held only in memory and discarded when Mimi finishes talking.
+        waitingBuffer=null;replayBlob=null;replayButton.hidden=true;
+      }catch{try{source.disconnect();}catch{}activeSource=null;askToPlay();}
     }
     async function playCapturedBlob(blob){
-      replayBlob=blob;
       if(state!=='processing')return;
+      replayBlob=blob;
       try {
-        // Web Audio changes both speed and pitch (squeaky voice) without a server.
+        // Resampling speed changes both pitch and speed without uploading audio.
         const buffer=await ctx.decodeAudioData(await blob.arrayBuffer());
-        if(state==='processing'){replayBlob=null;playBuffer(buffer);}
-      } catch {
+        if(state==='processing')playBuffer(buffer);
+      } catch(err) {
         if(state!=='processing')return;
         try {
-          objectUrl=URL.createObjectURL(blob);fallbackAudio=new Audio(objectUrl);
-          fallbackAudio.preservesPitch=false;fallbackAudio.webkitPreservesPitch=false;
-          fallbackAudio.playbackRate=voiceRates[voiceMode];fallbackAudio.onended=donePlaying;
-          markPlaying();await fallbackAudio.play();
+          // Native iOS audio element fallback if Web Audio cannot decode AAC.
+          if(objectUrl)URL.revokeObjectURL(objectUrl);
+          objectUrl=URL.createObjectURL(blob);
+          fallbackAudio=new Audio(objectUrl);
+          fallbackAudio.preservesPitch=false;
+          fallbackAudio.webkitPreservesPitch=false;
+          fallbackAudio.mozPreservesPitch=false;
+          fallbackAudio.playbackRate=voiceRates[voiceMode];
+          fallbackAudio.onended=donePlaying;
+          await fallbackAudio.play();
+          markPlaying();replayButton.hidden=true;
         } catch {
-          // Some iOS Safari versions require another tap to start media playback.
-          state='needs-tap';recordButton.disabled=false;recordLabel.textContent='Tap to talk';recordDetail.textContent='Or tap to hear Mimi';
-          face('');replayButton.hidden=false;
-          setMessage('One more tap! 🔊','Tap “Hear Mimi” to play your voice.');
+          askToPlay();
         }
       }
     }
@@ -485,12 +510,20 @@
       }
     });
     replayButton.addEventListener('click',async()=>{
-      if(!replayBlob && !fallbackAudio)return;
-      try{
-        if(fallbackAudio){markPlaying();await fallbackAudio.play();}
-        else if(replayBlob){state='processing';await playCapturedBlob(replayBlob);}
-        replayButton.hidden=true;
-      }catch{setMessage('Sound is blocked by Safari.','Try turning up the volume and tapping again.');}
+      if(!replayBlob && !fallbackAudio && !waitingBuffer)return;
+      try {
+        await getContext();
+        if(waitingBuffer){
+          const saved=waitingBuffer;
+          playBuffer(saved);
+        }else if(fallbackAudio){
+          fallbackAudio.playbackRate=voiceRates[voiceMode];
+          fallbackAudio.preservesPitch=false;fallbackAudio.webkitPreservesPitch=false;
+          await fallbackAudio.play();markPlaying();replayButton.hidden=true;
+        }else if(replayBlob){
+          state='processing';await playCapturedBlob(replayBlob);
+        }
+      }catch{askToPlay('Safari needs one more tap 🔊');}
     });
     function fun(mood) {
       stopParty();
@@ -535,7 +568,8 @@
     document.querySelectorAll('[data-voice]').forEach(button => button.addEventListener('click',()=>{
       voiceMode=button.dataset.voice;
       document.querySelectorAll('[data-voice]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
-      if(state==='idle')setMessage(voiceMode==='alien'?'Bleep bloop! 👽':voiceMode==='giant'?'ROOOAR! 🦖':'Squeak squeak! 🐭','Now tap the mic and say something silly!');
+      if(state==='idle' || state==='needs-tap')setMessage(voiceMode==='alien'?'Bleep bloop! 👽':voiceMode==='giant'?'ROOOAR! 🦖':'Squeak squeak! 🐭','Now tap the mic and say something silly!');
+      if(state==='needs-tap' && fallbackAudio){fallbackAudio.playbackRate=voiceRates[voiceMode];}
       getContext().then(()=>chirp(voiceMode==='giant'?[240,180]:voiceMode==='alien'?[510,860,410]:[820,990])).catch(()=>{});
     }));
     $('sound-toggle').addEventListener('click',()=>{

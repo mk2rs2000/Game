@@ -1,5 +1,5 @@
 // Cache only public static game files. Never store microphone recordings.
-const CACHE='mimi-me-v2';
+const CACHE='mimi-me-v3-fixed';
 const FILES=['./','./index.html','./six-seven.mp3','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
