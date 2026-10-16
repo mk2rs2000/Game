@@ -1,7 +1,7 @@
 {
-  "name":"Mimi & Me — Silly Talking Cat",
+  "name":"Mimi & Me — Kitty Playhouse",
   "short_name":"Mimi & Me",
-  "description":"A private, playful talking cat for kids.",
+  "description":"A private talking cat with games, dress-up and funny voices.",
   "start_url":"./",
   "scope":"./",
   "display":"standalone",
