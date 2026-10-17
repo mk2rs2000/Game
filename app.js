@@ -25,24 +25,80 @@ const hairColours=[['chocolate','Chocolate','#885a57'],['gold','Golden','#efb95d
 const hats=[['none','Nothing','🐱'],['bow','Big Bow','🎀'],['crown','Royal Crown','👑'],['flower','Flower','🌸'],['sunglasses','Sunglasses','😎'],['party','Party Hat','🥳'],['witchhat','Witch Hat','🧙'],['santahat','Santa Hat','🎅'],['reindeerhat','Antlers','🦌'],['star','Star Clips','⭐'],['heart','Heart Glasses','💖'],['elfhat','Elf Hat','🎄']];
 const furs=[['lavender','Lavender','#d5adfa','#aa7fd8'],['pink','Strawberry','#ffb4d6','#df82b8'],['ginger','Ginger','#ffcd8f','#dca26f'],['mint','Mint','#b6f4df','#79c8a9'],['snow','Snowball','#fff8f9','#dcd2e5'],['blue','Sky Blue','#acddff','#82b5dd']];
 const voices=[
- ['squeaky','Squeaky','🐭','Super cute',1.42,'high'],['chipmunk','Chipmunk','🐿️','Super fast',1.88,'high'],['fairy','Fairy','🧚','Tiny & magical',1.23,'high'],
- ['alien','Alien','👽','Spacey',1.64,'alien'],['robot','Robot','🤖','Beep boop',1.04,'robot'],['giant','Giant','🦖','Big & deep',.72,'deep'],
- ['monster','Monster','👹','Funny growl',.60,'monster'],['sleepy','Sleepy','😴','Slow & low',.84,'low'],['echo','Echo','🌈','Boing boing',1.10,'echo'],['normal','Normal','🐱','Just like you',1,'normal']
+ ['squeaky','Squeaky','🐭','Cute & chirpy',1.42,'high'],
+ ['chipmunk','Chipmunk','🐿️','Tiny speedster',1.88,'high'],
+ ['fairy','Fairy','🧚','Sparkly magic',1.23,'high'],
+ ['alien','Alien','👽','From outer space',1.64,'alien'],
+ ['robot','Robot','🤖','Beep boop!',1.04,'robot'],
+ ['giant','Giant','🦖','Big & deep',.72,'deep'],
+ ['monster','Monster','👹','Silly grumble',.60,'monster'],
+ ['sleepy','Sleepy','😴','Sleepy kitty',.84,'low'],
+ ['echo','Echo','🏔️','Bouncy echo',1.10,'echo'],
+ ['normal','My voice','🐱','No voice changes',1,'normal'],
+ ['baby','Baby Kitty','🍼','Sweet and tiny',1.58,'high'],
+ ['princessvoice','Princess','👑','Royal sparkle',1.16,'high'],
+ ['dinosaur','Dinosaur','🦕','Rumbly roar',.66,'monster'],
+ ['space','Space Radio','🚀','Bleepy space voice',1.12,'robot'],
+ ['underwater','Underwater','🐠','Bubbly and soft',.91,'underwater'],
+ ['witchvoice','Witch','🧙','Magic potion voice',.78,'witch'],
+ ['bunny','Bouncy Bunny','🐰','Extra bouncy',1.68,'high'],
+ ['superhero','Superhero','🦸','Brave and bold',.90,'deep'],
+ ['butterfly','Butterfly','🦋','Fluttery & light',1.30,'high'],
+ ['telephone','Telephone','☎️','Old-fashioned phone',1,'telephone'],
+ ['cave','Cave Echo','🦇','Spooky echoes',.86,'echo'],
+ ['pixie','Pixie','🌸','Tiny twinkles',1.75,'alien']
 ];
+// Gem-shop items are bought ONLY with pretend gems earned by playing; no payments/network.
+// [id, name, emoji, price, colour, accent, visual theme]
+const magicDresses=[
+ ['stardust','Stardust Princess','🌟',12,'#ab8cff','#fff2aa','stars'],
+ ['frostglow','Snowglow Fairy','❄️',18,'#9fdcf9','#e6fdff','snow'],
+ ['fairyglow','Fairy Light Dress','🧚',22,'#ffa6cc','#e9ffba','stars'],
+ ['christmaslights','Christmas Tree Lights','🎄',25,'#36a873','#ffef83','lights'],
+ ['candyglow','Candy Cane Twinkle','🍭',30,'#e85670','#fff5ef','lights'],
+ ['pumpkinglow','Pumpkin Glow Dress','🎃',32,'#d580ef','#ffe57e','pumpkin'],
+ ['winterqueen','Winter Queen','👑',38,'#a4c5ff','#f9fbff','snow'],
+ ['elfglimmer','Christmas Elf Sparkle','🧝',40,'#71c684','#ffd87a','lights'],
+ ['rainbowmagic','Rainbow Magic Gown','🌈',45,'#ef97e5','#8af3f2','rainbow'],
+ ['moonwish','Moonlight Dream Dress','🌙',48,'#6968c9','#f5dcff','stars'],
+ ['royaltree','Christmas Tree Princess','🎄',55,'#28784e','#ffd85c','lights'],
+ ['galaxydream','Galaxy Princess','🌌',65,'#604ea9','#b9a6ff','stars']
+];
+// [id, name, emoji, price, glow colour]
+const magicWands=[
+ ['starwand','Star Wand','⭐',8,'#ffcf4a'],
+ ['heartwand','Heart Wand','💖',12,'#ff8cc3'],
+ ['snowwand','Snowflake Wand','❄️',15,'#7ed9f7'],
+ ['fairywand','Fairy Wand','🧚',20,'#c898ff'],
+ ['pumpkinwand','Pumpkin Wand','🎃',22,'#ffb568'],
+ ['hollywand','Christmas Holly Wand','🎄',25,'#8ce59c'],
+ ['moonwand','Moon Wand','🌙',30,'#d1a8ff'],
+ ['rainbowwand','Rainbow Wand','🌈',35,'#ffb7e4'],
+ ['treewand','Twinkling Tree Wand','🎄',42,'#ffe97d']
+];
+const allMagic=[...magicDresses.map(x=>({type:'dress',data:x})),...magicWands.map(x=>({type:'wand',data:x}))];
 const gems=[
  ['ruby','Ruby','❤️','Red sparkle'],['sapphire','Sapphire','💙','Ocean gem'],['emerald','Emerald','💚','Forest gem'],['amethyst','Amethyst','💜','Purple power'],['topaz','Golden Topaz','💛','Sunny shine'],['rose','Rose Quartz','🩷','Heart gem'],
  ['diamond','Diamond','💎','Shiny crystal'],['moon','Moonstone','🌙','Moon magic'],['rainbow','Rainbow','🌈','Colour splash'],['star','Starlight','🌟','Twinkle star'],['snow','Snow Crystal','❄️','Winter wish'],['pumpkin','Pumpkin Gem','🎃','Spooky fun'],
  ['holly','Holly Gem','🎄','Festive joy'],['butterfly','Butterfly','🦋','Spring wings'],['ocean','Ocean Pearl','🫧','Bubbly'],['unicorn','Unicorn Gem','🦄','Wish magic'],['sun','Sunstone','☀️','Summer days'],['royal','Royal Heart','👑','Princess shine']
 ];
 const games=[['stars','Star Pop','⭐','Tap the stars!','#ffe0ae'],['gifts','Mystery Gifts','🎁','Pick a present!','#fcd4df'],['feed','Feed Mimi','🍓','Funny snacks!','#d1f7c7'],['dance','Dance Party','🪩','Kitty disco!','#e0d5ff'],['garden','Magic Garden','🌷','Grow flowers!','#d8f7f0'],['colours','Colour Magic','🎨','Match colours!','#ffe1e6'],['dare','Silly Dares','🎲','Make Mimi giggle!','#f1ddff'],['hunt','Gem Hunt','💎','Find treasure!','#d7e8ff']];
-const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',voice:'squeaky',total:0,album:[],actions:0};
+const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',wand:'none',voice:'squeaky',speed:1,total:0,album:[],actions:0,unlocked:[],discoverySteps:0};
 let save={...defaults};try{const old=JSON.parse(safeGet(stateKey)||'null');if(old&&typeof old==='object')save={...defaults,...old};}catch{}
-if(!Array.isArray(save.album))save.album=[]; save.total=Math.max(0,Number(save.total)||0);save.actions=Math.max(0,Number(save.actions)||0);
+if(!Array.isArray(save.album))save.album=[];
+if(!Array.isArray(save.unlocked))save.unlocked=[];
+save.album=[...new Set(save.album.filter(id=>gems.some(g=>g[0]===id)))];
+save.unlocked=[...new Set(save.unlocked.filter(id=>allMagic.some(m=>m.data[0]===id)))];
+save.total=Math.max(0,Math.floor(Number(save.total)||0));
+save.actions=Math.max(0,Math.floor(Number(save.actions)||0));
+save.discoverySteps=Math.max(0,Math.floor(Number(save.discoverySteps)||0));
+save.speed=Math.max(.5,Math.min(1.75,Number(save.speed)||1));
+if(save.wand!=='none'&&!save.unlocked.includes(save.wand))save.wand='none';
 function store(){safeSet(stateKey,JSON.stringify(save));}
 const choice=(items,key,def)=>items.some(it=>it[0]===key)?key:def;
 save.voice=choice(voices,save.voice,'squeaky');save.fur=choice(furs,save.fur,'lavender');save.hair=choice(hairstyle,save.hair,'none');save.hat=choice(hats,save.hat,'none');save.hairColour=choice(hairColours,save.hairColour,'chocolate');
-if(!Object.values(outfits).flat().some(o=>o[0]===save.outfit))save.outfit='daisy';
-let page='home', dressTab='outfit', season='Everyday', activity='', activeTimer=0, toastTimer=0, faceTimer=0, dancingTimer=0, muted=false;
+if(!Object.values(outfits).flat().some(o=>o[0]===save.outfit) && !(magicDresses.some(o=>o[0]===save.outfit)&&save.unlocked.includes(save.outfit)))save.outfit='daisy';
+let page='home', dressTab='outfit', season='Everyday', shopTab='dress', activity='', activeTimer=0, toastTimer=0, faceTimer=0, dancingTimer=0, muted=false;
 const wrap=$('cat-wrap'), speech=$('bubble'), hint=$('hint');
 const recBtn=$('record'), recLabel=$('record-label'), recDetail=$('record-detail'), replay=$('replay');
 function message(txt,detail='Tap the mic to talk with Mimi!'){speech.textContent=txt;hint.textContent=detail;}
@@ -50,10 +106,49 @@ function toast(txt){const el=$('toast');el.textContent=txt;el.hidden=false;clear
 function confetti(num=14){const colours=['#ff8dba','#ffcc4e','#9d7eef','#7bdfbd','#fff','#79cdea'];for(let i=0;i<num;i++){const c=document.createElement('i');c.className='confetti';c.style.background=colours[i%colours.length];c.style.left=(20+Math.random()*60)+'%';c.style.top=(25+Math.random()*55)+'%';c.style.setProperty('--dx',(Math.random()*420-210)+'px');c.style.setProperty('--dy',(Math.random()*320-220)+'px');c.style.setProperty('--spin',(Math.random()*850)+'deg');wrap.append(c);setTimeout(()=>c.remove(),1350);}}
 function face(kind=''){wrap.classList.remove('is-giggling','is-meme','is-listening','is-talking','is-dancing');if(kind)wrap.classList.add('is-'+kind);}
 function happy(txt='Yay! 🎉'){clearTimeout(faceTimer);message(txt);face('giggling');confetti(12);faceTimer=setTimeout(()=>face(),1100);}
-function updateGemUI(){ $('gem-count').textContent=save.total; $('gem-total').textContent=save.total;$('gem-found').textContent=`${save.album.length} / ${gems.length}`;$('album-caption').textContent=`${gems.length-save.album.length} to discover`;
- $('gem-album').innerHTML=gems.map(([key,name,emoji,note])=>{const owned=save.album.includes(key);return `<div class="gem-entry"><span class="gem-art ${owned?'':'locked'}">${owned?emoji:'🔒'}</span><b>${owned?name:'Mystery gem'}</b><small>${owned?note:'Keep playing!'}</small></div>`}).join('');}
-function reward(points=1){save.total+=points;save.actions++;let found='';if(save.album.length<gems.length){const left=gems.filter(g=>!save.album.includes(g[0]));const pick=left[Math.floor(Math.random()*left.length)];found=pick[0];save.album.push(found);}store();updateGemUI();toast(found?`+${points} 💎  New gem: ${gems.find(g=>g[0]===found)[1]}!`:`+${points} 💎 Sparkle points!`);}
-function outfitSVG(info){if(!info)return '';const [id,,emoji,colour,decoration]=info;
+function updateGemUI(){
+ $('gem-count').textContent=save.total;
+ $('gem-total').textContent=save.total;
+ $('shop-balance').textContent=save.total;
+ $('gem-found').textContent=`${save.album.length} / ${gems.length}`;
+ $('album-caption').textContent=`${gems.length-save.album.length} left to discover`;
+ const countdown=save.discoverySteps===0?1:(save.discoverySteps%2===0?1:2);
+ $('discovery-next').textContent=save.album.length===gems.length?'🏆 You found all 18 special gems!':countdown===1?'🌟 One more game reward to find a special gem!':'✨ Two more game rewards to find a special gem!';
+ $('discovery-bar-fill').style.width=(countdown===1?50:0)+'%';
+ $('gem-album').innerHTML=gems.map(([key,name,emoji,note],index)=>{const owned=save.album.includes(key);return `<button type="button" class="gem-entry ${owned?'gem-owned':''}" data-gem-info="${key}" aria-label="${name}, ${owned?'collected':'not yet found'}"><span class="gem-art ${owned?'':'locked'}">${owned?emoji:'💎'}</span><b>${name}</b><small>${owned?'✅ Collected!':'🔒 Find in games'}</small></button>`}).join('');
+}
+function reward(points=1){
+ save.total+=points;save.actions++;save.discoverySteps++;
+ let found='';
+ if(save.album.length<gems.length && save.discoverySteps%2===1){
+   const left=gems.filter(g=>!save.album.includes(g[0]));
+   const pick=left[(save.album.length*7+3)%left.length];
+   found=pick[0];save.album.push(found);
+ }
+ store();updateGemUI();renderShop();
+ toast(found?`💎 +${points} gems! ✨ NEW special gem: ${gems.find(g=>g[0]===found)[1]}!`:`💎 +${points} gems! One step closer to your next special gem!`);
+}
+
+function outfitSVG(info){if(!info)return '';
+ const special=magicDresses.find(d=>d[0]===info[0]);if(special){
+  const [id,,icon,price,colour,accent,theme]=special;
+  const base=`<path class="magic-outline" d="M167 268 Q205 245 249 269 L286 353 Q210 404 133 353 Z" fill="${colour}" stroke="${accent}" stroke-width="6"/><path d="M173 282 Q204 302 242 282" stroke="${accent}" stroke-width="8" fill="none"/><path d="M142 343 Q208 373 279 343" stroke="${accent}" stroke-width="7" opacity=".85" fill="none"/>`;
+  let decorations='';
+  if(theme==='lights'){
+    decorations=`<path d="M146 320 Q165 305 183 325 T225 326 T270 322" stroke="#1a7744" stroke-width="4" fill="none"/>`+
+      Array.from({length:10},(_,i)=>{const x=151+i*13, y=318+Math.sin(i*.8)*9;return `<circle class="light-bulb" style="animation-delay:${(i%5)*.24}s" cx="${x}" cy="${y}" r="6" fill="${['#ffe953','#ff7ab4','#8df9f4','#fff','#ffae61'][i%5]}"/>`}).join('');
+  }else if(theme==='snow'){
+    decorations=Array.from({length:10},(_,i)=>`<text class="light-bulb" style="animation-delay:${i*.16}s" x="${153+i%5*27}" y="${304+Math.floor(i/5)*32}" font-size="19">❄</text>`).join('');
+  }else if(theme==='pumpkin'){
+    decorations=`<text x="207" y="338" font-size="46" text-anchor="middle">🎃</text>`;
+  }else if(theme==='rainbow'){
+    decorations=`<path d="M158 322 Q208 270 259 322" stroke="#f9e67e" stroke-width="9" fill="none"/><path d="M161 331 Q208 282 257 331" stroke="#73d8f1" stroke-width="7" fill="none"/>`;
+  }else{
+    decorations=Array.from({length:10},(_,i)=>`<text class="light-bulb" style="animation-delay:${i*.19}s" x="${151+i%5*28}" y="${303+Math.floor(i/5)*35}" font-size="17">✦</text>`).join('');
+  }
+  return `<g class="magical-dress" style="--magic-colour:${accent}">${base}${decorations}<text x="207" y="369" font-size="25" text-anchor="middle">${icon}</text></g>`;
+ }
+const [id,,emoji,colour,decoration]=info;
  const pale=['ghost','snowflake','snow','winter','xmasprincess'].includes(id)?'#8d7dc1':'#fff';
  return `<path d="M169 270 Q187 257 207 263 Q228 257 247 271 L272 355 Q205 400 145 357 Z" fill="${colour}" stroke="#ffffff" stroke-width="4"/><path d="M169 272 Q208 291 247 272" stroke="${pale}" opacity=".8" fill="none" stroke-width="6"/><path d="M156 333 Q209 350 262 334" stroke="${pale}" fill="none" stroke-width="4" opacity=".8"/><rect x="185" y="294" width="46" height="9" rx="4" fill="${pale}" opacity=".9"/><text x="208" y="337" font-size="37" text-anchor="middle">${decoration}</text>${id==='overalls'?'<path d="M172 267 L196 302 M244 267 L222 302" stroke="white" stroke-width="11"/>':''}`;
 }
@@ -83,15 +178,24 @@ function hatSVG(id){const obj=hats.find(a=>a[0]===id);if(!obj || id==='none')ret
  if(id==='sunglasses'||id==='heart')return `<text x="207" y="186" text-anchor="middle" font-size="86">${obj[2]}</text>`;
  return `<text x="${x}" y="${y}" text-anchor="middle" font-size="75" transform="translate(0 0) scale(${scale})">${obj[2]}</text>`;
 }
-function applyLook(){const f=furs.find(a=>a[0]===save.fur)||furs[0];document.documentElement.style.setProperty('--cat-fur',f[2]);document.documentElement.style.setProperty('--cat-fur-dark',f[3]);
- const o=Object.values(outfits).flat().find(a=>a[0]===save.outfit),c=(hairColours.find(a=>a[0]===save.hairColour)||hairColours[0])[2];
- all('svg.cat').forEach(svg=>{svg.querySelector('.dress-layer').innerHTML=outfitSVG(o);svg.querySelector('.hair-layer').innerHTML=hairSVG(save.hair,c);svg.querySelector('.hat-layer').innerHTML=hatSVG(save.hat)});
- $('wearing').textContent=`${o?o[1]:'Fluffy Mimi'} • ${hairstyle.find(a=>a[0]===save.hair)[1]}`;
+function wandSVG(id){
+ const wand=magicWands.find(x=>x[0]===id);if(!wand)return '';
+ const [,,icon,,glow]=wand;
+ return `<g class="magic-wand" style="--wand-glow:${glow}"><path d="M306 329 L351 212" stroke="#8662af" stroke-width="11" stroke-linecap="round"/><path d="M306 329 L351 212" stroke="#fff3dd" stroke-width="5" stroke-linecap="round"/><circle cx="351" cy="210" r="29" fill="${glow}" opacity=".25" class="wand-aura"/><text x="351" y="229" font-size="46" text-anchor="middle" class="wand-star">${icon}</text><text x="325" y="195" font-size="20" class="light-bulb">✧</text><text x="378" y="192" font-size="18" class="light-bulb">✧</text></g>`;
 }
-function selectLook(key,value){save[key]=value;store();applyLook();renderWardrobe();chirp([720,970],.09);toast('✨ Mimi looks fabulous!');}
+function applyLook(){const f=furs.find(a=>a[0]===save.fur)||furs[0];document.documentElement.style.setProperty('--cat-fur',f[2]);document.documentElement.style.setProperty('--cat-fur-dark',f[3]);
+ const o=[...Object.values(outfits).flat(),...magicDresses].find(a=>a[0]===save.outfit),c=(hairColours.find(a=>a[0]===save.hairColour)||hairColours[0])[2];
+ all('svg.cat').forEach(svg=>{svg.querySelector('.dress-layer').innerHTML=outfitSVG(o);svg.querySelector('.hair-layer').innerHTML=hairSVG(save.hair,c);svg.querySelector('.hat-layer').innerHTML=hatSVG(save.hat);svg.querySelector('.wand-layer').innerHTML=wandSVG(save.wand)});
+ $('wearing').textContent=`${o?o[1]:'Fluffy Mimi'} • ${hairstyle.find(a=>a[0]===save.hair)[1]}${save.wand!=='none'?' • Magic wand!':''}`;
+}
+function selectLook(key,value){if((key==='outfit'||key==='wand') && allMagic.some(m=>m.data[0]===value) && !save.unlocked.includes(value)){toast('🔒 Unlock this in the Magic Shop!');showPage('shop');return;}save[key]=value;store();applyLook();renderWardrobe();chirp([720,970],.09);toast('✨ Mimi looks fabulous!');}
 function renderWardrobe(){all('[data-dress-tab]').forEach(b=>{b.classList.toggle('selected',b.dataset.dressTab===dressTab);b.setAttribute('aria-selected',String(b.dataset.dressTab===dressTab));});let html='';
  if(dressTab==='outfit'){
   html='<p>Pick the perfect costume — mix it with any hair or hat!</p><div class="season-tabs">'+Object.keys(outfits).map(s=>`<button type="button" class="${season===s?'selected':''}" data-season="${s}">${({Everyday:'🌈',Halloween:'🎃',Christmas:'🎄',Seasons:'☀️'})[s]} ${s}</button>`).join('')+'</div><h3 class="subhead">'+season+' outfits</h3><div class="wardrobe-grid">'+outfits[season].map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-outfit="${id}" aria-pressed="${save.outfit===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div>';
+ }else if(dressTab==='magic'){
+ html='<p>✨ These glowing dresses can only be unlocked using gems from the Magic Shop!</p><div class="wardrobe-grid">'+magicDresses.map(([id,label,emoji,price])=>{const owned=save.unlocked.includes(id);return `<button type="button" class="wardrobe-item ${owned?'magical-tile':'locked-wardrobe'}" data-magic-dress="${id}" aria-pressed="${save.outfit===id}"><span>${emoji}</span><b>${label}</b><small>${owned?'✨ Wear it':'🔒 '+price+' 💎'}</small></button>`}).join('')+'</div><button type="button" class="shop-shortcut" data-jump-shop="true">🪄 Visit Magic Shop ➜</button>';
+ }else if(dressTab==='wand'){
+ html='<p>🪄 Wands sparkle in Mimi’s paw. Earn gems to unlock new ones!</p><div class="wardrobe-grid"><button type="button" class="wardrobe-item" data-wand="none" aria-pressed="'+(save.wand==='none')+'"><span>🐾</span><b>No wand</b></button>'+magicWands.map(([id,label,emoji,price])=>{const owned=save.unlocked.includes(id);return `<button type="button" class="wardrobe-item ${owned?'magical-tile':'locked-wardrobe'}" data-magic-wand="${id}" aria-pressed="${save.wand===id}"><span>${emoji}</span><b>${label}</b><small>${owned?'✨ Hold it':'🔒 '+price+' 💎'}</small></button>`}).join('')+'</div><button type="button" class="shop-shortcut" data-jump-shop="true">🪄 Visit Magic Shop ➜</button>';
  }else if(dressTab==='hair'){
   html='<p>Try a hairstyle and choose its colour.</p><h3 class="subhead">Hairstyles</h3><div class="wardrobe-grid">'+hairstyle.map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-hair="${id}" aria-pressed="${save.hair===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div><h3 class="subhead">Hair colours</h3><div class="wardrobe-grid">'+hairColours.map(([id,label,colour])=>`<button type="button" class="wardrobe-item colour-choice" data-hair-colour="${id}" aria-pressed="${save.hairColour===id}"><span class="colour-dot" style="background:${colour}"></span><b>${label}</b></button>`).join('')+'</div>';
  }else if(dressTab==='hat'){
@@ -101,14 +205,41 @@ function renderWardrobe(){all('[data-dress-tab]').forEach(b=>{b.classList.toggle
  }
  $('wardrobe-content').innerHTML=html;
 }
-function renderVoice(){ $('voice-grid').innerHTML=voices.map(([id,label,emoji,note])=>`<button type="button" class="voice-card" data-voice="${id}" aria-pressed="${save.voice===id}"><span>${emoji}</span><b>${label}</b><small>${note}</small></button>`).join('');
- $('quick-voice').innerHTML=voices.filter(v=>['squeaky','alien','giant','robot'].includes(v[0])).map(([id,label,emoji])=>`<button type="button" class="quick-chip ${save.voice===id?'selected':''}" data-voice="${id}" aria-pressed="${save.voice===id}">${emoji} ${label}</button>`).join('');
+function renderShop(){
+ const selected=shopTab==='dress'?magicDresses:magicWands;
+ all('[data-shop-tab]').forEach(b=>{const yes=b.dataset.shopTab===shopTab;b.classList.toggle('selected',yes);b.setAttribute('aria-pressed',String(yes));});
+ $('shop-balance').textContent=save.total;
+ $('shop-progress').textContent=`${selected.filter(item=>save.unlocked.includes(item[0])).length} of ${selected.length} unlocked`;
+ $('shop-items').innerHTML=selected.map(([id,name,icon,price,col,accent,theme])=>{
+  const bought=save.unlocked.includes(id),equipped=(shopTab==='dress'?save.outfit:save.wand)===id,afford=save.total>=price;
+  return `<article class="shop-card ${bought?'owned':''}"><div class="shop-art ${shopTab==='dress'?'dress-art':'wand-art'} ${theme==='lights'?'xmas-lights':''}" style="--item-tint:${col};--item-glow:${accent||col}"><span class="shop-emoji">${icon}</span><span class="shop-spark s1">✦</span><span class="shop-spark s2">✨</span><span class="shop-spark s3">✦</span>${theme==='lights'?'<span class="mini-light">🔴🟢🟡🔵</span>':''}</div><h3>${name}</h3><p>${shopTab==='dress'?'✨ Glowing magical dress':'🪄 Sparkling magic wand'}</p><button type="button" data-shop-buy="${id}" ${equipped?'disabled':''} class="shop-buy ${bought?'equip':''}" aria-label="${bought?(equipped?'Wearing ':'Equip '):'Unlock '}${name}${bought?'':' for '+price+' gems'}">${equipped?'✓ Equipped':bought?'✨ Wear it!':afford?'💎 '+price+' · Unlock':'🔒 '+price+' 💎'}</button></article>`
+ }).join('');
 }
-function setVoice(id){save.voice=choice(voices,id,'squeaky');store();renderVoice();chirp([550,840]);const v=voices.find(x=>x[0]===save.voice);toast(`${v[2]} ${v[1]} voice selected!`);if(lastBuffer||lastBlob)replay.hidden=false;}
-function showPage(id){if(!['home','wardrobe','play','voices','gems'].includes(id))return;
+function buyOrEquip(id){
+ const item=allMagic.find(m=>m.data[0]===id);if(!item)return;
+ const [key,name,icon,price]=item.data;
+ if(!save.unlocked.includes(key)){
+  if(save.total<price){toast(`💎 You need ${price-save.total} more gems! Play games to earn them.`);chirp([350,285]);return;}
+  save.total-=price;save.unlocked.push(key);confetti(32);chirp([523,659,784,1046],.14);toast(`🎉 ${name} unlocked!`);
+ }else{toast(`✨ Mimi is wearing ${name}!`);}
+ if(item.type==='dress')save.outfit=key;else save.wand=key;
+ store();applyLook();updateGemUI();renderWardrobe();renderShop();
+}
+function renderSpeed(){
+ const value=Number(save.speed).toFixed(2)+'×';
+ all('[data-speed-readout]').forEach(el=>el.textContent=value);
+ all('[data-speed-slider]').forEach(el=>el.value=save.speed);
+ all('[data-speed-preset]').forEach(el=>{const selected=Math.abs(Number(el.dataset.speedPreset)-save.speed)<.001;el.classList.toggle('selected',selected);el.setAttribute('aria-pressed',String(selected));});
+}
+function setSpeed(value){save.speed=Math.max(.5,Math.min(1.75,Number(value)||1));store();renderSpeed();if(lastBuffer||lastBlob)replay.hidden=false;}
+function renderVoice(){ $('voice-grid').innerHTML=voices.map(([id,label,emoji,note])=>`<button type="button" class="voice-card" data-voice="${id}" aria-pressed="${save.voice===id}"><span>${emoji}</span><b>${label}</b><small>${note}</small></button>`).join('');
+ $('quick-voice').innerHTML=voices.filter(v=>['squeaky','alien','giant','robot','baby','dinosaur'].includes(v[0])).map(([id,label,emoji])=>`<button type="button" class="quick-chip ${save.voice===id?'selected':''}" data-voice="${id}" aria-pressed="${save.voice===id}">${emoji} ${label}</button>`).join('');
+}
+function setVoice(id){save.voice=choice(voices,id,'squeaky');store();renderVoice();chirp([550,840]);const v=voices.find(x=>x[0]===save.voice);toast(`${v[2]} ${v[1]} voice selected!`);if(lastBuffer||lastBlob){replay.hidden=false;$('voice-replay').hidden=false;}}
+function showPage(id){if(!['home','wardrobe','play','voices','gems','shop'].includes(id))return;
  if(page==='home' && id!=='home' && (recState==='recording'||recState==='requesting'||recState==='processing'))cancelRecording();
  if(page==='home' && id!=='home' && recState==='playing')stopPlayback();
- page=id;all('.page').forEach(p=>{const yes=p.id===`page-${id}`;p.hidden=!yes;p.classList.toggle('active',yes)});all('[data-page]').forEach(b=>{b.classList.toggle('selected',b.dataset.page===id);b.setAttribute('aria-selected',String(b.dataset.page===id));});if(id!=='play')closeActivity();window.scrollTo({top:0,behavior:'auto'});}
+ page=id;if(id==='shop')renderShop();if(id==='voices')$('voice-replay').hidden=!(lastBuffer||lastBlob);all('.page').forEach(p=>{const yes=p.id===`page-${id}`;p.hidden=!yes;p.classList.toggle('active',yes)});all('[data-page]').forEach(b=>{b.classList.toggle('selected',b.dataset.page===id);b.setAttribute('aria-selected',String(b.dataset.page===id));});if(id!=='play')closeActivity();window.scrollTo({top:0,behavior:'auto'});}
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
 let ctx=null;
 async function getContext(){if(!AudioCtx)throw new Error('Web Audio is not available.');if(!ctx)ctx=new AudioCtx();if(ctx.state==='suspended')await ctx.resume();return ctx;}
@@ -121,23 +252,27 @@ function recordingLabel(){recBtn.classList.remove('is-recording');recBtn.disable
 function stopTimers(){clearTimeout(recordTimer);cancelAnimationFrame(recordAnimation);recordTimer=0;recordAnimation=0;}
 function stopMic(){if(processor){processor.onaudioprocess=null;try{processor.disconnect()}catch{}processor=null}if(micSource){try{micSource.disconnect()}catch{}micSource=null}if(muteNode){try{muteNode.disconnect()}catch{}muteNode=null}if(mediaStream){mediaStream.getTracks().forEach(t=>t.stop());mediaStream=null}}
 function stopPlayback(){if(playingSource){try{playingSource.onended=null;playingSource.stop()}catch{}playingSource=null}playingNodes.forEach(n=>{try{n.stop?.()}catch{}try{n.disconnect()}catch{}});playingNodes=[];if(fallbackAudio){fallbackAudio.onended=null;fallbackAudio.pause();fallbackAudio=null}if(audioURL){URL.revokeObjectURL(audioURL);audioURL=null}if(recState==='playing'){recState='idle';recordingLabel()}}
-function discardVoice(){stopPlayback();lastBuffer=null;lastBlob=null;replay.hidden=true;}
+function discardVoice(){stopPlayback();lastBuffer=null;lastBlob=null;replay.hidden=true;$('voice-replay').hidden=true;}
 function cancelRecording(){stopTimers();if(recorder){recorder.onstop=null;recorder.ondataavailable=null;recorder.onerror=null;try{if(recorder.state!=='inactive')recorder.stop()}catch{}recorder=null}stopMic();chunks=[];pcmChunks=[];pcmSamples=0;recState='idle';recordingLabel();}
 function voiceData(){return voices.find(v=>v[0]===save.voice)||voices[0]}
 function voiceFilter(source,ac){const v=voiceData(),nodes=[source];let destination=source;
  if(v[5]==='robot'){const filter=ac.createBiquadFilter();filter.type='bandpass';filter.frequency.value=1050;filter.Q.value=.5;destination.connect(filter);destination=filter;nodes.push(filter);
   const ring=ac.createGain();ring.gain.value=.7;const lfo=ac.createOscillator(),lfoGain=ac.createGain();lfo.frequency.value=34;lfoGain.gain.value=.3;lfo.connect(lfoGain);lfoGain.connect(ring.gain);lfo.start();nodes.push(lfo,lfoGain,ring);destination.connect(ring);destination=ring;
  }else if(v[5]==='monster'||v[5]==='deep'||v[5]==='low'){const filter=ac.createBiquadFilter();filter.type='lowpass';filter.frequency.value=v[5]==='monster'?850:1500;destination.connect(filter);destination=filter;nodes.push(filter);
- }else if(v[5]==='high'||v[5]==='alien'){const filter=ac.createBiquadFilter();filter.type='highshelf';filter.frequency.value=1100;filter.gain.value=v[5]==='alien'?7:3;destination.connect(filter);destination=filter;nodes.push(filter);}
+ }else if(v[5]==='underwater'){const filter=ac.createBiquadFilter();filter.type='lowpass';filter.frequency.value=750;destination.connect(filter);destination=filter;nodes.push(filter);
+  }else if(v[5]==='telephone'){const filter=ac.createBiquadFilter();filter.type='bandpass';filter.frequency.value=1100;filter.Q.value=.8;destination.connect(filter);destination=filter;nodes.push(filter);
+  }else if(v[5]==='witch'){const filter=ac.createBiquadFilter();filter.type='lowpass';filter.frequency.value=1000;destination.connect(filter);destination=filter;nodes.push(filter);
+  }else if(v[5]==='high'||v[5]==='alien'){const filter=ac.createBiquadFilter();filter.type='highshelf';filter.frequency.value=1100;filter.gain.value=v[5]==='alien'?7:3;destination.connect(filter);destination=filter;nodes.push(filter);}
  const volume=ac.createGain();volume.gain.value=.88;destination.connect(volume);volume.connect(ac.destination);nodes.push(volume);
  if(v[5]==='echo'){const delay=ac.createDelay(.6),wet=ac.createGain();delay.delayTime.value=.21;wet.gain.value=.33;destination.connect(delay);delay.connect(wet);wet.connect(ac.destination);nodes.push(delay,wet);}
  return nodes;
 }
+function playbackRate(){return Math.max(.35,Math.min(3,voiceData()[4]*save.speed));}
 function playing(){recState='playing';recBtn.disabled=true;recLabel.textContent='Mimi is talking!';recDetail.textContent=voiceData()[1]+' voice';face('talking');message(`Hee hee! ${voiceData()[2]} That's you!`,'Choose another voice and replay it!');confetti(9);replay.hidden=true;}
-function finishedPlaying(){stopPlayback();recState='idle';recordingLabel();replay.hidden=!(lastBuffer||lastBlob);message('That was funny! 😹','Change voice and tap Hear that again!');}
-function needTap(){recState='idle';recordingLabel();replay.hidden=!(lastBuffer||lastBlob);message('Tap Hear that again! 🔊','Safari sometimes needs an extra tap to play sound.');}
-async function playLatest(){if(!lastBuffer&&!lastBlob)return;stopPlayback();try{const ac=await getContext();if(lastBuffer){const src=ac.createBufferSource();src.buffer=lastBuffer;src.playbackRate.value=voiceData()[4];playingNodes=voiceFilter(src,ac);playingSource=src;src.onended=finishedPlaying;src.start();playing();return;}
- if(lastBlob){if(audioURL)URL.revokeObjectURL(audioURL);audioURL=URL.createObjectURL(lastBlob);const audio=new Audio(audioURL);fallbackAudio=audio;audio.playbackRate=voiceData()[4];audio.preservesPitch=false;audio.webkitPreservesPitch=false;audio.onended=finishedPlaying;await audio.play();playing();return;}
+function finishedPlaying(){stopPlayback();recState='idle';recordingLabel();replay.hidden=!(lastBuffer||lastBlob);$('voice-replay').hidden=!(lastBuffer||lastBlob);message('That was funny! 😹','Change voice and tap Hear that again!');}
+function needTap(){recState='idle';recordingLabel();replay.hidden=!(lastBuffer||lastBlob);$('voice-replay').hidden=!(lastBuffer||lastBlob);message('Tap Hear that again! 🔊','Safari sometimes needs an extra tap to play sound.');}
+async function playLatest(){if(!lastBuffer&&!lastBlob)return;stopPlayback();try{const ac=await getContext();if(lastBuffer){const src=ac.createBufferSource();src.buffer=lastBuffer;src.playbackRate.value=playbackRate();playingNodes=voiceFilter(src,ac);playingSource=src;src.onended=finishedPlaying;src.start();playing();return;}
+ if(lastBlob){if(audioURL)URL.revokeObjectURL(audioURL);audioURL=URL.createObjectURL(lastBlob);const audio=new Audio(audioURL);fallbackAudio=audio;audio.playbackRate=playbackRate();audio.preservesPitch=false;audio.webkitPreservesPitch=false;audio.onended=finishedPlaying;await audio.play();playing();return;}
  }catch(err){console.warn('Local playback could not start:',err?.name);needTap();}}
 async function finishBlob(blob){if(recState!=='processing')return;if(!blob?.size){cancelRecording();message('I missed that! 🐱','Speak a little longer, then try again.');return}lastBlob=blob;lastBuffer=null;
  try{const ac=await getContext();lastBuffer=await ac.decodeAudioData(await blob.arrayBuffer());if(recState==='processing')await playLatest();}
@@ -191,17 +326,23 @@ all('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.
 all('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
 $('gem-shortcut').onclick=()=>showPage('gems');$('gem-hunt').onclick=()=>{showPage('play');openActivity('hunt');};
 all('[data-dress-tab]').forEach(b=>b.onclick=()=>{dressTab=b.dataset.dressTab;renderWardrobe()});
-$('wardrobe-content').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.season){season=b.dataset.season;renderWardrobe()}else if(b.dataset.outfit)selectLook('outfit',b.dataset.outfit);else if(b.dataset.hair)selectLook('hair',b.dataset.hair);else if(b.dataset.hat)selectLook('hat',b.dataset.hat);else if(b.dataset.fur)selectLook('fur',b.dataset.fur);else if(b.dataset.hairColour)selectLook('hairColour',b.dataset.hairColour)});
+$('wardrobe-content').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.jumpShop){showPage('shop')}else if(b.dataset.magicDress)selectLook('outfit',b.dataset.magicDress);else if(b.dataset.magicWand)selectLook('wand',b.dataset.magicWand);else if(b.dataset.wand)selectLook('wand',b.dataset.wand);else if(b.dataset.season){season=b.dataset.season;renderWardrobe()}else if(b.dataset.outfit)selectLook('outfit',b.dataset.outfit);else if(b.dataset.hair)selectLook('hair',b.dataset.hair);else if(b.dataset.hat)selectLook('hat',b.dataset.hat);else if(b.dataset.fur)selectLook('fur',b.dataset.fur);else if(b.dataset.hairColour)selectLook('hairColour',b.dataset.hairColour)});
 $('random-look').onclick=()=>{const get=a=>a[Math.floor(Math.random()*a.length)];save.outfit=get(Object.values(outfits).flat())[0];save.hair=get(hairstyle)[0];save.hairColour=get(hairColours)[0];save.hat=get(hats)[0];store();applyLook();renderWardrobe();confetti(18);toast('🎲 Surprise outfit!')};
 $('clear-look').onclick=()=>{save.outfit='daisy';save.hair='none';save.hat='none';store();applyLook();renderWardrobe();toast('Back to fluffy Mimi! 🐱')};
 $('voice-grid').addEventListener('click',e=>{const b=e.target.closest('[data-voice]');if(b)setVoice(b.dataset.voice)});$('quick-voice').addEventListener('click',e=>{const b=e.target.closest('[data-voice]');if(b)setVoice(b.dataset.voice)});
+all('[data-speed-slider]').forEach(slider=>slider.addEventListener('input',()=>setSpeed(slider.value)));
+all('[data-speed-preset]').forEach(b=>b.addEventListener('click',()=>setSpeed(b.dataset.speedPreset)));
+$('voice-replay').onclick=playLatest;
+all('[data-shop-tab]').forEach(b=>b.addEventListener('click',()=>{shopTab=b.dataset.shopTab;renderShop()}));
+$('shop-items').addEventListener('click',e=>{const b=e.target.closest('[data-shop-buy]');if(b)buyOrEquip(b.dataset.shopBuy)});
+$('gem-album').addEventListener('click',e=>{const b=e.target.closest('[data-gem-info]');if(!b)return;const g=gems.find(x=>x[0]===b.dataset.gemInfo);if(!g)return;toast(save.album.includes(g[0])?`${g[2]} ${g[1]}: ${g[3]} — collected!`:`🔒 ${g[1]} — play games to discover it!`);});
 $('try-voice').onclick=()=>showPage('home');$('voice-test').onclick=()=>chirp([430,880,570,1020,620],.12);
 $('game-tiles').addEventListener('click',e=>{const b=e.target.closest('[data-game]');if(b)openActivity(b.dataset.game)});$('activity-close').onclick=closeActivity;
 recBtn.onclick=()=>{if(recState==='recording')endRecording();else if(recState==='idle')beginRecording()};replay.onclick=playLatest;
 $('tickle').onclick=()=>catAction('tickle');$('boop').onclick=()=>catAction('boop');$('meme').onclick=()=>catAction('meme');$('home-dance').onclick=()=>catAction('dance');wrap.onclick=()=>catAction('tickle');wrap.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();catAction('tickle')}};
 $('sound-toggle').onclick=()=>{muted=!muted;$('sound-toggle').textContent=muted?'🔇 Effects off':'🔊 Effects on';$('sound-toggle').setAttribute('aria-pressed',String(!muted));if(!muted)chirp()};
-$('reset-save').onclick=()=>{if(!window.confirm('Grown-ups only: clear all saved gems and outfits on this device?'))return;save={...defaults,album:[]};store();applyLook();renderWardrobe();renderVoice();updateGemUI();toast('Collection reset')};
+$('reset-save').onclick=()=>{if(!window.confirm('Grown-ups only: clear all saved gems and outfits on this device?'))return;save={...defaults,album:[],unlocked:[]};store();applyLook();renderWardrobe();renderVoice();renderSpeed();updateGemUI();renderShop();toast('Collection reset')};
 window.addEventListener('pagehide',()=>{cancelRecording();discardVoice();stopDancing();closeActivity();if(ctx){ctx.close().catch(()=>{});ctx=null}});
-applyLook();renderWardrobe();renderVoice();buildGameTiles();updateGemUI();recordingLabel();
+applyLook();renderWardrobe();renderVoice();renderSpeed();buildGameTiles();updateGemUI();renderShop();recordingLabel();
 if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
 })();

@@ -3,8 +3,8 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#c5a7fa"><meta name="description" content="A private, colourful offline-friendly talking cat playhouse for little ones. No ads, no accounts, no uploads.">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Mimi Playhouse"><meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css?v=4.3">
-<title>Mimi's Magic Playhouse</title></head><body>
+<link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css?v=5.0">
+<title>Mimi's Magic Playhouse — Gem Shop</title></head><body>
 <div class="app-shell">
 <header class="topbar"><div class="brand"><span class="brand-icon">🐾</span><span>Mimi's <em>Magic</em><small>Playhouse</small></span></div><div class="top-actions"><button type="button" class="gem-balance" id="gem-shortcut" aria-label="View your gem collection">💎 <span id="gem-count">0</span></button><span class="privacy-pill">🔒 Private</span></div></header>
 <nav class="nav" role="tablist" aria-label="Playhouse pages">
@@ -13,6 +13,7 @@
 <button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="play"><span>🎮</span>Games</button>
 <button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="voices"><span>🎤</span>Voices</button>
 <button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="gems"><span>💎</span>Gems</button>
+<button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="shop"><span>🪄</span>Shop</button>
 </nav>
 <main id="main">
 <section class="page active" id="page-home" role="tabpanel" aria-label="Home">
@@ -64,7 +65,7 @@
             </g>
             <path d="M187 94 Q196 99 208 94 Q221 100 230 93" stroke="#ecb3ed" stroke-width="6" fill="none" stroke-linecap="round" opacity=".7" />
           </g>
-        <g class="dress-layer"></g><g class="hair-layer"></g><g class="hat-layer"></g></svg></div>
+        <g class="dress-layer"></g><g class="hair-layer"></g><g class="hat-layer"></g><g class="wand-layer"></g></svg></div>
   <div id="numbers" class="number-burst" aria-hidden="true">6 🙌 7</div>
   <div class="timer-rail"><span id="progress" class="timer-fill"></span></div>
   <p class="hint" id="hint">She repeats your own voice. No AI, no uploads!</p>
@@ -73,13 +74,17 @@
     <button id="record" type="button" class="primary-mic"><span id="mic-emoji">🎤</span><span><strong id="record-label">Tap to talk</strong><small id="record-detail">Tap again to hear Mimi</small></span></button>
     <button type="button" class="replay-btn" id="replay" hidden>🔊 Hear that again!</button>
     <div class="quick-voice" id="quick-voice" aria-label="Voice effect"></div>
+    <div class="speed-control"><div class="speed-title"><b>🐢 Voice speed 🐇</b><span data-speed-readout>1.00×</span></div>
+      <input type="range" data-speed-slider aria-label="Voice playback speed" min="0.5" max="1.75" step="0.05" value="1">
+      <div class="speed-presets"><button type="button" data-speed-preset="0.65">🐢 Slow</button><button type="button" data-speed-preset="1">🐱 Normal</button><button type="button" data-speed-preset="1.5">🐇 Fast</button></div>
+    </div>
   </div>
   <div class="action-grid"><button type="button" id="meme" class="action-card gold"><span>🙌</span><b>SIX! SEVEN!</b><small>Dance &amp; giggle</small></button>
     <button type="button" id="tickle" class="action-card pink"><span>😹</span><b>Tickle!</b><small>Mimi laughs</small></button>
     <button type="button" id="boop" class="action-card aqua"><span>🐽</span><b>Boop!</b><small>Tap her nose</small></button>
     <button type="button" id="home-dance" class="action-card lilac"><span>🪩</span><b>Dance!</b><small>Disco kitty</small></button>
   </div>
-  <button type="button" class="explore-banner" data-goto="wardrobe">✨ New! Christmas, Halloween and 30+ outfits <span>➜</span></button>
+  <button type="button" class="explore-banner" data-goto="shop">🪄 Visit the Magic Shop! Unlock glowing dresses &amp; wands using gems <span>➜</span></button>
  </div></div>
 </section>
 <section class="page" id="page-wardrobe" role="tabpanel" aria-label="Dress Up" hidden>
@@ -129,9 +134,9 @@
             </g>
             <path d="M187 94 Q196 99 208 94 Q221 100 230 93" stroke="#ecb3ed" stroke-width="6" fill="none" stroke-linecap="round" opacity=".7" />
           </g>
-        <g class="dress-layer"></g><g class="hair-layer"></g><g class="hat-layer"></g></svg></div><div class="wearing" id="wearing">Mimi's fabulous look</div><button class="small-outline" id="random-look" type="button">🎲 Surprise me!</button></div>
+        <g class="dress-layer"></g><g class="hair-layer"></g><g class="hat-layer"></g><g class="wand-layer"></g></svg></div><div class="wearing" id="wearing">Mimi's fabulous look</div><button class="small-outline" id="random-look" type="button">🎲 Surprise me!</button></div>
  <div class="wardrobe-panel"><div class="subnav" id="dress-tabs" role="tablist" aria-label="Wardrobe categories">
-    <button type="button" role="tab" aria-selected="true" class="selected" data-dress-tab="outfit">👗 Outfits</button><button type="button" role="tab" aria-selected="false" data-dress-tab="hair">💇 Hair</button><button type="button" role="tab" aria-selected="false" data-dress-tab="hat">🎩 Extras</button><button type="button" role="tab" aria-selected="false" data-dress-tab="fur">🎨 Fur</button></div>
+    <button type="button" role="tab" aria-selected="true" class="selected" data-dress-tab="outfit">👗 Outfits</button><button type="button" role="tab" aria-selected="false" data-dress-tab="hair">💇 Hair</button><button type="button" role="tab" aria-selected="false" data-dress-tab="hat">🎩 Extras</button><button type="button" role="tab" aria-selected="false" data-dress-tab="fur">🎨 Fur</button><button type="button" role="tab" aria-selected="false" data-dress-tab="magic">✨ Magic Dresses</button><button type="button" role="tab" aria-selected="false" data-dress-tab="wand">🪄 Wands</button></div>
   <div id="wardrobe-content"></div><button class="small-outline" id="clear-look" type="button">🐱 Reset outfit</button></div></div>
 </section>
 <section class="page" id="page-play" role="tabpanel" aria-label="Games" hidden>
@@ -142,20 +147,33 @@
 <section class="page" id="page-voices" role="tabpanel" aria-label="Voices" hidden>
  <div class="section-heading"><div><span class="eyebrow">🎤 SILLY SOUNDS</span><h1>Funny voice studio</h1><p>Pick a voice, then say something on Home!</p></div><span class="heading-sticker">👽</span></div>
  <div class="info-strip">💡 Each voice changes the pitch or sound of your own recording. Your words are never sent anywhere.</div>
- <div id="voice-grid" class="voice-grid"></div>
+ <div class="speed-studio"><h2>🎚️ Slow motion or super speed!</h2><p>Choose any voice, then adjust how fast Mimi talks. You can replay the last recording.</p>
+    <div class="speed-control"><div class="speed-title"><b>Playback speed</b><span data-speed-readout>1.00×</span></div><input type="range" data-speed-slider aria-label="Voice playback speed" min="0.5" max="1.75" step="0.05" value="1"><div class="speed-presets"><button type="button" data-speed-preset="0.65">🐢 Slow</button><button type="button" data-speed-preset="1">🐱 Normal</button><button type="button" data-speed-preset="1.5">🐇 Fast</button></div></div>
+    <button type="button" id="voice-replay" class="wide-button" hidden>🔊 Replay with this voice!</button></div>
+  <div id="voice-grid" class="voice-grid"></div>
  <button id="try-voice" type="button" class="wide-button">🎤 Let's talk to Mimi!</button>
  <button type="button" class="small-outline" id="voice-test">🎵 Preview a silly sound</button>
 </section>
 <section class="page" id="page-gems" role="tabpanel" aria-label="Gems" hidden>
- <div class="section-heading"><div><span class="eyebrow">💎 YOUR TREASURE BOX</span><h1>Gem collection</h1><p>Play games to discover colourful treasures!</p></div><span class="heading-sticker">🪄</span></div>
- <div class="gem-summary"><div><span class="gem-big">💎</span><div><small>Total sparkle points</small><b id="gem-total">0</b></div></div><div><span class="gem-big">🏆</span><div><small>Different gems found</small><b id="gem-found">0 / 18</b></div></div></div>
+ <div class="section-heading"><div><span class="eyebrow">💎 YOUR TREASURE BOX</span><h1>Gem collection</h1><p>Collect all 18 special gems AND earn normal gems for the Magic Shop!</p></div><span class="heading-sticker">🪄</span></div>
+ <div class="gem-summary"><div><span class="gem-big">💎</span><div><small>💎 Normal gems to spend</small><b id="gem-total">0</b></div></div><div><span class="gem-big">🏆</span><div><small>Different gems found</small><b id="gem-found">0 / 18</b></div></div></div>
  <div class="treasure-intro"><span>🗺️</span><div><b>Hunt for hidden gems!</b><p>Play Gem Hunt, Star Pop and other games to fill your treasure chest.</p></div><button type="button" id="gem-hunt">Play hunt ➜</button></div>
- <div class="album-head"><h2>✨ Your gemstone album</h2><span id="album-caption">18 to discover</span></div><div id="gem-album" class="gem-album"></div>
- <details class="settings"><summary>🔐 Grown-up settings &amp; privacy</summary><p>Only gems and dress-up choices are stored on this device. Voice clips are held temporarily in memory for playback and aren't saved or uploaded. No accounts, trackers, adverts, payments or chat.</p><button id="reset-save" class="danger-button" type="button">Reset local collection and outfits</button></details>
+ <div class="gem-guide"><div class="gem-guide-symbol">🔮</div><div><b id="discovery-next">Your first special gem awaits!</b><p>Win gems in games. Every two game rewards reveal another special jewel for your album. Special gems are collectibles, not shop money.</p><div class="discovery-bar"><span id="discovery-bar-fill"></span></div></div></div>
+  <button type="button" class="shop-shortcut" data-goto="shop">🛍️ Spend normal gems on glowing dresses and magic wands ➜</button>
+  <div class="album-head"><h2>✨ Your 18 special gems</h2><span id="album-caption">18 to discover</span></div><div id="gem-album" class="gem-album"></div><p class="album-tip">✨ Tap a special gem to learn about it. Keep playing games to complete the whole album!</p>
+ <details class="settings"><summary>🔐 Grown-up settings &amp; privacy</summary><p>Only virtual gems, special collection, purchased costumes, voice settings and dress-up choices are stored on this device. Voice clips are held temporarily in memory for playback and aren't saved or uploaded. No accounts, trackers, adverts, payments or chat.</p><button id="reset-save" class="danger-button" type="button">Reset local collection and outfits</button></details>
+</section>
+<section class="page" id="page-shop" role="tabpanel" aria-label="Magic Shop" hidden>
+ <div class="section-heading"><div><span class="eyebrow">🪄 THE SPARKLE BOUTIQUE</span><h1>Mimi's Magic Shop</h1><p>Earn gems by playing. Unlock special clothes and wands!</p></div><span class="heading-sticker">🛍️</span></div>
+ <div class="shop-hero"><div class="shop-hero-emoji">✨👗🪄</div><div><b>Make Mimi sparkle!</b><p>All purchases use pretend gems earned in games. No real money, ever!</p></div><div class="shop-balance">💎 <b id="shop-balance">0</b><small>to spend</small></div></div>
+ <div class="shop-tabs" aria-label="Shop categories"><button type="button" class="selected" aria-pressed="true" data-shop-tab="dress">👗 Glowing Dresses</button><button type="button" aria-pressed="false" data-shop-tab="wand">🪄 Magic Wands</button></div>
+ <div class="shop-summary"><span id="shop-progress">0 of 0 unlocked</span><button type="button" data-goto="play">🎮 Earn more gems ➜</button></div>
+ <div class="shop-grid" id="shop-items"></div>
+ <div class="shop-help">🌟 Bought something? It stays unlocked on this device! Tap <b>Wear it!</b> or find it under <b>Dress Up → Magic Dresses / Wands</b>.</div>
 </section>
 </main>
 <footer class="foot">Made for little imaginations 🧸 · No ads · No accounts · No microphone uploads <button id="sound-toggle" type="button" aria-pressed="true">🔊 Effects on</button></footer>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-<script src="app.js?v=4.3" defer></script>
+<script src="app.js?v=5.0" defer></script>
 </body></html>

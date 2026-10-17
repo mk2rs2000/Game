@@ -1,37 +1,33 @@
-# Mimi's Magic Playhouse — V4
+# Mimi's Magic Playhouse V5 — Gem Shop & Voice Studio
 
-A colourful, privacy-first talking cat web app for iPhone Safari and other modern browsers.
+A private, playful Safari website. This version upgrades V4 without throwing away locally saved gems, collection progress or outfits, provided you open the same website/domain on the same browser/device. The new features do not use real money or require accounts.
 
-## Upload to GitHub Pages (no Apple certificates)
+## What's new?
 
-1. Unzip the download. Upload **all eight site files** — `index.html`, `style.css`, `app.js`, `manifest.webmanifest`, `sw.js`, `six-seven.wav`, `icon-192.png`, and `icon-512.png` — to the root of your GitHub Pages repository. Do not upload this README unless you want to.
-2. GitHub repository Settings → Pages → Deploy from branch → choose main / root → Save.
-3. Open the HTTPS GitHub Pages URL in Safari; use **Add to Home Screen** from Share if desired.
-4. Tap to talk. Safari asks for microphone permission; tap Allow, speak, tap Stop & repeat.
+- **Magic Shop:** 12 **gem-only glowing dresses**, including twinkling Christmas tree lights, Candy Cane Twinkle, Christmas Elf Sparkle, Pumpkin Glow, Winter Queen and Rainbow Magic Gown.
+- **Magic Wands:** 9 **gem-only wands**, including Star, Christmas Holly, Twinkling Tree, Snowflake and Rainbow. When equipped, Mimi holds the glowing wand in her paw.
+- **Two types of gems:** Ordinary blue gems are **currency**, earned by playing games and spent to unlock dresses and wands. The 18 named special jewels are **collectibles** in the Gems page; they are not spent.
+- **Find all 18:** The first earned game reward reveals a special gem; another is revealed after every two additional earned game rewards, until the album is complete. Tap any jewel to see its name and collection status. Keep playing to collect all 18.
+- **Voices:** 22 locally processed silly presets, including Baby Kitty, Dinosaur, Underwater, Witch, Telephone, Cave Echo, Pixie and the original effects.
+- **Playback speed:** Slow / Normal / Fast buttons or adjustable **0.50x–1.75x** slider on the Home and Voices pages. Pick a new voice or speed and replay the last recording without recording again. *The rate adjustment affects both speed and pitch*, which is normal for browser audio.
+- Dress-up has new **Magic Dresses** and **Wands** tabs so purchased items can be worn again.
 
-**Do not open `index.html` as `file://` in Safari**. iOS microphone recording generally needs HTTPS (or localhost during desktop testing). If replacing an earlier edition, make sure you upload all the new files, not only `index.html`. Safari may cache the previous edition; refresh or use the new URL with `?v=4.3` after upload.
+## Publish to GitHub Pages
 
-## Features
+1. Extract the ZIP. Upload all 8 website files (`index.html`, `app.js`, `style.css`, `sw.js`, `manifest.webmanifest`, `six-seven.wav`, `icon-192.png`, `icon-512.png`) to the **same GitHub Pages repository and directory** as V4, replacing the previous versions.
+2. Keep GitHub Pages serving the branch root through **Settings > Pages**. Open the `https://` site in Safari. The site must use HTTPS for microphone access.
+3. Refresh Safari after deployment, or open the address with `?v=5.0` appended to the URL. An old service-worker cache may require closing and reopening the page. Please upload every site file, **not just index.html**.
+4. Tap **Tap to talk**, grant microphone permission, speak, then **Stop & repeat**. Choose another voice or move the speed slider to replay the same recording differently.
+5. Play games to earn blue gems, then open **Shop** and buy outfits/wands with them. **No Apple developer account, app signing or certificates are required.**
 
-- 32 dresses and costumes across Everyday, Halloween, Christmas and Seasons; 11 hairstyles; 5 hair colours; 12 hats and extras; 6 fur colours.
-- 10 selectable voice transformations; the existing recording may be replayed in another voice **while the page is open**. Pitch and speed change together; some voices use filters/echo. Results vary between devices.
-- 8 activities: Star Pop, Mystery Gifts, Feed Mimi, Dance Party, Magic Garden, Colour Magic, Silly Dares, Gem Hunt.
-- 18 discoverable gem types, a visible gem album, and free sparkle points. Gem progress and wardrobe choices are kept on **the child's device only** using localStorage. There is no shop, advertising, purchase, account, analytics or chat.
-- 6–7 meme button plays an included locally generated sound (`six-seven.wav`) and triggers an animation.
+## Saving and privacy
 
-## Privacy
+- Gem balances, discovered special jewels, wardrobe choices, shop unlocks, selected voice and speed are saved in browser `localStorage` on the device. Opening the website in a different browser/domain or clearing Safari website data may reset progress. Reset is available under **Gems > Grown-up settings**.
+- Microphone access is requested by the browser. Recorded clips are kept in memory only for repeat playback and are discarded on replacement or page close. They are **not sent to a server or saved to storage** by the app.
+- No advertising, third-party scripts, analytics, login, AI conversation or real-money purchases. Static files can be cached offline after initial load. Your web host may still receive ordinary requests to serve the files.
 
-- Microphone is read using browser `getUserMedia` (with permission). Recorded audio is kept in RAM and replayed locally. It is **not uploaded, persisted or included in service-worker cache**, and is discarded on re-recording or closing the page.
-- LocalStorage saves only selected clothes/voice and gem progress. Use the Grown-up settings on the Gems page to reset these.
-- `sw.js` caches **static site files** for offline access after first load. Offline microphone playback may work on browsers supporting the needed audio APIs; permission and behaviour vary by iOS/Safari version.
-- When loading from GitHub Pages, GitHub (like any host) still receives requests and ordinary server metadata for delivery of the site. The site includes no third-party scripts, trackers or fonts.
+## Testing and limitations
 
-## Troubleshooting iPhone
+Automated Chromium tests verified: all eight interactive games, the 18-special-gem discovery path, gem spending and unlock persistence, 12 dresses, nine wands, V4 progress migration, all 22 voice choices, and simulated microphone recording with two different playback rates. **Not physically tested on an iPhone or in Safari**, so real Safari microphone permission/playback should still be checked.
 
-- `Tap to talk` requires **HTTPS** and microphone permission in Safari Settings for that website.
-- Turn off Silent Mode/increase media volume if voice replay is inaudible.
-- If Safari blocks automatic playback after recording, tap `Hear that again!`.
-- Voice effects are performed locally by changing playback rate; effects are not professional voice conversion and can vary across Safari versions.
-- After uploading an update, Safari may cache older files; refresh the page and check that `app.js` and `style.css` were both updated.
-
-This version has browser automation checks, but has not been tested physically on the user's iPhone.
+Safari/browser pitch/rate behaviour can vary, especially if the audio-decoder fallback is used. If an attempted recording has no sound, verify HTTPS, microphone permissions, media volume and Safari version. **Speech is repeated acoustically; no speech-to-text or AI is used.**
