@@ -104,7 +104,11 @@ const magicHats=[
  ['butterflycrown','Butterfly Crown','🦋',45,'#a4e5ff',6],
  ['christmascrown','Twinkling Christmas Hat','🎄',54,'#d3ff9c',7],
  ['starhalo','Rainbow Star Halo','🌈',70,'#ffb9ee',9],
- ['fairyqueen','Fairy Queen Crown','👑',90,'#d5b1ff',12]
+ ['fairyqueen','Fairy Queen Crown','👑',90,'#d5b1ff',12],
+ ['piratehat','Pirate Hat','🏴‍☠️',12,'#9acff7',1],
+ ['beanie','Cosy Rainbow Beanie','🧢',14,'#ff9bc6',1],
+ ['crystalcrown','Crystal Princess Crown','💎',38,'#c0efff',4],
+ ['moonqueen','Moon Queen Crown','👑',62,'#c4acff',8]
 ];
 const magicHair=[
  ['fairylocks','Fairy Glitter Locks','🧚',18,'#ffb1df',2],
@@ -121,7 +125,18 @@ const magicWings=[
  ['rainbowwings','Rainbow Dream Wings','🌈',76,'#ffb4d5',9],
  ['starlightwings','Starlight Queen Wings','🌟',105,'#d4acff',12]
 ];
-const allMagic=[...magicDresses.map(x=>({type:'dress',data:x})),...magicWands.map(x=>({type:'wand',data:x})),...magicHats.map(x=>({type:'hat',data:x})),...magicHair.map(x=>({type:'hair',data:x})),...magicWings.map(x=>({type:'wings',data:x}))];
+const petTypes=[
+ ['lavender','Lilac Kitten','#d9affd','💜',12,1],
+ ['ocean','Bluebell Kitten','#8dd3ff','💙',12,1],
+ ['ginger','Gingerbread Kitten','#ffc47a','🧡',12,1],
+ ['mint','Minty Kitten','#9ce8b8','💚',12,1],
+ ['starlight','Rainbow Star Kitten','#e6a8f9','🌈',18,6]
+];
+const toyItems=[
+ ['startoy','Starry Toy Box','🎁',18,'#ffe69a',1],
+ ['parrot','Pirate Parrot','🦜',35,'#8fdfbb',2]
+];
+const allMagic=[...magicDresses.map(x=>({type:'dress',data:x})),...magicWands.map(x=>({type:'wand',data:x})),...magicHats.map(x=>({type:'hat',data:x})),...magicHair.map(x=>({type:'hair',data:x})),...magicWings.map(x=>({type:'wings',data:x})),...toyItems.map(x=>({type:'toy',data:x}))];
 const gems=[
  ['ruby','Ruby','❤️','Red sparkle'],['sapphire','Sapphire','💙','Ocean gem'],['emerald','Emerald','💚','Forest gem'],['amethyst','Amethyst','💜','Purple power'],['topaz','Golden Topaz','💛','Sunny shine'],['rose','Rose Quartz','🩷','Heart gem'],
  ['diamond','Diamond','💎','Shiny crystal'],['moon','Moonstone','🌙','Moon magic'],['rainbow','Rainbow','🌈','Colour splash'],['star','Starlight','🌟','Twinkle star'],['snow','Snow Crystal','❄️','Winter wish'],['pumpkin','Pumpkin Gem','🎃','Spooky fun'],
@@ -136,7 +151,7 @@ const rooms=[
  ['art','Art Studio','🎨','Painty colours and creative play.','colours','bubbles']
 ];
 const games=[['stars','Star Pop','⭐','Tap the stars!','#ffe0ae','dance'],['gifts','Mystery Gifts','🎁','Pick a present!','#fcd4df','bedroom'],['feed','Feed Mimi','🍓','Funny snacks!','#d1f7c7','kitchen'],['dance','Dance Party','🪩','Kitty disco!','#e0d5ff','dance'],['garden','Magic Garden','🌷','Grow flowers!','#d8f7f0','garden'],['colours','Colour Magic','🎨','Match colours!','#ffe1e6','art'],['dare','Silly Dares','🎲','Make Mimi giggle!','#f1ddff','bedroom'],['hunt','Gem Hunt','💎','Find treasure!','#d7e8ff','gem'],['bubbles','Bubble Pop','🫧','Pop the floating bubbles!','#dff7ff','art'],['memory','Memory Match','🧠','Match the cute cards!','#f4e6ff','bedroom'],['music','Music Mixer','🎵','Make a fun tune!','#fff0c9','dance'],['cookies','Cookie Catch','🍪','Catch sweet treats!','#ffe4d1','kitchen']]
-const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',wand:'none',voice:'squeaky',speed:1,total:0,album:[],actions:0,unlocked:[],discoverySteps:0,xp:0,room:'dance',wings:'none'};
+const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',wand:'none',voice:'squeaky',speed:1,total:0,album:[],actions:0,unlocked:[],discoverySteps:0,xp:0,room:'dance',wings:'none',toy:'none',friend:'none',eggsHatched:[],incubating:null,activeKitten:'none',completedChallenges:0};
 let save={...defaults};try{const old=JSON.parse(safeGet(stateKey)||safeGet('mimi-playhouse-v4')||'null');if(old&&typeof old==='object')save={...defaults,...old};}catch{}
 if(!Array.isArray(save.album))save.album=[];
 if(!Array.isArray(save.unlocked))save.unlocked=[];
@@ -146,6 +161,14 @@ save.total=Math.max(0,Math.floor(Number(save.total)||0));
 save.actions=Math.max(0,Math.floor(Number(save.actions)||0));
 save.discoverySteps=Math.max(0,Math.floor(Number(save.discoverySteps)||0));
 save.xp=Math.max(0,Math.floor(Number(save.xp)||0));
+if(!Array.isArray(save.eggsHatched))save.eggsHatched=[];
+save.eggsHatched=[...new Set(save.eggsHatched.filter(id=>petTypes.some(t=>t[0]===id)))];
+if(!save.incubating||typeof save.incubating!=='object'||!petTypes.some(t=>t[0]===save.incubating.id)||save.eggsHatched.includes(save.incubating.id))save.incubating=null;
+if(save.incubating)save.incubating.progress=Math.max(0,Math.floor(Number(save.incubating.progress)||0));
+save.activeKitten=save.eggsHatched.includes(save.activeKitten)?save.activeKitten:'none';
+save.completedChallenges=Math.max(0,Math.floor(Number(save.completedChallenges)||0));
+if(!toyItems.some(t=>t[0]===save.toy&&save.unlocked.includes(t[0])))save.toy='none';
+if(!toyItems.some(t=>t[0]===save.friend&&save.unlocked.includes(t[0])))save.friend='none';
 save.speed=Math.max(.5,Math.min(1.75,Number(save.speed)||1));
 if(save.wand!=='none'&&!save.unlocked.includes(save.wand))save.wand='none';
 if(!rooms.some(r=>r[0]===save.room))save.room='dance';
@@ -166,7 +189,7 @@ function currentRoom(){return rooms.find(r=>r[0]===save.room)||rooms[0];}
 function roomClass(){return 'room-'+currentRoom()[0];}
 function updateGemUI(){
  const info=levelInfo(), room=currentRoom();
- $('gem-count').textContent=save.total;
+ $('gem-count').textContent=save.total;if($('nursery-gems'))$('nursery-gems').textContent=save.total;
  $('gem-total').textContent=save.total;
  $('shop-balance').textContent=save.total;
  $('gem-found').textContent=`${save.album.length} / ${gems.length}`;
@@ -195,7 +218,7 @@ function reward(points=1,xpGain=points){
    const pick=left[(save.album.length*7+3)%left.length];
    found=pick[0];save.album.push(found);
  }
- store();updateGemUI();renderShop();renderRooms();
+ store();updateGemUI();renderShop();renderRooms();renderNursery();
  toast(found?`💎 +${points} gems! ✨ NEW special gem: ${gems.find(g=>g[0]===found)[1]}!`:`💎 +${points} gems! +${xpGain} XP!`);
 }
 
@@ -246,6 +269,8 @@ function fairyMotionStyle(col){return `--aura:${col};animation-delay:-${(Math.ra
 function hatSVG(id){
  const magic=magicHats.find(a=>a[0]===id);
  if(magic){const [key,label,emoji,price,glow]=magic;
+ if(key==='piratehat') return `<g class="enchanted-hat fairy-fade" style="${fairyMotionStyle(glow)}"><path d="M125 95 Q156 32 210 53 Q265 30 297 95 Q258 123 207 106 Q155 124 125 95 Z" fill="#303452" stroke="#f8d99a" stroke-width="6"/><path d="M139 98 Q173 83 207 95 Q251 84 282 98" fill="none" stroke="#fff" stroke-width="5"/><text x="209" y="96" font-size="38" text-anchor="middle">☠️</text></g>`;
+ if(key==='beanie') return `<g class="enchanted-hat fairy-fade" style="${fairyMotionStyle(glow)}"><circle cx="207" cy="33" r="16" fill="#f7d7ff" stroke="#fff" stroke-width="4"/><path d="M143 100 Q144 36 208 38 Q269 39 271 100 Z" fill="#bd8df3" stroke="#fff" stroke-width="5"/><path d="M148 67 Q209 82 268 67" fill="none" stroke="#ff99bc" stroke-width="10"/><rect x="134" y="87" width="144" height="26" rx="13" fill="#ffb0d9" stroke="#fff" stroke-width="5"/></g>`;
  return `<g class="enchanted-hat fairy-fade" style="${fairyMotionStyle(glow)}"><ellipse cx="207" cy="58" rx="53" ry="23" fill="${glow}" opacity=".35"/><text x="207" y="77" text-anchor="middle" font-size="74">${emoji}</text><path d="M168 91 Q207 58 247 91" stroke="${glow}" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="156" cy="78" r="7" fill="#fff"/><circle cx="256" cy="74" r="6" fill="#fff"/></g>`;
  }
  const obj=hats.find(a=>a[0]===id);if(!obj || id==='none')return '';
@@ -276,6 +301,7 @@ function applyLook(){const f=furs.find(a=>a[0]===save.fur)||furs[0];document.doc
   svg.querySelector('.hair-layer').innerHTML=magicHair.some(i=>i[0]===save.hair)?enchantedHairSVG(save.hair):hairSVG(save.hair,c);
   svg.querySelector('.hat-layer').innerHTML=hatSVG(save.hat);
   svg.querySelector('.wand-layer').innerHTML=wandSVG(save.wand)});
+ renderCompanions();
  $('wearing').textContent=`${o?o[1]:'Fluffy Mimi'} • ${([...hairstyle,...magicHair].find(a=>a[0]===save.hair)||hairstyle[0])[1]}${save.wand!=='none'?' • Magic wand!':''}`;
 }
 function selectLook(key,value){if(['outfit','wand','hat','hair','wings'].includes(key) && allMagic.some(m=>m.data[0]===value) && !save.unlocked.includes(value)){toast('🔒 Unlock this in the Magic Shop!');showPage('shop');return;}save[key]=value;store();applyLook();renderWardrobe();chirp([720,970],.09);toast('✨ Mimi looks fabulous!');}
@@ -297,7 +323,7 @@ function renderWardrobe(){all('[data-dress-tab]').forEach(b=>{b.classList.toggle
  }
  $('wardrobe-content').innerHTML=html;
 }
-function shopCollection(){return {dress:magicDresses,wand:magicWands,hat:magicHats,hair:magicHair,wings:magicWings}[shopTab]||magicDresses;}
+function shopCollection(){return {dress:magicDresses,wand:magicWands,hat:magicHats,hair:magicHair,wings:magicWings,toy:toyItems}[shopTab]||magicDresses;}
 function magicLevel(item){return item.data[item.data.length-1];}
 function renderShop(){
  const selected=shopCollection(), info=levelInfo();
@@ -308,10 +334,10 @@ function renderShop(){
  $('shop-items').innerHTML=selected.map(item=>{
   const [id,name,icon,price,colour]=item, req=item[item.length-1], theme=shopTab==='dress'?item[6]:'';
   const accent=shopTab==='dress'?item[5]:colour;
-  const target={dress:'outfit',wand:'wand',hat:'hat',hair:'hair',wings:'wings'}[shopTab];
+  const target={dress:'outfit',wand:'wand',hat:'hat',hair:'hair',wings:'wings'}[shopTab]||(id==='parrot'?'friend':'toy');
   const bought=save.unlocked.includes(id),equipped=save[target]===id,afford=save.total>=price,levelOk=info.level>=req;
   const label=equipped?'✓ Equipped':bought?'✨ Wear it!':!levelOk?`⭐ Level ${req} needed`:afford?`💎 ${price} · Unlock`:`🔒 ${price} 💎`;
-  const descriptions={dress:'Glowing magical dress',wand:'Sparkling magic wand',hat:'Glowing colour-changing hat',hair:'Slow-fade rainbow hairstyle',wings:'Shimmering fairy wings'};
+  const descriptions={dress:'Glowing magical dress',wand:'Sparkling magic wand',hat:'Glowing colour-changing hat',hair:'Slow-fade rainbow hairstyle',wings:'Shimmering fairy wings',toy:'Magical playroom accessory'};
   return `<article class="shop-card ${bought?'owned':''}"><div class="shop-art ${theme==='lights'?'xmas-lights':''}" style="--item-tint:${colour};--item-glow:${accent}"><span class="shop-emoji ${['hair','hat','wings'].includes(shopTab)?'fairy-fade':''}" style="--aura:${colour}">${icon}</span><span class="shop-spark s1">✦</span><span class="shop-spark s2">✨</span><span class="shop-spark s3">✦</span>${theme==='lights'?'<span class="mini-light">🔴🟢🟡🔵</span>':''}</div><h3>${name}</h3><p>✨ ${descriptions[shopTab]}<span class="req">Requires level ${req}</span></p><button type="button" data-shop-buy="${id}" ${equipped?'disabled':''} class="shop-buy ${bought?'equip':''}">${label}</button></article>`;
  }).join('');
 }
@@ -323,9 +349,9 @@ function buyOrEquip(id){
   if(save.total<price){toast(`💎 You need ${price-save.total} more gems! Play games to earn them.`);chirp([350,285]);return;}
   save.total-=price;save.unlocked.push(key);confetti(32);chirp([523,659,784,1046],.14);toast(`🎉 ${name} unlocked!`);
  }else{toast(`✨ Mimi is wearing ${name}!`);}
- const target={dress:'outfit',wand:'wand',hat:'hat',hair:'hair',wings:'wings'}[item.type];
+ const target={dress:'outfit',wand:'wand',hat:'hat',hair:'hair',wings:'wings'}[item.type]||(key==='parrot'?'friend':'toy');
  save[target]=key;
- store();applyLook();updateGemUI();renderWardrobe();renderShop();
+ store();applyLook();updateGemUI();renderWardrobe();renderShop();renderNursery();
 }
 function renderSpeed(){
  const value=Number(save.speed).toFixed(2)+'×';
@@ -338,10 +364,48 @@ function renderVoice(){ $('voice-grid').innerHTML=voices.map(([id,label,emoji,no
  $('quick-voice').innerHTML=voices.filter(v=>['squeaky','alien','giant','robot','baby','dinosaur'].includes(v[0])).map(([id,label,emoji])=>`<button type="button" class="quick-chip ${save.voice===id?'selected':''}" data-voice="${id}" aria-pressed="${save.voice===id}">${emoji} ${label}</button>`).join('');
 }
 function setVoice(id){save.voice=choice(voices,id,'squeaky');store();renderVoice();chirp([550,840]);const v=voices.find(x=>x[0]===save.voice);toast(`${v[2]} ${v[1]} voice selected!`);if(lastBuffer||lastBlob){replay.hidden=false;$('voice-replay').hidden=false;}}
-function showPage(id){if(!['home','rooms','wardrobe','play','voices','gems','shop'].includes(id))return;
+
+function littleKittenSVG(colour='#d9affd',sparkle=false){return `<svg class="little-kitten-svg" viewBox="0 0 124 125" aria-hidden="true"><path d="M24 59 18 16 51 33 Q62 28 74 33 L109 16 100 62" fill="${colour}" stroke="#fff" stroke-width="4"/><ellipse cx="62" cy="74" rx="49" ry="43" fill="${colour}" stroke="#fff" stroke-width="4"/><ellipse cx="44" cy="67" rx="6" ry="9" fill="#392e53"/><ellipse cx="80" cy="67" rx="6" ry="9" fill="#392e53"/><circle cx="42" cy="63" r="2.2" fill="#fff"/><circle cx="78" cy="63" r="2.2" fill="#fff"/><path d="M56 84 Q62 78 68 84 L62 88Z" fill="#a34d89"/><path d="M62 88 Q54 98 46 91 M62 88 Q70 98 78 91" stroke="#744b70" fill="none" stroke-width="3" stroke-linecap="round"/><ellipse cx="27" cy="82" rx="8" ry="5" fill="#ff9abf" opacity=".75"/><ellipse cx="97" cy="82" rx="8" ry="5" fill="#ff9abf" opacity=".75"/>${sparkle?'<text x="7" y="25" font-size="23">✨</text><text x="88" y="115" font-size="23">🌟</text>':''}</svg>`;}
+function renderCompanions(){
+ const box=$('stage-companions');if(!box)return;
+ const kitten=petTypes.find(p=>p[0]===save.activeKitten);
+ box.innerHTML=`${kitten?`<span class="side-kitten" title="${kitten[1]}">${littleKittenSVG(kitten[2],kitten[0]==='starlight')}</span>`:''}${save.friend==='parrot'?'<span class="perch-parrot" title="Pirate Parrot">🦜</span>':''}${save.toy==='startoy'?'<button type="button" id="home-toy-box" class="home-toy-box" aria-label="Play with the starry toy box">🎁⭐</button>':''}`;
+ const toy=$('home-toy-box');if(toy)toy.onclick=e=>{e.stopPropagation();chirp([520,830,660],.1);confetti(14);message('✨ Stars from the toy box!','Your toy box is full of fun!')};
+}
+function renderNursery(){
+ const eggBox=$('egg-shop'), hatchBox=$('incubation-area'),collection=$('kitten-collection');
+ if(!eggBox)return;
+ const current=save.incubating, info=levelInfo();
+ eggBox.innerHTML=petTypes.map(([id,label,colour,emoji,need,minLevel])=>{
+ const have=save.eggsHatched.includes(id),busy=!!current,locked=info.level<minLevel;
+ const canBuy=!have&&!busy&&!locked&&save.total>=50;
+ const text=have?'✅ Hatched':current?.id===id?'🥚 Hatching now':busy?'🥚 Finish your current egg':locked?`⭐ Unlock at level ${minLevel}`:save.total<50?'💎 Need 50 gems':'💎 Buy egg · 50';
+ return `<article class="egg-card ${have?'is-hatched':''}"><div class="egg-illustration" style="--egg-colour:${colour}"><span class="egg-shell ${id==='starlight'?'sparkly-egg':''}">${id==='starlight'?'✨':'★'}</span></div><h3>${label}</h3><p>${id==='starlight'?'Rare sparkly kitten · 18 wins':'Colourful kitten · 12 wins'}</p><button type="button" data-buy-egg="${id}" ${!canBuy?'disabled':''}>${text}</button></article>`;
+ }).join('');
+ if(!current){hatchBox.innerHTML='<div class="empty-nursery">🥚 Choose a 50-gem egg above. Finish games to help it hatch!</div>'}
+ else{const pet=petTypes.find(t=>t[0]===current.id);const need=pet[4],pct=Math.min(100,current.progress/need*100);hatchBox.innerHTML=`<div class="egg-progress-card"><div class="big-egg" style="--egg-colour:${pet[2]}">🥚</div><div><b>${pet[1]} is growing!</b><p>${current.progress} of ${need} completed games. Only finished challenges count — not repeated button taps.</p><div class="hatch-track" role="progressbar" aria-label="Egg hatching progress" aria-valuenow="${current.progress}" aria-valuemin="0" aria-valuemax="${need}"><span style="width:${pct}%"></span></div><button type="button" class="small-outline" data-goto-nursery-games="true">🎮 Play a game to help it hatch</button></div></div>`;}
+ collection.innerHTML=petTypes.map(([id,label,colour,emoji,need])=>{const found=save.eggsHatched.includes(id),active=save.activeKitten===id;return `<button type="button" class="kitten-card ${found?'owned':''} ${active?'selected':''}" data-pick-kitten="${id}" ${!found?'disabled':''}>${found?littleKittenSVG(colour,id==='starlight'):'<span class="kitten-mystery">❔</span>'}<b>${label}</b><small>${active?'💖 Following Mimi':found?'🐾 Tap to follow':'🔒 In an egg'}</small></button>`}).join('');
+ const extras=$('nursery-extras');if(extras)extras.innerHTML=`<div class="nursery-feature">🎁 <b>Star Toy Box</b> — ${save.unlocked.includes('startoy')?'Unlocked! Tap it on Home to play.':'18 gems in the Magic Shop'}</div><div class="nursery-feature">🦜 <b>Pirate Parrot</b> — ${save.unlocked.includes('parrot')?'Your parrot can perch by Mimi.':'35 gems in the Magic Shop'}</div>`;
+}
+function buyEgg(id){const pet=petTypes.find(t=>t[0]===id);if(!pet)return;
+ if(save.incubating){toast('🥚 Hatch your current egg first!');return;}
+ if(save.eggsHatched.includes(id)){toast('💖 You already have this kitten!');return;}
+ if(levelInfo().level<pet[5]){toast(`⭐ Level ${pet[5]} needed for this egg.`);return;}
+ if(save.total<50){toast(`💎 You need ${50-save.total} more gems.`);return;}
+ save.total-=50;save.incubating={id,progress:0};store();updateGemUI();renderShop();renderNursery();confetti(20);chirp([550,770,950],.1);toast(`🥚 ${pet[1]} egg bought! Complete ${pet[4]} games to hatch it.`);
+}
+function completeQualifiedChallenge(gameId){
+ // Only real end-of-round results call this function, never raw taps or generic gem rewards.
+ save.completedChallenges++;
+ if(save.incubating){const pet=petTypes.find(t=>t[0]===save.incubating.id);save.incubating.progress++;
+  if(save.incubating.progress>=pet[4]){save.eggsHatched.push(pet[0]);save.activeKitten=pet[0];save.incubating=null;confetti(55);chirp([500,660,800,990,1200],.13);toast(`🎉 ${pet[1]} hatched! Your new kitten follows Mimi!`);}else{toast(`🥚 Hatch progress ${save.incubating.progress}/${pet[4]} · Great game!`);}}
+ store();updateGemUI();renderNursery();renderCompanions();
+}
+
+function showPage(id){if(!['home','nursery','rooms','wardrobe','play','voices','gems','shop'].includes(id))return;
  if(page==='home' && id!=='home' && (recState==='recording'||recState==='requesting'||recState==='processing'))cancelRecording();
  if(page==='home' && id!=='home' && recState==='playing')stopPlayback();
- page=id;if(id==='shop')renderShop();if(id==='voices')$('voice-replay').hidden=!(lastBuffer||lastBlob);if(id==='rooms')renderRooms();all('.page').forEach(p=>{const yes=p.id===`page-${id}`;p.hidden=!yes;p.classList.toggle('active',yes)});all('[data-page]').forEach(b=>{b.classList.toggle('selected',b.dataset.page===id);b.setAttribute('aria-selected',String(b.dataset.page===id));});if(id!=='play')closeActivity();window.scrollTo({top:0,behavior:'auto'});}
+ page=id;if(id==='shop')renderShop();if(id==='voices')$('voice-replay').hidden=!(lastBuffer||lastBlob);if(id==='rooms')renderRooms();if(id==='nursery')renderNursery();all('.page').forEach(p=>{const yes=p.id===`page-${id}`;p.hidden=!yes;p.classList.toggle('active',yes)});all('[data-page]').forEach(b=>{b.classList.toggle('selected',b.dataset.page===id);b.setAttribute('aria-selected',String(b.dataset.page===id));});if(id!=='play')closeActivity();window.scrollTo({top:0,behavior:'auto'});}
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
 let ctx=null;
 async function getContext(){if(!AudioCtx)throw new Error('Web Audio is not available.');if(!ctx)ctx=new AudioCtx();if(ctx.state==='suspended')await ctx.resume();return ctx;}
@@ -432,38 +496,86 @@ function renderRooms(){
 }
 function setRoom(id){if(!rooms.some(r=>r[0]===id))return;save.room=id;store();updateGemUI();renderRooms();toast(`${currentRoom()[2]} ${currentRoom()[1]} selected!`);}
 let extraGameIntervals=[];
-function closeActivity(){if(activeTimer){clearInterval(activeTimer);clearTimeout(activeTimer);activeTimer=0}extraGameIntervals.forEach(clearInterval);extraGameIntervals=[];activity='';$('activity').hidden=true}
+function closeActivity(){if(activeTimer){clearInterval(activeTimer);clearTimeout(activeTimer);activeTimer=0}extraGameIntervals.forEach(x=>{if(typeof x==='object'&&x?.rhythmCleanup)x.rhythmCleanup();else {clearInterval(x);clearTimeout(x)}});extraGameIntervals=[];activity='';$('activity').hidden=true}
 function openActivity(id){closeActivity();const g=games.find(x=>x[0]===id);if(!g)return;activity=id;showPage('play');$('activity').hidden=false;$('activity-title').textContent=`${g[2]} ${g[1]}`;$('activity-info').textContent=g[3];renderActivity();$('activity').scrollIntoView({behavior:'smooth',block:'start'});}
 function awardActivity(n,text='Brilliant!'){reward(n);confetti(18);chirp([523,659,784,1000],.13);if(text)toast(text+` +${n} 💎`);}
 function renderActivity(){const body=$('activity-body');body.innerHTML='';if(activity==='stars')startStars();if(activity==='gifts')startGifts();if(activity==='feed')startFeed();if(activity==='dance')startPartyGame();if(activity==='garden')startGarden();if(activity==='colours')startColours();if(activity==='dare')startDare();if(activity==='hunt')startHunt();if(activity==='bubbles')startBubbles();if(activity==='memory')startMemory();if(activity==='music')startMusic();if(activity==='cookies')startCookies()}
 function startStars(){let score=0,time=15;const body=$('activity-body');body.innerHTML='<div class="game-status"><span>⭐ <b id="star-score">0</b></span><span>⏱️ <b id="star-clock">15</b>s</span></div><div class="star-field" id="star-field"><button type="button" class="star-target" id="star-target">⭐</button></div><p class="activity-note">Tap the star before it moves!</p>';
  const target=$('star-target'),field=$('star-field');function move(){const maxX=Math.max(1,field.clientWidth-82),maxY=Math.max(1,field.clientHeight-80);target.style.left=Math.floor(Math.random()*maxX)+'px';target.style.top=Math.floor(Math.random()*maxY)+'px';target.textContent=['⭐','🌟','💖','✨'][Math.floor(Math.random()*4)]}move();target.onclick=()=>{if(activity!=='stars'||time<=0)return;score++;$('star-score').textContent=score;move();chirp([610+(score%5)*85],.065);if(score%4===0)confetti(5)};
- activeTimer=setInterval(()=>{if(activity!=='stars')return;time--;$('star-clock').textContent=time;if(time<=0){clearInterval(activeTimer);activeTimer=0;body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🌟</div><h2>You popped ${score} stars!</h2><p>You're a superstar!</p><button class="game-again" id="again-stars">Play again</button></div>`;awardActivity(Math.max(1,Math.min(10,Math.ceil(score/3))),'Star power!');$('again-stars').onclick=startStars;}},1000);
+ activeTimer=setInterval(()=>{if(activity!=='stars')return;time--;$('star-clock').textContent=time;if(time<=0){clearInterval(activeTimer);activeTimer=0;body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🌟</div><h2>You popped ${score} stars!</h2><p>You're a superstar!</p><button class="game-again" id="again-stars">Play again</button></div>`;if(score>=4)awardActivity(Math.max(1,Math.min(10,Math.ceil(score/3))),'Star power!');if(score>=4)completeQualifiedChallenge('stars');$('again-stars').onclick=startStars;}},1000);
 }
 function startGifts(){let answer=Math.floor(Math.random()*3),opened=false;const body=$('activity-body');body.innerHTML='<div class="choice-grid">'+[0,1,2].map(i=>`<button data-gift="${i}" type="button">🎁</button>`).join('')+'</div><p class="activity-msg" id="gift-msg">Which present has the star?</p><div class="game-action"><button class="game-again" id="again-gifts">New presents 🔀</button></div>';
- all('[data-gift]').forEach(b=>b.onclick=()=>{if(opened)return;opened=true;const win=Number(b.dataset.gift)===answer;all('[data-gift]').forEach(k=>{const i=Number(k.dataset.gift);k.textContent=i===answer?'🌟':i===Number(b.dataset.gift)?'🐸':'🎁';k.disabled=true});$('gift-msg').textContent=win?'Hooray! You found it! 🌟':'Ribbit! A funny frog! 🐸';reward(win?3:1);confetti(win?18:6);chirp([520,690,840]);});$('again-gifts').onclick=startGifts;
+ all('[data-gift]').forEach(b=>b.onclick=()=>{if(opened)return;opened=true;const win=Number(b.dataset.gift)===answer;all('[data-gift]').forEach(k=>{const i=Number(k.dataset.gift);k.textContent=i===answer?'🌟':i===Number(b.dataset.gift)?'🐸':'🎁';k.disabled=true});$('gift-msg').textContent=win?'Hooray! You found it! 🌟':'Ribbit! A funny frog! 🐸';if(win)reward(3);confetti(win?18:6);chirp([520,690,840]);});$('again-gifts').onclick=startGifts;
 }
-function startFeed(){const foods=[['🐟','Fish','Mmm, yummy fish!'],['🍓','Berry','Sweet strawberries!'],['🥦','Broccoli','Crunch crunch!'],['🧁','Cupcake','Sprinkles everywhere!'],['🍕','Pizza','Cheesy meow!'],['🍉','Melon','Slurp slurp!']];const b=$('activity-body');b.innerHTML='<div class="choice-grid">'+foods.map(([e,n])=>`<button type="button" data-feed="${e}" aria-label="Feed Mimi ${n}">${e}</button>`).join('')+'</div><p id="feed-msg" class="activity-msg">What does Mimi want?</p>';
- all('[data-feed]').forEach(btn=>btn.onclick=()=>{const f=foods.find(a=>a[0]===btn.dataset.feed);$('feed-msg').textContent=`${f[0]} ${f[2]}`;happy(f[2]);reward(1);});}
-function startPartyGame(){const b=$('activity-body');let beats=0;b.innerHTML='<div class="game-board" style="text-align:center"><div style="font-size:85px" id="party-emoji">🪩</div><h2>Tap for a dance move!</h2><p>Every 5 moves earns some gems.</p><button type="button" id="dance-move" class="game-again">💃 Dance!</button><p id="dance-count" class="activity-note">0 moves</p></div>';
- $('dance-move').onclick=()=>{beats++;$('dance-emoji');$('party-emoji').textContent=['💃','🕺','🐈','🪩','🎉'][beats%5];$('dance-count').textContent=`${beats} moves`;chirp([480+(beats%5)*95,700],.08);if(beats%5===0){confetti(25);reward(3)}};}
-function startGarden(){const b=$('activity-body');let growth=0;b.innerHTML='<div class="game-board" style="text-align:center"><div class="flowers" id="garden-flower">🌱</div><p id="garden-msg">Water the little seed!</p><button type="button" id="water" class="game-again">💧 Water!</button></div>';
- $('water').onclick=()=>{growth++;$('garden-flower').textContent=['🌱','🌿','🌷','🌸','🌻'][Math.min(growth,4)];$('garden-msg').textContent=growth>=4?'A gorgeous flower! 🌼':'Keep watering! 💦';chirp([650,760,870]);if(growth>=4){reward(3);growth=0;setTimeout(()=>{if(activity==='garden'){$('garden-flower').textContent='🌱';$('garden-msg').textContent='Another flower?';}},850)}};}
-function startColours(){const b=$('activity-body'),colors=[['red','#ef6b85','❤️'],['blue','#5ca6ea','💙'],['green','#74c4a1','💚'],['yellow','#f4ca54','💛'],['purple','#a282e3','💜'],['orange','#f5a065','🧡']];let correct='';function round(){const choices=colors.slice().sort(()=>Math.random()-.5).slice(0,3);correct=choices[Math.floor(Math.random()*3)][0];b.innerHTML=`<div class="game-board" style="text-align:center"><h2>Find the colour: ${correct.toUpperCase()}!</h2><div class="game-action">${choices.map(([name,col])=>`<button type="button" class="colour-guess" style="background:${col}" data-guess="${name}" aria-label="${name}"></button>`).join('')}</div><p id="colour-msg" class="activity-msg">Which one is it?</p></div>`;all('[data-guess]').forEach(btn=>btn.onclick=()=>{if(btn.dataset.guess===correct){reward(2);chirp([680,830,1030]);$('colour-msg').textContent='Amazing! ✨ Next one!';setTimeout(()=>{if(activity==='colours')round()},650)}else{$('colour-msg').textContent='Try another one! 💕';chirp([420,370]);}})}round()}
+function startFeed(){
+ const foods=[['🐟','Fish'],['🍓','Strawberry'],['🥦','Broccoli'],['🧁','Cupcake'],['🍕','Pizza'],['🍉','Watermelon']];
+ const b=$('activity-body');let done=0,last=0,doneRound=false,target=null;
+ b.innerHTML='<div class="game-board" style="text-align:center"><h2>🍓 Feed Mimi the right treats!</h2><p>Mimi will ask for three different foods.</p><h2 id="food-request"></h2><div class="choice-grid">'+foods.map(([e,n])=>`<button type="button" data-feed="${e}" aria-label="Give ${n}">${e}</button>`).join('')+'</div><p id="feed-msg" class="activity-msg">Help Mimi choose!</p><button class="game-again" id="feed-again" hidden>🍕 Another meal!</button></div>';
+ const pick=()=>{target=foods[Math.floor(Math.random()*foods.length)];$('food-request').textContent=`Mimi wants ${target[0]} ${target[1]}!`};pick();
+ all('[data-feed]').forEach(btn=>btn.onclick=()=>{if(doneRound||performance.now()-last<700)return;last=performance.now();if(btn.dataset.feed!==target[0]){$('feed-msg').textContent='Not that snack! Look at what Mimi asked for. 💖';chirp([340,290]);return;}
+ done++;chirp([560,810],.09);if(done===3){doneRound=true;all('[data-feed]').forEach(el=>el.disabled=true);awardActivity(3,'Happy snack time!');$('feed-msg').textContent='🎉 Three yummy treats! +3 gems';$('food-request').textContent='😻 Mimi is full!';$('feed-again').hidden=false;return;}
+ $('feed-msg').textContent=`Great choice! ${done}/3 treats`;pick();});$('feed-again').onclick=startFeed;
+}
+function startPartyGame(){
+ const body=$('activity-body'), arrows=['⬅️','⬆️','⬇️','➡️'];
+ const steps=Array.from({length:7},()=>Math.floor(Math.random()*4));
+ let beat=-1,correct=0,misses=0,finished=false,answered=false,beatTimeout=0;
+ body.innerHTML=`<div class="game-board rhythm-board"><div class="game-status"><span>🎯 <b id="rhythm-points">0</b> / 7</span><span>🎵 Beat <b id="rhythm-beat">0</b> / 7</span></div><h2>Follow Mimi's dance!</h2><p id="rhythm-hint">Watch the arrow. Tap the matching arrow before the next beat.</p><div class="dance-signal" id="dance-signal">🪩</div><div class="rhythm-pad">${arrows.map((x,i)=>`<button type="button" data-dance-arrow="${i}" disabled>${x}</button>`).join('')}</div><p class="activity-msg" id="rhythm-result">Ready for 7 beats?</p><button type="button" id="rhythm-start" class="game-again">▶ Start dance!</button></div>`;
+ const buttons=all('[data-dance-arrow]'),clock=()=>performance.now();let startedAt=0;
+ function finish(){if(finished)return;finished=true;buttons.forEach(b=>b.disabled=true);clearTimeout(beatTimeout);$('dance-signal').textContent=correct>=5?'🌟':'💜';$('rhythm-start').textContent='🔁 Try a new dance';$('rhythm-start').hidden=false;
+   if(correct>=5&&clock()-startedAt>=5000){const score=correct===7?6:4;awardActivity(score,'Dance complete!');completeQualifiedChallenge('dance');$('rhythm-result').textContent=`Wonderful! ${correct}/7 right. +${score} gems!`;}
+   else{$('rhythm-result').textContent=`${correct}/7 right. Get 5 to win gems — try again!`;chirp([340,300]);}}
+ function next(){if(finished)return;beat++;answered=false;if(beat>=steps.length){finish();return;}
+   $('rhythm-beat').textContent=beat+1;$('dance-signal').textContent=arrows[steps[beat]];$('rhythm-result').textContent='Tap the matching arrow!';buttons.forEach(b=>b.disabled=false);
+   chirp([480+beat*70],.06);beatTimeout=setTimeout(()=>{if(!answered){misses++;$('rhythm-result').textContent='Missed it! Keep dancing!';}next();},1150);
+ }
+ buttons.forEach(btn=>btn.onclick=()=>{if(answered||finished||beat<0)return;answered=true;buttons.forEach(b=>b.disabled=true);if(Number(btn.dataset.danceArrow)===steps[beat]){correct++;$('rhythm-points').textContent=correct;$('rhythm-result').textContent='✨ Great move!';chirp([670,840],.06);}else{$('rhythm-result').textContent='Oops, wrong arrow!';chirp([330],.08);} });
+ $('rhythm-start').onclick=()=>{if(beat>=0){closeActivity();openActivity('dance');return;}startedAt=clock();$('rhythm-start').hidden=true;next();};
+ // Beat timeout is cleared when the game is replaced or closed.
+ extraGameIntervals.push({rhythmCleanup:()=>{finished=true;clearTimeout(beatTimeout);}});
+}
+function startGarden(){
+ const body=$('activity-body');const steps=[['seed','🌰','Plant a seed','First, put a seed in the soil.'],['water','💧','Add water','Seeds need a drink to wake up.'],['sun','☀️','Give sunshine','Warm sunshine helps the sprout grow.'],['magic','✨','Add fairy magic','A pinch of magic makes the flower bloom.']];
+ let step=0,errors=0,completed=false,lastTap=0,begin=performance.now();
+ const scenes=['🪴','🌱','🌿','🌷','🌻'];
+ body.innerHTML=`<div class="game-board grow-puzzle"><div class="garden-top"><span class="garden-plant" id="garden-plant">🪴</span><div><h2>Grow a magic flower!</h2><p>Read the clue, then pick the right item in order.</p><b id="garden-step">Step 1 of 4</b></div></div><div id="garden-clue" class="garden-clue">${steps[0][3]}</div><div class="garden-choices">${steps.slice().reverse().map(([id,emoji,label])=>`<button type="button" data-garden-choice="${id}">${emoji}<small>${label}</small></button>`).join('')}</div><p class="activity-msg" id="garden-feedback">Grow your flower, one step at a time!</p><button type="button" class="game-again" id="garden-again" hidden>🌸 Grow another flower</button></div>`;
+ all('[data-garden-choice]').forEach(btn=>btn.onclick=()=>{if(completed)return;const now=performance.now();if(now-lastTap<850)return;lastTap=now;const correct=btn.dataset.gardenChoice===steps[step][0];
+   if(!correct){errors++;$('garden-feedback').textContent='Not yet! Read the clue and try a different item.';chirp([350,290],.08);return;}
+   step++;$('garden-plant').textContent=scenes[step];chirp([570+step*80,720+step*80],.075);
+   if(step<4){$('garden-step').textContent=`Step ${step+1} of 4`;$('garden-clue').textContent=steps[step][3];$('garden-feedback').textContent='Great! What comes next?';return;}
+   completed=true;all('[data-garden-choice]').forEach(el=>el.disabled=true);$('garden-step').textContent='Flower finished!';$('garden-clue').textContent='🌻 Your flower is blooming!';$('garden-again').hidden=false;
+   if(performance.now()-begin>=2550){const n=errors===0?5:3;awardActivity(n,'Garden puzzle complete!');completeQualifiedChallenge('garden');$('garden-feedback').textContent=`✨ Flower grown! +${n} gems, +1 egg progress.`;}
+   else {$('garden-feedback').textContent='🌻 Flower finished! Next time, go a little slower to earn gems.';}
+ });$('garden-again').onclick=startGarden;
+}
+
+function startColours(){
+ const b=$('activity-body'),colors=[['red','#ef6b85','❤️'],['blue','#5ca6ea','💙'],['green','#74c4a1','💚'],['yellow','#f4ca54','💛'],['purple','#a282e3','💜'],['orange','#f5a065','🧡']];let correct='',wins=0,last=0;
+ function round(){const choices=colors.slice().sort(()=>Math.random()-.5).slice(0,3);correct=choices[Math.floor(Math.random()*3)][0];b.innerHTML=`<div class="game-board" style="text-align:center"><h2>Find the colour: ${correct.toUpperCase()}!</h2><p>${wins} of 4 correct</p><div class="game-action">${choices.map(([name,col])=>`<button type="button" class="colour-guess" style="background:${col}" data-guess="${name}" aria-label="${name}"></button>`).join('')}</div><p id="colour-msg" class="activity-msg">Which one is it?</p></div>`;
+ all('[data-guess]').forEach(btn=>btn.onclick=()=>{if(performance.now()-last<450)return;last=performance.now();if(btn.dataset.guess===correct){wins++;chirp([680,830,1030]);if(wins>=4){awardActivity(4,'Colour puzzle solved!');b.innerHTML='<div class="game-board" style="text-align:center"><div style="font-size:65px">🌈</div><h2>You found all the colours!</h2><button class="game-again" id="again-colours">Play again</button></div>';$('again-colours').onclick=startColours;return;}$('colour-msg').textContent='Amazing! ✨ Next one!';setTimeout(()=>{if(activity==='colours')round()},650)}else{$('colour-msg').textContent='Try another one! 💕';chirp([420,370]);}})}round();
+}
+
 const dares=['Say “SILLY SAUSAGES!” 🌭','Roar like a TINY dinosaur! 🦖','Make the funniest alien sound! 👽','Sing one line of a silly song! 🎶','Say “banana pyjamas”! 🍌','Pretend you are a dancing potato! 🥔','Meow like a kitten! 🐱','Do your best robot noise! 🤖','Whisper “Mimi is amazing!” 🌟'];
-function startDare(){const b=$('activity-body');let last=-1;b.innerHTML='<div class="game-board" style="text-align:center"><div style="font-size:58px">🎲</div><h2 id="dare-text">Ready for a silly dare?</h2><p>No need to record unless you want to!</p><button class="game-again" id="dare-go">Give me a dare!</button></div>';const go=()=>{let n=Math.floor(Math.random()*dares.length);if(n===last)n=(n+1)%dares.length;last=n;$('dare-text').textContent=dares[n];reward(1);chirp([660,820],.1)};$('dare-go').onclick=go;go()}
+function startDare(){const b=$('activity-body');let last=-1;b.innerHTML='<div class="game-board" style="text-align:center"><div style="font-size:58px">🎲</div><h2 id="dare-text">Ready for a silly dare?</h2><p>No need to record unless you want to!</p><button class="game-again" id="dare-go">Give me a dare!</button></div>';const go=()=>{let n=Math.floor(Math.random()*dares.length);if(n===last)n=(n+1)%dares.length;last=n;$('dare-text').textContent=dares[n];chirp([660,820],.1)};$('dare-go').onclick=go;go()}
 function startHunt(){let found=0;const goal=6,b=$('activity-body');const chosen=[...Array(12).keys()].sort(()=>Math.random()-.5).slice(0,goal);b.innerHTML='<p class="activity-note">Tap the tiles to find 6 hidden gems! ✨</p><div class="hunt-grid">'+[...Array(12)].map((_,i)=>`<button type="button" class="hunt-tile" data-hunt="${i}" aria-label="Open tile ${i+1}">❔</button>`).join('')+'</div><p class="activity-msg" id="hunt-progress">0 of 6 gems</p><div class="game-action"><button class="game-again" id="hunt-again">Shuffle 🪄</button></div>';
- all('[data-hunt]').forEach(tile=>tile.onclick=()=>{if(tile.disabled)return;tile.disabled=true;if(chosen.includes(Number(tile.dataset.hunt))){tile.textContent='💎';tile.classList.add('found');found++;chirp([650,930]);$('hunt-progress').textContent=`${found} of ${goal} gems`;if(found===goal){$('hunt-progress').textContent='You found them ALL! 🎉';reward(6);confetti(33)}}else{tile.textContent='🌼';chirp([420],.07)}});$('hunt-again').onclick=startHunt;
+ all('[data-hunt]').forEach(tile=>tile.onclick=()=>{if(tile.disabled)return;tile.disabled=true;if(chosen.includes(Number(tile.dataset.hunt))){tile.textContent='💎';tile.classList.add('found');found++;chirp([650,930]);$('hunt-progress').textContent=`${found} of ${goal} gems`;if(found===goal){$('hunt-progress').textContent='You found them ALL! 🎉';reward(6);completeQualifiedChallenge('hunt');confetti(33)}}else{tile.textContent='🌼';chirp([420],.07)}});$('hunt-again').onclick=startHunt;
 }
 
 function startBubbles(){let score=0,time=18;const body=$('activity-body');body.innerHTML='<div class="game-status"><span>🫧 <b id="bubble-score">0</b></span><span>⏱️ <b id="bubble-clock">18</b>s</span></div><div class="star-field" id="bubble-field"></div><p class="activity-note">Pop as many bubbles as you can!</p>';
- const field=$('bubble-field'); function addBubble(){if(activity!=='bubbles')return;const b=document.createElement('button');b.type='button';b.className='star-target';b.textContent=['🫧','💖','✨'][Math.floor(Math.random()*3)];b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px';b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px';b.onclick=()=>{score++;$('bubble-score').textContent=score;chirp([640+(score%4)*70],.05);b.remove();};field.append(b);setTimeout(()=>b.remove(),1400);} const spawner=setInterval(()=>{addBubble();addBubble();},700);extraGameIntervals.push(spawner); activeTimer=setInterval(()=>{time--; $('bubble-clock').textContent=time; if(time<=0){clearInterval(spawner); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🫧</div><h2>You popped ${score} bubbles!</h2><button class="game-again" id="again-bubbles">Play again</button></div>`; awardActivity(Math.max(2,Math.ceil(score/4)),'Bubble burst!'); $('again-bubbles').onclick=startBubbles;}},1000); addBubble();}
-function startMemory(){const icons=['🐱','💖','🌈','⭐','🎀','🎄'];const deck=[...icons,...icons].sort(()=>Math.random()-.5);let first=null, lock=false, matches=0;const body=$('activity-body');body.innerHTML='<p class="activity-note">Match all the pairs!</p><div class="hunt-grid">'+deck.map((icon,i)=>`<button type="button" class="hunt-tile" data-memory="${i}" aria-label="Card ${i+1}">❔</button>`).join('')+'</div><p class="activity-msg" id="memory-msg">Pick a card!</p>'; all('[data-memory]').forEach(btn=>btn.onclick=()=>{if(lock||btn.disabled)return; const idx=Number(btn.dataset.memory); btn.textContent=deck[idx]; if(first===null){first=btn; return;} if(first===btn)return; lock=true; if(first.textContent===btn.textContent){ first.disabled=btn.disabled=true; matches++; $('memory-msg').textContent='Match found! ✨'; reward(2,2); lock=false; first=null; if(matches===icons.length){ confetti(28); $('memory-msg').textContent='You matched them all!'; }} else { $('memory-msg').textContent='Oops! Try again!'; setTimeout(()=>{if(activity!=='memory'||!first)return;first.textContent='❔'; btn.textContent='❔'; lock=false; first=null;},650); }});}
-function startMusic(){const body=$('activity-body'); const notes=[['🎵',440],['🎶',554],['🥁',220],['🎹',660],['🪇',770],['🔔',880]]; let taps=0; body.innerHTML='<div class="game-board" style="text-align:center"><h2>Make a tune for Mimi!</h2><div class="choice-grid">'+notes.map(([e,f],i)=>`<button type="button" data-note="${f}">${e}</button>`).join('')+'</div><p id="music-msg" class="activity-msg">Tap 6 sounds to win gems!</p></div>'; all('[data-note]').forEach(btn=>btn.onclick=()=>{taps++; chirp([Number(btn.dataset.note), Number(btn.dataset.note)+110],.07); $('music-msg').textContent=`${taps} sounds played`; if(taps>0 && taps%6===0){awardActivity(3,'Music magic!')}});}
-function startCookies(){let caught=0,time=18;const body=$('activity-body'); body.innerHTML='<div class="game-status"><span>🍪 <b id="cookie-score">0</b></span><span>⏱️ <b id="cookie-clock">18</b>s</span></div><div class="star-field" id="cookie-field"></div><p class="activity-note">Tap the cookies before they disappear!</p>'; const field=$('cookie-field'); function drop(){if(activity!=='cookies')return; const b=document.createElement('button'); b.type='button'; b.className='star-target'; b.textContent=['🍪','🧁','🍓'][Math.floor(Math.random()*3)]; b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px'; b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px'; b.onclick=()=>{caught++; $('cookie-score').textContent=caught; chirp([520,700],.06); b.remove();}; field.append(b); setTimeout(()=>{if(b.isConnected)b.remove();},1300);} const rain=setInterval(drop,600);extraGameIntervals.push(rain); activeTimer=setInterval(()=>{time--; $('cookie-clock').textContent=time; if(time<=0){clearInterval(rain); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🍪</div><h2>You caught ${caught} treats!</h2><button class="game-again" id="again-cookies">Play again</button></div>`; awardActivity(Math.max(1,Math.ceil(caught/3)),'Treat time!'); $('again-cookies').onclick=startCookies;}},1000); drop();}
+ const field=$('bubble-field'); function addBubble(){if(activity!=='bubbles')return;const b=document.createElement('button');b.type='button';b.className='star-target';b.textContent=['🫧','💖','✨'][Math.floor(Math.random()*3)];b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px';b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px';b.onclick=()=>{score++;$('bubble-score').textContent=score;chirp([640+(score%4)*70],.05);b.remove();};field.append(b);setTimeout(()=>b.remove(),1400);} const spawner=setInterval(()=>{addBubble();addBubble();},700);extraGameIntervals.push(spawner); activeTimer=setInterval(()=>{time--; $('bubble-clock').textContent=time; if(time<=0){clearInterval(spawner); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🫧</div><h2>You popped ${score} bubbles!</h2><button class="game-again" id="again-bubbles">Play again</button></div>`; awardActivity(Math.max(2,Math.ceil(score/4)),'Bubble burst!');if(score>=5)completeQualifiedChallenge('bubbles'); $('again-bubbles').onclick=startBubbles;}},1000); addBubble();}
+function startMemory(){const icons=['🐱','💖','🌈','⭐','🎀','🎄'];const deck=[...icons,...icons].sort(()=>Math.random()-.5);let first=null, lock=false, matches=0;const body=$('activity-body');body.innerHTML='<p class="activity-note">Match all the pairs!</p><div class="hunt-grid">'+deck.map((icon,i)=>`<button type="button" class="hunt-tile" data-memory="${i}" aria-label="Card ${i+1}">❔</button>`).join('')+'</div><p class="activity-msg" id="memory-msg">Pick a card!</p>'; all('[data-memory]').forEach(btn=>btn.onclick=()=>{if(lock||btn.disabled)return; const idx=Number(btn.dataset.memory); btn.textContent=deck[idx]; if(first===null){first=btn; return;} if(first===btn)return; lock=true; if(first.textContent===btn.textContent){ first.disabled=btn.disabled=true; matches++; $('memory-msg').textContent='Match found! ✨'; reward(2,2); lock=false; first=null; if(matches===icons.length){completeQualifiedChallenge('memory'); confetti(28); $('memory-msg').textContent='You matched them all!'; }} else { $('memory-msg').textContent='Oops! Try again!'; setTimeout(()=>{if(activity!=='memory'||!first)return;first.textContent='❔'; btn.textContent='❔'; lock=false; first=null;},650); }});}
+function startMusic(){const body=$('activity-body'); const notes=[['🎵',440],['🎶',554],['🥁',220],['🎹',660]]; const seq=Array.from({length:4},()=>Math.floor(Math.random()*4));let cursor=0,playingDemo=false,completed=false;
+ body.innerHTML='<div class="game-board" style="text-align:center"><h2>🎹 Copy the music!</h2><p>Listen to four notes, then tap them in the same order.</p><div class="choice-grid">'+notes.map(([emoji,f],i)=>`<button type="button" data-music="${i}">${emoji}</button>`).join('')+'</div><button type="button" id="music-demo" class="game-again">🔊 Hear the pattern</button><p id="music-msg" class="activity-msg">Listen, then copy the notes!</p></div>';
+ $('music-demo').onclick=async()=>{if(playingDemo||completed)return;playingDemo=true;$('music-demo').disabled=true;for(let i=0;i<seq.length;i++){if(activity!=='music')break;chirp([notes[seq[i]][1]],.2);await new Promise(resolve=>setTimeout(resolve,560));}playingDemo=false;$('music-demo').disabled=false;};
+ all('[data-music]').forEach(btn=>btn.onclick=()=>{if(playingDemo||completed)return;const choice=Number(btn.dataset.music);chirp([notes[choice][1]],.1);if(choice===seq[cursor]){cursor++;$('music-msg').textContent=`Good! ${cursor}/4 notes`;if(cursor===4){completed=true;awardActivity(4,'Musical memory complete!');$('music-msg').textContent='⭐ Lovely song! +4 gems';$('music-demo').textContent='🔁 Play again';$('music-demo').disabled=false;$('music-demo').onclick=startMusic;}}else{cursor=0;$('music-msg').textContent='Not quite — start from the first note and listen again!';}});
+}
+function startCookies(){let caught=0,time=18;const body=$('activity-body'); body.innerHTML='<div class="game-status"><span>🍪 <b id="cookie-score">0</b></span><span>⏱️ <b id="cookie-clock">18</b>s</span></div><div class="star-field" id="cookie-field"></div><p class="activity-note">Tap the cookies before they disappear!</p>'; const field=$('cookie-field'); function drop(){if(activity!=='cookies')return; const b=document.createElement('button'); b.type='button'; b.className='star-target'; b.textContent=['🍪','🧁','🍓'][Math.floor(Math.random()*3)]; b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px'; b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px'; b.onclick=()=>{caught++; $('cookie-score').textContent=caught; chirp([520,700],.06); b.remove();}; field.append(b); setTimeout(()=>{if(b.isConnected)b.remove();},1300);} const rain=setInterval(drop,600);extraGameIntervals.push(rain); activeTimer=setInterval(()=>{time--; $('cookie-clock').textContent=time; if(time<=0){clearInterval(rain); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🍪</div><h2>You caught ${caught} treats!</h2><button class="game-again" id="again-cookies">Play again</button></div>`; awardActivity(Math.max(1,Math.ceil(caught/3)),'Treat time!');if(caught>=4)completeQualifiedChallenge('cookies'); $('again-cookies').onclick=startCookies;}},1000); drop();}
 // Event wiring is done after every required element exists: a missing optional element cannot block other buttons.
 all('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 all('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
+$('egg-shop').addEventListener('click',e=>{const b=e.target.closest('[data-buy-egg]');if(b)buyEgg(b.dataset.buyEgg)});
+$('kitten-collection').addEventListener('click',e=>{const b=e.target.closest('[data-pick-kitten]');if(!b||!save.eggsHatched.includes(b.dataset.pickKitten))return;save.activeKitten=save.activeKitten===b.dataset.pickKitten?'none':b.dataset.pickKitten;store();renderNursery();renderCompanions();toast(save.activeKitten==='none'?'🐱 Kitten is resting!':'🐾 Your kitten is following Mimi!');});
+$('incubation-area').addEventListener('click',e=>{if(e.target.closest('[data-goto-nursery-games]'))showPage('play')});
 $('gem-shortcut').onclick=()=>showPage('gems');$('gem-hunt').onclick=()=>{showPage('play');openActivity('hunt');};
 $('room-grid').addEventListener('click',e=>{const b=e.target.closest('[data-room]');if(b)setRoom(b.dataset.room)});
 $('room-actions').addEventListener('click',e=>{const g=e.target.closest('[data-room-game]'); if(g){showPage('play'); openActivity(g.dataset.roomGame); return;} if(e.target.closest('[data-room-home]')){showPage('home');}});
@@ -483,8 +595,8 @@ $('game-tiles').addEventListener('click',e=>{const b=e.target.closest('[data-gam
 recBtn.onclick=()=>{if(recState==='recording')endRecording();else if(recState==='idle')beginRecording()};replay.onclick=playLatest;
 $('fart').onclick=doFart;$('tickle').onclick=()=>catAction('tickle');$('boop').onclick=()=>catAction('boop');$('meme').onclick=()=>catAction('meme');$('home-dance').onclick=()=>catAction('dance');wrap.onclick=()=>catAction('tickle');wrap.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();catAction('tickle')}};
 $('sound-toggle').onclick=()=>{muted=!muted;$('sound-toggle').textContent=muted?'🔇 Effects off':'🔊 Effects on';$('sound-toggle').setAttribute('aria-pressed',String(!muted));if(!muted)chirp()};
-$('reset-save').onclick=()=>{if(!window.confirm('Grown-ups only: clear all saved gems and outfits on this device?'))return;save={...defaults,album:[],unlocked:[]};store();applyLook();renderWardrobe();renderVoice();renderSpeed();updateGemUI();renderShop();renderRooms();toast('Collection reset')};
+$('reset-save').onclick=()=>{if(!window.confirm('Grown-ups only: clear all saved gems and outfits on this device?'))return;save={...defaults,album:[],unlocked:[]};store();applyLook();renderWardrobe();renderVoice();renderSpeed();updateGemUI();renderShop();renderRooms();renderNursery();renderCompanions();toast('Collection reset')};
 window.addEventListener('pagehide',()=>{cancelRecording();discardVoice();stopDancing();closeActivity();if(ctx){ctx.close().catch(()=>{});ctx=null}});
-applyLook();renderWardrobe();renderVoice();renderSpeed();buildGameTiles();updateGemUI();renderShop();renderRooms();recordingLabel();
+applyLook();renderWardrobe();renderVoice();renderSpeed();buildGameTiles();updateGemUI();renderShop();renderRooms();renderNursery();renderCompanions();recordingLabel();
 if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
 })();

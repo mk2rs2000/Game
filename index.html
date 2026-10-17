@@ -3,12 +3,13 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#c5a7fa"><meta name="description" content="A private, colourful offline-friendly talking cat playhouse for little ones. No ads, no accounts, no uploads.">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Mimi Playhouse"><meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css?v=6.2">
-<title>Mimi's Magic Playhouse — Real Rooms V6.2</title></head><body>
+<link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css?v=7.0">
+<title>Mimi's Playhouse — Kitten Nursery & Puzzle Games V7</title></head><body>
 <div class="app-shell">
 <header class="topbar"><div class="brand"><span class="brand-icon">🐾</span><span>Mimi's <em>Magic</em><small>Playhouse</small></span></div><div class="top-actions"><div class="mini-level" aria-label="Current level">⭐ Lv <span id="level-count">1</span></div><button type="button" class="gem-balance" id="gem-shortcut" aria-label="View your gem collection">💎 <span id="gem-count">0</span></button><span class="privacy-pill">🔒 Private</span></div></header>
 <nav class="nav" role="tablist" aria-label="Playhouse pages">
 <button type="button" role="tab" aria-selected="true" class="nav-btn selected" data-page="home"><span>🏡</span>Home</button>
+<button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="nursery"><span>🥚</span>Nursery</button>
 <button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="wardrobe"><span>👗</span>Dress Up</button>
 <button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="rooms"><span>🏠</span>Rooms</button>
 <button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="play"><span>🎮</span>Games</button>
@@ -20,6 +21,7 @@
 <section class="page active" id="page-home" role="tabpanel" aria-label="Home">
  <div class="home-grid"><div class="stage-card room-dance" id="stage">
   <div class="room-backdrop" id="room-backdrop" aria-hidden="true"><img id="room-background-image" src="rooms/dance.svg" alt="" draggable="false"></div>
+  <div id="stage-companions" class="stage-companions" aria-live="off"></div>
   <div class="stage-sparkles" aria-hidden="true">✦ &nbsp; ⭐ &nbsp; ✨</div><h1>Hi, I'm Mimi! <span>💖</span></h1>
   <div id="bubble" class="speech-bubble" role="status" aria-live="polite">Tap the mic and say hello!</div>
   <div id="cat-wrap" class="cat-wrap" tabindex="0" role="button" aria-label="Tickle Mimi the cat"><svg class="cat" viewBox="0 0 420 420" role="img" aria-label="A smiling lavender cartoon kitten">
@@ -73,7 +75,7 @@
   <div class="timer-rail"><span id="progress" class="timer-fill"></span></div>
   <p class="hint" id="hint">She repeats your own voice. No AI, no uploads!</p>
  </div><div class="home-controls">
-  <div class="hello-card"><div class="level-card"><div><small>⭐ Current level</small><b id="level-title">Level 1</b><span id="level-copy">Play games with Mimi to unlock more shop items.</span></div><div class="xp-stack"><div class="xp-bar"><span id="xp-bar-fill"></span></div><small id="xp-copy">0 / 20 XP to level 2</small></div></div><div class="room-banner"><div><small>🏠 Current room</small><b id="current-room-name">Dance Room</b><span id="current-room-copy">A sparkly room full of disco fun.</span></div><button type="button" data-goto="rooms">Change room ➜</button></div><h2>🎙️ Let's have a chat!</h2><p>Mimi copies you in a silly voice!</p>
+  <div class="hello-card"><h2>🎙️ Let's have a chat!</h2><p>Mimi copies you in a silly voice!</p>
     <button id="record" type="button" class="primary-mic"><span id="mic-emoji">🎤</span><span><strong id="record-label">Tap to talk</strong><small id="record-detail">Tap again to hear Mimi</small></span></button>
     <button type="button" class="replay-btn" id="replay" hidden>🔊 Hear that again!</button>
     <div class="quick-voice" id="quick-voice" aria-label="Voice effect"></div>
@@ -82,15 +84,31 @@
       <div class="speed-presets"><button type="button" data-speed-preset="0.65">🐢 Slow</button><button type="button" data-speed-preset="1">🐱 Normal</button><button type="button" data-speed-preset="1.5">🐇 Fast</button></div>
     </div>
   </div>
+  <div class="home-progress">
+    <div class="level-card"><div><small>⭐ Current level</small><b id="level-title">Level 1</b><span id="level-copy">Play games with Mimi to unlock more shop items.</span></div><div class="xp-stack"><div class="xp-bar"><span id="xp-bar-fill"></span></div><small id="xp-copy">0 / 20 XP to level 2</small></div></div>
+    <div class="room-banner"><div><small>🏠 Current room</small><b id="current-room-name">Dance Room</b><span id="current-room-copy">A sparkly room full of disco fun.</span></div><button type="button" data-goto="rooms">Change room ➜</button></div>
+  </div>
   <div class="action-grid"><button type="button" id="meme" class="action-card gold"><span>🙌</span><b>SIX! SEVEN!</b><small>Dance &amp; giggle</small></button>
     <button type="button" id="tickle" class="action-card pink"><span>😹</span><b>Tickle!</b><small>Mimi laughs</small></button>
     <button type="button" id="boop" class="action-card aqua"><span>🐽</span><b>Boop!</b><small>Tap her nose</small></button>
     <button type="button" id="home-dance" class="action-card lilac"><span>🪩</span><b>Dance!</b><small>Disco kitty</small></button><button type="button" id="fart" class="action-card fart-card"><span>💨</span><b>Fart!</b><small>Silly kitty toots</small></button>
   </div>
+  <button type="button" class="explore-banner" data-goto="nursery">🥚 Visit the Kitten Nursery! Hatch colourful baby kittens for 50 gems <span>➜</span></button>
   <button type="button" class="explore-banner" data-goto="rooms">🏠 Visit Mimi's Rooms! Explore fun places and games <span>➜</span></button>
   <button type="button" class="explore-banner" data-goto="shop">🪄 Visit the Magic Shop! Unlock glowing dresses &amp; wands using gems <span>➜</span></button>
  </div></div>
 </section>
+<section class="page" id="page-nursery" role="tabpanel" aria-label="Kitten Nursery" hidden>
+ <div class="section-heading"><div><span class="eyebrow">🥚 THE LITTLE KITTEN NURSERY</span><h1>Hatch baby kittens!</h1><p>Choose an egg for 50 gems. Complete games to help it hatch!</p></div><span class="heading-sticker">🐣</span></div>
+ <div class="nursery-hero"><div class="nursery-hero-icon">🐈💖</div><div><b>Meet Mimi's little friends</b><p>Earn your gems in games. Keep playing proper challenges to grow a baby kitten! One egg can grow at a time.</p><span class="room-theme-badge">💎 You have <strong id="nursery-gems">0</strong> gems</span></div></div>
+ <h2 class="nursery-subhead">🥚 Choose an egg — 50 gems each</h2>
+ <div class="egg-grid" id="egg-shop"></div>
+ <h2 class="nursery-subhead">🌟 Your hatching egg</h2><div id="incubation-area"></div>
+ <h2 class="nursery-subhead">🐾 Your kitten collection</h2><p class="activity-note">Choose a hatched kitten to follow Mimi on the Home page. She can visit the nursery too!</p>
+ <div class="kitten-grid" id="kitten-collection"></div>
+ <h2 class="nursery-subhead">🧸 Toys and pals</h2><div class="nursery-features" id="nursery-extras"></div>
+ <button type="button" data-goto="shop" class="wide-button">🛍️ Visit the shop for toys, crowns and parrots</button>
+ </section>
 <section class="page" id="page-wardrobe" role="tabpanel" aria-label="Dress Up" hidden>
  <div class="section-heading"><div><span class="eyebrow">✨ THE MAGIC CLOSET</span><h1>Dress up Mimi!</h1><p>Mix costumes, hair and sparkly hats.</p></div><span class="heading-sticker">👑</span></div>
  <div class="wardrobe-layout"><div class="outfit-preview"><div id="mirror" class="mirror"><div class="mirror-stars">✨ 🌟 ✨</div><svg class="cat mini-cat" viewBox="0 0 420 420" role="img" aria-label="A smiling lavender cartoon kitten">
@@ -176,7 +194,7 @@
 <section class="page" id="page-shop" role="tabpanel" aria-label="Magic Shop" hidden>
  <div class="section-heading"><div><span class="eyebrow">🪄 THE SPARKLE BOUTIQUE</span><h1>Mimi's Magic Shop</h1><p>Earn gems by playing. Unlock glowing dresses, hats, fairy wings, rainbow hair and wands as you level up!</p></div><span class="heading-sticker">🛍️</span></div>
  <div class="shop-hero"><div class="shop-hero-emoji">✨👗🪄</div><div><b>Make Mimi sparkle!</b><p>All purchases use pretend gems earned in games. No real money, ever!</p></div><div class="shop-balance">💎 <b id="shop-balance">0</b><small>to spend</small></div></div>
- <div class="shop-tabs" aria-label="Shop categories"><button type="button" class="selected" aria-pressed="true" data-shop-tab="dress">👗 Glowing Dresses</button><button type="button" aria-pressed="false" data-shop-tab="wand">🪄 Wands</button><button type="button" aria-pressed="false" data-shop-tab="hat">👑 Magic Hats</button><button type="button" aria-pressed="false" data-shop-tab="hair">🌈 Glow Hair</button><button type="button" aria-pressed="false" data-shop-tab="wings">🦋 Fairy Wings</button></div>
+ <div class="shop-tabs" aria-label="Shop categories"><button type="button" class="selected" aria-pressed="true" data-shop-tab="dress">👗 Glowing Dresses</button><button type="button" aria-pressed="false" data-shop-tab="wand">🪄 Wands</button><button type="button" aria-pressed="false" data-shop-tab="hat">👑 Magic Hats</button><button type="button" aria-pressed="false" data-shop-tab="hair">🌈 Glow Hair</button><button type="button" aria-pressed="false" data-shop-tab="wings">🦋 Fairy Wings</button><button type="button" aria-pressed="false" data-shop-tab="toy">🎁 Toys &amp; Parrot</button></div>
  <div class="shop-summary"><span id="shop-progress">0 of 0 unlocked</span><span class="shop-level-note">⭐ <b id="shop-level">Level 1</b></span><button type="button" data-goto="play">🎮 Earn more gems ➜</button></div>
  <div class="shop-grid" id="shop-items"></div>
  <div class="shop-help">🌟 Bought something? It stays unlocked on this device! Find dresses, hats, hair, wings and wands under <b>Dress Up</b>. Magical colours gently fade in and out.</div>
@@ -185,5 +203,5 @@
 <footer class="foot">Made for little imaginations 🧸 · No ads · No accounts · No microphone uploads <button id="sound-toggle" type="button" aria-pressed="true">🔊 Effects on</button></footer>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-<script src="app.js?v=6.2" defer></script>
+<script src="app.js?v=7.0" defer></script>
 </body></html>
