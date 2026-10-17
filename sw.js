@@ -1,13 +1,12 @@
-/* Offline-friendly files. Never caches or intercepts microphone recordings. */
-const CACHE='mimi-magic-playhouse-v5-0';
-const ASSETS=['./','./index.html','./style.css?v=5.0','./app.js?v=5.0','./six-seven.wav','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
-self.addEventListener('install', event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('mimi-magic-playhouse-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+/* Mimi V6.1 offline shell. Microphone audio is never intercepted or saved. */
+const CACHE='mimi-magic-playhouse-v6-1';
+const ASSETS=['./','./index.html','./style.css?v=6.1','./app.js?v=6.1','./six-seven.wav','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('mimi-magic-playhouse-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
-  const req=event.request;
-  if(req.method!=='GET'||new URL(req.url).origin!==self.location.origin)return;
-  if(req.mode==='navigate'){
-    event.respondWith(fetch(req).catch(()=>caches.match('./index.html')));return;
-  }
-  event.respondWith(caches.match(req).then(cached=>cached||fetch(req)));
+ const req=event.request,url=new URL(req.url);
+ if(req.method!=='GET'||url.origin!==self.location.origin)return;
+ const isAppFile=req.mode==='navigate'||/\/(?:index\.html|style\.css|app\.js)$/.test(url.pathname);
+ if(isAppFile){event.respondWith(fetch(req).then(resp=>{if(resp.ok){const copy=resp.clone();caches.open(CACHE).then(c=>c.put(req,copy)).catch(()=>{});}return resp;}).catch(()=>caches.match(req).then(r=>r||(req.mode==='navigate'?caches.match('./index.html'):undefined))));}
+ else{event.respondWith(caches.match(req).then(r=>r||fetch(req)));}
 });

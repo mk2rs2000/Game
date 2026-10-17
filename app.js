@@ -68,7 +68,11 @@ const magicDresses=[
  ['icecastle','Ice Castle Ballgown','🏰',86,'#a9d7ff','#f7fdff','snow',9],
  ['sunbeam','Sunbeam Sparkle','☀️',92,'#ffc75f','#fff2a8','stars',9],
  ['mermaidmagic','Mermaid Magic Dress','🧜',99,'#61d8df','#d7fffb','rainbow',10],
- ['twinklewitch','Twinkle Witch Dress','🧙',108,'#8f6be6','#ffd1ff','pumpkin',11]
+ ['twinklewitch','Twinkle Witch Dress','🧙',108,'#8f6be6','#ffd1ff','pumpkin',11],
+ ['fairyblossom','Fairy Blossom Gown','🧚',32,'#faa7dd','#fff4bd','stars',3],
+ ['forestfairy','Forest Fairy Dress','🍃',44,'#83dda9','#f5ffad','stars',4],
+ ['starfairy','Starlight Fairy Dress','🌟',63,'#a9a0ff','#ffeb8d','stars',7],
+ ['fairyqueenrobe','Fairy Queen Gown','🦋',105,'#e6a4fe','#fcffc7','rainbow',11]
 ]
 // [id, name, emoji, price, glow colour]
 const magicWands=[
@@ -85,9 +89,39 @@ const magicWands=[
  ['starlightwand','Starlight Scepter','🌟',55,'#ffe47c',7],
  ['aurorawand','Aurora Wand','✨',62,'#90f0ff',8],
  ['royalwand','Royal Heart Scepter','👑',70,'#ff94d7',9],
- ['galaxywand','Galaxy Wand','🌌',82,'#9d8dff',10]
+ ['galaxywand','Galaxy Wand','🌌',82,'#9d8dff',10],
+ ['glitterwand','Pixie Dust Wand','✨',28,'#fbb1f4',3],
+ ['fireflywand','Firefly Lantern Wand','🪲',48,'#ffeaa9',6],
+ ['fairyqueenwand','Fairy Queen Wand','🦋',98,'#d5b7ff',12]
 ]
-const allMagic=[...magicDresses.map(x=>({type:'dress',data:x})),...magicWands.map(x=>({type:'wand',data:x}))];
+// Gem-only magical accessories. All have a permanent level and gem cost.
+// [id, name, icon, cost, glow tint, minimum level]
+const magicHats=[
+ ['moonhalo','Moonbeam Halo','🌙',15,'#ecd1ff',2],
+ ['fairycrown','Fairy Blossom Crown','🌸',22,'#ffabd4',3],
+ ['glowbow','Colour-Changing Bow','🎀',27,'#ff95e8',4],
+ ['fireflyhat','Firefly Tiara','✨',35,'#ffe68c',5],
+ ['butterflycrown','Butterfly Crown','🦋',45,'#a4e5ff',6],
+ ['christmascrown','Twinkling Christmas Hat','🎄',54,'#d3ff9c',7],
+ ['starhalo','Rainbow Star Halo','🌈',70,'#ffb9ee',9],
+ ['fairyqueen','Fairy Queen Crown','👑',90,'#d5b1ff',12]
+];
+const magicHair=[
+ ['fairylocks','Fairy Glitter Locks','🧚',18,'#ffb1df',2],
+ ['rainbowcurls','Slow Rainbow Curls','🌈',25,'#ffa5d5',3],
+ ['mermaidwaves','Mermaid Glow Waves','🧜',38,'#9ccfff',5],
+ ['blossombuns','Blossom Fairy Buns','🌺',48,'#ff9fd8',6],
+ ['aurorahair','Aurora Glow Hair','✨',58,'#b4afff',8],
+ ['stardustbraids','Stardust Braids','🌟',82,'#e3a7ff',10]
+];
+const magicWings=[
+ ['fairywings','Little Fairy Wings','🧚',21,'#ffd1f3',2],
+ ['butterflywings','Butterfly Sparkle Wings','🦋',34,'#97e8ff',4],
+ ['winterwings','Snow Fairy Wings','❄️',49,'#c5e7ff',6],
+ ['rainbowwings','Rainbow Dream Wings','🌈',76,'#ffb4d5',9],
+ ['starlightwings','Starlight Queen Wings','🌟',105,'#d4acff',12]
+];
+const allMagic=[...magicDresses.map(x=>({type:'dress',data:x})),...magicWands.map(x=>({type:'wand',data:x})),...magicHats.map(x=>({type:'hat',data:x})),...magicHair.map(x=>({type:'hair',data:x})),...magicWings.map(x=>({type:'wings',data:x}))];
 const gems=[
  ['ruby','Ruby','❤️','Red sparkle'],['sapphire','Sapphire','💙','Ocean gem'],['emerald','Emerald','💚','Forest gem'],['amethyst','Amethyst','💜','Purple power'],['topaz','Golden Topaz','💛','Sunny shine'],['rose','Rose Quartz','🩷','Heart gem'],
  ['diamond','Diamond','💎','Shiny crystal'],['moon','Moonstone','🌙','Moon magic'],['rainbow','Rainbow','🌈','Colour splash'],['star','Starlight','🌟','Twinkle star'],['snow','Snow Crystal','❄️','Winter wish'],['pumpkin','Pumpkin Gem','🎃','Spooky fun'],
@@ -102,8 +136,8 @@ const rooms=[
  ['art','Art Studio','🎨','Painty colours and creative play.','colours','bubbles']
 ];
 const games=[['stars','Star Pop','⭐','Tap the stars!','#ffe0ae','dance'],['gifts','Mystery Gifts','🎁','Pick a present!','#fcd4df','bedroom'],['feed','Feed Mimi','🍓','Funny snacks!','#d1f7c7','kitchen'],['dance','Dance Party','🪩','Kitty disco!','#e0d5ff','dance'],['garden','Magic Garden','🌷','Grow flowers!','#d8f7f0','garden'],['colours','Colour Magic','🎨','Match colours!','#ffe1e6','art'],['dare','Silly Dares','🎲','Make Mimi giggle!','#f1ddff','bedroom'],['hunt','Gem Hunt','💎','Find treasure!','#d7e8ff','gem'],['bubbles','Bubble Pop','🫧','Pop the floating bubbles!','#dff7ff','art'],['memory','Memory Match','🧠','Match the cute cards!','#f4e6ff','bedroom'],['music','Music Mixer','🎵','Make a fun tune!','#fff0c9','dance'],['cookies','Cookie Catch','🍪','Catch sweet treats!','#ffe4d1','kitchen']]
-const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',wand:'none',voice:'squeaky',speed:1,total:0,album:[],actions:0,unlocked:[],discoverySteps:0,xp:0,room:'dance'};
-let save={...defaults};try{const old=JSON.parse(safeGet(stateKey)||'null');if(old&&typeof old==='object')save={...defaults,...old};}catch{}
+const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',wand:'none',voice:'squeaky',speed:1,total:0,album:[],actions:0,unlocked:[],discoverySteps:0,xp:0,room:'dance',wings:'none'};
+let save={...defaults};try{const old=JSON.parse(safeGet(stateKey)||safeGet('mimi-playhouse-v4')||'null');if(old&&typeof old==='object')save={...defaults,...old};}catch{}
 if(!Array.isArray(save.album))save.album=[];
 if(!Array.isArray(save.unlocked))save.unlocked=[];
 save.album=[...new Set(save.album.filter(id=>gems.some(g=>g[0]===id)))];
@@ -117,7 +151,7 @@ if(save.wand!=='none'&&!save.unlocked.includes(save.wand))save.wand='none';
 if(!rooms.some(r=>r[0]===save.room))save.room='dance';
 function store(){safeSet(stateKey,JSON.stringify(save));}
 const choice=(items,key,def)=>items.some(it=>it[0]===key)?key:def;
-save.voice=choice(voices,save.voice,'squeaky');save.fur=choice(furs,save.fur,'lavender');save.hair=choice(hairstyle,save.hair,'none');save.hat=choice(hats,save.hat,'none');save.hairColour=choice(hairColours,save.hairColour,'chocolate');
+save.voice=choice(voices,save.voice,'squeaky');save.fur=choice(furs,save.fur,'lavender');save.hair=(magicHair.some(i=>i[0]===save.hair)&&save.unlocked.includes(save.hair))?save.hair:choice(hairstyle,save.hair,'none');save.hat=(magicHats.some(i=>i[0]===save.hat)&&save.unlocked.includes(save.hat))?save.hat:choice(hats,save.hat,'none');save.wings=(magicWings.some(i=>i[0]===save.wings)&&save.unlocked.includes(save.wings))?save.wings:'none';save.hairColour=choice(hairColours,save.hairColour,'chocolate');
 if(!Object.values(outfits).flat().some(o=>o[0]===save.outfit) && !(magicDresses.some(o=>o[0]===save.outfit)&&save.unlocked.includes(save.outfit)))save.outfit='daisy';
 let page='home', dressTab='outfit', season='Everyday', shopTab='dress', activity='', activeTimer=0, toastTimer=0, faceTimer=0, dancingTimer=0, muted=false;
 const wrap=$('cat-wrap'), speech=$('bubble'), hint=$('hint');
@@ -206,7 +240,13 @@ function hairSVG(style,colour){if(style==='none')return '';
  if(style==='rainbow')return `<g fill="#fa86a4">${shape}</g><path d="M154 100 Q205 62 264 100" stroke="#ffe16a" stroke-width="16" fill="none"/><path d="M150 100 Q205 73 269 100" stroke="#76dcb8" stroke-width="7" fill="none"/>`;
  return `<g fill="${colour}" stroke="#fff" stroke-width="2" stroke-linejoin="round">${shape}</g>`;
 }
-function hatSVG(id){const obj=hats.find(a=>a[0]===id);if(!obj || id==='none')return '';
+function fairyMotionStyle(col){return `--aura:${col};animation-delay:-${(Math.random()*11).toFixed(1)}s;animation-duration:${(10+Math.random()*6).toFixed(1)}s`;}
+function hatSVG(id){
+ const magic=magicHats.find(a=>a[0]===id);
+ if(magic){const [key,label,emoji,price,glow]=magic;
+ return `<g class="enchanted-hat fairy-fade" style="${fairyMotionStyle(glow)}"><ellipse cx="207" cy="58" rx="53" ry="23" fill="${glow}" opacity=".35"/><text x="207" y="77" text-anchor="middle" font-size="74">${emoji}</text><path d="M168 91 Q207 58 247 91" stroke="${glow}" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="156" cy="78" r="7" fill="#fff"/><circle cx="256" cy="74" r="6" fill="#fff"/></g>`;
+ }
+ const obj=hats.find(a=>a[0]===id);if(!obj || id==='none')return '';
  const top=['witchhat','santahat','elfhat','crown','party','flower','star','bow','reindeerhat'].includes(id);
  const x=top?207:207,y=top?65:163,scale=top?'1':'0.95';
  if(id==='sunglasses'||id==='heart')return `<text x="207" y="186" text-anchor="middle" font-size="86">${obj[2]}</text>`;
@@ -217,12 +257,26 @@ function wandSVG(id){
  const [,,icon,,glow]=wand;
  return `<g class="magic-wand" style="--wand-glow:${glow}"><path d="M306 329 L351 212" stroke="#8662af" stroke-width="11" stroke-linecap="round"/><path d="M306 329 L351 212" stroke="#fff3dd" stroke-width="5" stroke-linecap="round"/><circle cx="351" cy="210" r="29" fill="${glow}" opacity=".25" class="wand-aura"/><text x="351" y="229" font-size="46" text-anchor="middle" class="wand-star">${icon}</text><text x="325" y="195" font-size="20" class="light-bulb">✧</text><text x="378" y="192" font-size="18" class="light-bulb">✧</text></g>`;
 }
+function wingSVG(id){const item=magicWings.find(x=>x[0]===id);if(!item)return '';
+ const col=item[4];
+ return `<g class="fairy-wings fairy-fade" style="${fairyMotionStyle(col)}"><path d="M155 247 C52 140 45 303 147 317 C65 327 93 393 177 336 Z" fill="${col}" stroke="#fff" stroke-width="5" opacity=".83"/><path d="M259 247 C365 140 383 299 273 317 C360 332 337 395 244 336 Z" fill="${col}" stroke="#fff" stroke-width="5" opacity=".83"/><path d="M157 268 Q90 249 128 301 M260 270 Q326 244 291 303" fill="none" stroke="#fff9" stroke-width="6"/><circle cx="113" cy="247" r="9" fill="#fff"/><circle cx="304" cy="253" r="9" fill="#fff"/></g>`;
+}
+function enchantedHairSVG(id){const item=magicHair.find(x=>x[0]===id);if(!item)return '';
+ const forms={fairylocks:'long',rainbowcurls:'curly',mermaidwaves:'long',blossombuns:'buns',aurorahair:'ponytail',stardustbraids:'braids'};
+ return `<g class="enchanted-hair fairy-fade" style="${fairyMotionStyle(item[4])}">${hairSVG(forms[id]||'long',item[4])}</g>`;
+}
 function applyLook(){const f=furs.find(a=>a[0]===save.fur)||furs[0];document.documentElement.style.setProperty('--cat-fur',f[2]);document.documentElement.style.setProperty('--cat-fur-dark',f[3]);
  const o=[...Object.values(outfits).flat(),...magicDresses].find(a=>a[0]===save.outfit),c=(hairColours.find(a=>a[0]===save.hairColour)||hairColours[0])[2];
- all('svg.cat').forEach(svg=>{svg.querySelector('.dress-layer').innerHTML=outfitSVG(o);svg.querySelector('.hair-layer').innerHTML=hairSVG(save.hair,c);svg.querySelector('.hat-layer').innerHTML=hatSVG(save.hat);svg.querySelector('.wand-layer').innerHTML=wandSVG(save.wand)});
- $('wearing').textContent=`${o?o[1]:'Fluffy Mimi'} • ${hairstyle.find(a=>a[0]===save.hair)[1]}${save.wand!=='none'?' • Magic wand!':''}`;
+ all('svg.cat').forEach(svg=>{svg.querySelector('.dress-layer').innerHTML=outfitSVG(o);
+  // SVG layer is created inside each cat; no duplicate IDs are introduced.
+  let wingsLayer=svg.querySelector('.wings-layer');if(!wingsLayer){wingsLayer=document.createElementNS('http://www.w3.org/2000/svg','g');wingsLayer.setAttribute('class','wings-layer');svg.querySelector('.dress-layer').before(wingsLayer);}
+  wingsLayer.innerHTML=wingSVG(save.wings);
+  svg.querySelector('.hair-layer').innerHTML=magicHair.some(i=>i[0]===save.hair)?enchantedHairSVG(save.hair):hairSVG(save.hair,c);
+  svg.querySelector('.hat-layer').innerHTML=hatSVG(save.hat);
+  svg.querySelector('.wand-layer').innerHTML=wandSVG(save.wand)});
+ $('wearing').textContent=`${o?o[1]:'Fluffy Mimi'} • ${([...hairstyle,...magicHair].find(a=>a[0]===save.hair)||hairstyle[0])[1]}${save.wand!=='none'?' • Magic wand!':''}`;
 }
-function selectLook(key,value){if((key==='outfit'||key==='wand') && allMagic.some(m=>m.data[0]===value) && !save.unlocked.includes(value)){toast('🔒 Unlock this in the Magic Shop!');showPage('shop');return;}save[key]=value;store();applyLook();renderWardrobe();chirp([720,970],.09);toast('✨ Mimi looks fabulous!');}
+function selectLook(key,value){if(['outfit','wand','hat','hair','wings'].includes(key) && allMagic.some(m=>m.data[0]===value) && !save.unlocked.includes(value)){toast('🔒 Unlock this in the Magic Shop!');showPage('shop');return;}save[key]=value;store();applyLook();renderWardrobe();chirp([720,970],.09);toast('✨ Mimi looks fabulous!');}
 function renderWardrobe(){all('[data-dress-tab]').forEach(b=>{b.classList.toggle('selected',b.dataset.dressTab===dressTab);b.setAttribute('aria-selected',String(b.dataset.dressTab===dressTab));});let html='';
  if(dressTab==='outfit'){
   html='<p>Pick the perfect costume — mix it with any hair or hat!</p><div class="season-tabs">'+Object.keys(outfits).map(s=>`<button type="button" class="${season===s?'selected':''}" data-season="${s}">${({Everyday:'🌈',Halloween:'🎃',Christmas:'🎄',Seasons:'☀️'})[s]} ${s}</button>`).join('')+'</div><h3 class="subhead">'+season+' outfits</h3><div class="wardrobe-grid">'+outfits[season].map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-outfit="${id}" aria-pressed="${save.outfit===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div>';
@@ -231,50 +285,46 @@ function renderWardrobe(){all('[data-dress-tab]').forEach(b=>{b.classList.toggle
  }else if(dressTab==='wand'){
  html='<p>🪄 Wands sparkle in Mimi’s paw. Earn gems to unlock new ones!</p><div class="wardrobe-grid"><button type="button" class="wardrobe-item" data-wand="none" aria-pressed="'+(save.wand==='none')+'"><span>🐾</span><b>No wand</b></button>'+magicWands.map(([id,label,emoji,price,glow,req])=>{const owned=save.unlocked.includes(id);return `<button type="button" class="wardrobe-item ${owned?'magical-tile':'locked-wardrobe'}" data-magic-wand="${id}" aria-pressed="${save.wand===id}"><span>${emoji}</span><b>${label}</b><small>${owned?'✨ Hold it':'🔒 '+price+' 💎 · Lv '+req}</small></button>`}).join('')+'</div><button type="button" class="shop-shortcut" data-jump-shop="true">🪄 Visit Magic Shop ➜</button>';
  }else if(dressTab==='hair'){
-  html='<p>Try a hairstyle and choose its colour.</p><h3 class="subhead">Hairstyles</h3><div class="wardrobe-grid">'+hairstyle.map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-hair="${id}" aria-pressed="${save.hair===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div><h3 class="subhead">Hair colours</h3><div class="wardrobe-grid">'+hairColours.map(([id,label,colour])=>`<button type="button" class="wardrobe-item colour-choice" data-hair-colour="${id}" aria-pressed="${save.hairColour===id}"><span class="colour-dot" style="background:${colour}"></span><b>${label}</b></button>`).join('')+'</div>';
+  html='<p>Try a hairstyle and choose its colour.</p><h3 class="subhead">Hairstyles</h3><div class="wardrobe-grid">'+hairstyle.map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-hair="${id}" aria-pressed="${save.hair===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div><h3 class="subhead">✨ Magical hairstyles</h3><div class="wardrobe-grid">'+magicHair.map(([id,label,emoji,price,col,level])=>`<button type="button" class="wardrobe-item ${save.unlocked.includes(id)?'magical-tile':'locked-wardrobe'}" data-magic-hair="${id}" aria-pressed="${save.hair===id}"><span class="magic-item-icon">${emoji}</span><b>${label}</b><small>${save.unlocked.includes(id)?'✨ Style it!':'🔒 '+price+' 💎 · Lv '+level}</small></button>`).join('')+'</div><h3 class="subhead">Hair colours</h3><div class="wardrobe-grid">'+hairColours.map(([id,label,colour])=>`<button type="button" class="wardrobe-item colour-choice" data-hair-colour="${id}" aria-pressed="${save.hairColour===id}"><span class="colour-dot" style="background:${colour}"></span><b>${label}</b></button>`).join('')+'</div>';
  }else if(dressTab==='hat'){
-  html='<p>Top it off with something sparkly!</p><div class="wardrobe-grid">'+hats.map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-hat="${id}" aria-pressed="${save.hat===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div>';
+  html='<p>Top it off with something sparkly!</p><div class="wardrobe-grid">'+hats.map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-hat="${id}" aria-pressed="${save.hat===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div><h3 class="subhead">✨ Magical hats</h3><div class="wardrobe-grid">'+magicHats.map(([id,label,emoji,price,col,level])=>`<button type="button" class="wardrobe-item ${save.unlocked.includes(id)?'magical-tile':'locked-wardrobe'}" data-magic-hat="${id}" aria-pressed="${save.hat===id}"><span class="magic-item-icon">${emoji}</span><b>${label}</b><small>${save.unlocked.includes(id)?'✨ Wear it!':'🔒 '+price+' 💎 · Lv '+level}</small></button>`).join('')+'</div>';
+ }else if(dressTab==='wings'){
+  html='<p>🦋 Sparkly fairy wings glow and gently change colours. Unlock with pretend gems!</p><div class="wardrobe-grid"><button type="button" class="wardrobe-item" data-wings="none" aria-pressed="'+(save.wings==='none')+'"><span>🐱</span><b>No wings</b></button>'+magicWings.map(([id,label,emoji,price,col,level])=>`<button type="button" class="wardrobe-item ${save.unlocked.includes(id)?'magical-tile':'locked-wardrobe'}" data-magic-wings="${id}" aria-pressed="${save.wings===id}"><span class="magic-item-icon">${emoji}</span><b>${label}</b><small>${save.unlocked.includes(id)?'🦋 Wear wings':'🔒 '+price+' 💎 · Lv '+level}</small></button>`).join('')+'</div>';
  }else {
   html='<p>Mimi can be any colour you like!</p><div class="wardrobe-grid">'+furs.map(([id,label,colour])=>`<button type="button" class="wardrobe-item colour-choice" data-fur="${id}" aria-pressed="${save.fur===id}"><span class="colour-dot" style="background:${colour}"></span><b>${label}</b></button>`).join('')+'</div>';
  }
  $('wardrobe-content').innerHTML=html;
 }
+function shopCollection(){return {dress:magicDresses,wand:magicWands,hat:magicHats,hair:magicHair,wings:magicWings}[shopTab]||magicDresses;}
+function magicLevel(item){return item.data[item.data.length-1];}
 function renderShop(){
- const selected=shopTab==='dress'?magicDresses:magicWands;
- const info=levelInfo();
+ const selected=shopCollection(), info=levelInfo();
  all('[data-shop-tab]').forEach(b=>{const yes=b.dataset.shopTab===shopTab;b.classList.toggle('selected',yes);b.setAttribute('aria-pressed',String(yes));});
  $('shop-balance').textContent=save.total;
  $('shop-progress').textContent=`${selected.filter(item=>save.unlocked.includes(item[0])).length} of ${selected.length} unlocked`;
  if($('shop-level'))$('shop-level').textContent=`Level ${info.level}`;
  $('shop-items').innerHTML=selected.map(item=>{
-  const [id,name,icon,price,...rest]=item;
-  const req=shopTab==='dress'?rest[3]:rest[1];
-  const theme=shopTab==='dress'?rest[2]:'';
-  const col=rest[0], accent=shopTab==='dress'?rest[1]:rest[0];
-  const bought=save.unlocked.includes(id),equipped=(shopTab==='dress'?save.outfit:save.wand)===id,afford=save.total>=price,levelOk=info.level>=req;
-  let label='';
-  if(equipped) label='✓ Equipped';
-  else if(bought) label=shopTab==='dress'?'✨ Wear it!':'🪄 Hold it!';
-  else if(!levelOk) label=`⭐ Lv ${req}`;
-  else if(afford) label=`💎 ${price} · Unlock`;
-  else label=`🔒 ${price} 💎`;
-  return `<article class="shop-card ${bought?'owned':''}"><div class="shop-art ${shopTab==='dress'?'dress-art':'wand-art'} ${theme==='lights'?'xmas-lights':''}" style="--item-tint:${col};--item-glow:${accent||col}"><span class="shop-emoji">${icon}</span><span class="shop-spark s1">✦</span><span class="shop-spark s2">✨</span><span class="shop-spark s3">✦</span>${theme==='lights'?'<span class="mini-light">🔴🟢🟡🔵</span>':''}</div><h3>${name}</h3><p>${shopTab==='dress'?'✨ Glowing magical dress':'🪄 Sparkling magic wand'}<span class="req">Requires level ${req}</span></p><button type="button" data-shop-buy="${id}" ${equipped?'disabled':''} class="shop-buy ${bought?'equip':''}">${label}</button></article>`;
+  const [id,name,icon,price,colour]=item, req=item[item.length-1], theme=shopTab==='dress'?item[6]:'';
+  const accent=shopTab==='dress'?item[5]:colour;
+  const target={dress:'outfit',wand:'wand',hat:'hat',hair:'hair',wings:'wings'}[shopTab];
+  const bought=save.unlocked.includes(id),equipped=save[target]===id,afford=save.total>=price,levelOk=info.level>=req;
+  const label=equipped?'✓ Equipped':bought?'✨ Wear it!':!levelOk?`⭐ Level ${req} needed`:afford?`💎 ${price} · Unlock`:`🔒 ${price} 💎`;
+  const descriptions={dress:'Glowing magical dress',wand:'Sparkling magic wand',hat:'Glowing colour-changing hat',hair:'Slow-fade rainbow hairstyle',wings:'Shimmering fairy wings'};
+  return `<article class="shop-card ${bought?'owned':''}"><div class="shop-art ${theme==='lights'?'xmas-lights':''}" style="--item-tint:${colour};--item-glow:${accent}"><span class="shop-emoji ${['hair','hat','wings'].includes(shopTab)?'fairy-fade':''}" style="--aura:${colour}">${icon}</span><span class="shop-spark s1">✦</span><span class="shop-spark s2">✨</span><span class="shop-spark s3">✦</span>${theme==='lights'?'<span class="mini-light">🔴🟢🟡🔵</span>':''}</div><h3>${name}</h3><p>✨ ${descriptions[shopTab]}<span class="req">Requires level ${req}</span></p><button type="button" data-shop-buy="${id}" ${equipped?'disabled':''} class="shop-buy ${bought?'equip':''}">${label}</button></article>`;
  }).join('');
 }
 function buyOrEquip(id){
  const item=allMagic.find(m=>m.data[0]===id);if(!item)return;
- const [key,name,icon,price,...rest]=item.data;
- const req=item.type==='dress'?rest[3]:rest[1];
- const info=levelInfo();
+ const [key,name,icon,price]=item.data, req=magicLevel(item);
  if(!save.unlocked.includes(key)){
-  if(info.level<req){toast(`⭐ Reach level ${req} to unlock ${name}!`);chirp([390,330]);return;}
+  if(levelInfo().level<req){toast(`⭐ Reach level ${req} to unlock ${name}!`);chirp([390,330]);return;}
   if(save.total<price){toast(`💎 You need ${price-save.total} more gems! Play games to earn them.`);chirp([350,285]);return;}
   save.total-=price;save.unlocked.push(key);confetti(32);chirp([523,659,784,1046],.14);toast(`🎉 ${name} unlocked!`);
  }else{toast(`✨ Mimi is wearing ${name}!`);}
- if(item.type==='dress')save.outfit=key;else save.wand=key;
+ const target={dress:'outfit',wand:'wand',hat:'hat',hair:'hair',wings:'wings'}[item.type];
+ save[target]=key;
  store();applyLook();updateGemUI();renderWardrobe();renderShop();
 }
-
 function renderSpeed(){
  const value=Number(save.speed).toFixed(2)+'×';
  all('[data-speed-readout]').forEach(el=>el.textContent=value);
@@ -342,6 +392,28 @@ function endRecording(){if(recState!=='recording')return;const length=performanc
  else if(recorder&&recorder.state!=='inactive'){try{recorder.stop()}catch{cancelRecording();message('Try again, please! 🎤');}}
  else{cancelRecording()}}
 function stopDancing(){clearTimeout(dancingTimer);dancingTimer=0;if(recState!=='playing')face();}
+function fartSound(){
+ if(muted)return;
+ getContext().then(ac=>{
+  const length=.72, sampleRate=ac.sampleRate, buffer=ac.createBuffer(1,Math.ceil(sampleRate*length),sampleRate);
+  const data=buffer.getChannelData(0);
+  let rolling=0;
+  for(let i=0;i<data.length;i++){
+   const t=i/sampleRate, decay=Math.pow(1-t/length,1.6);
+   // Synthetic rasp; no recorded audio, files or network needed.
+   rolling=rolling*.84+(Math.random()*2-1)*.16;
+   data[i]=(Math.sin(2*Math.PI*(100*t+18*t*t))*.36 + rolling*2.15)*decay*.45;
+  }
+  const source=ac.createBufferSource(),filter=ac.createBiquadFilter(),gain=ac.createGain();
+  source.buffer=buffer;filter.type='lowpass';filter.frequency.value=480;gain.gain.value=.6;
+  source.connect(filter);filter.connect(gain);gain.connect(ac.destination);source.start();
+ }).catch(()=>{});
+}
+function doFart(){
+ if(recState==='recording'||recState==='requesting'||recState==='processing')return;
+ face('giggling');message('Pffffft! 💨😹','Oh Mimi! That was a cheeky one!');fartSound();confetti(9);
+ clearTimeout(faceTimer);faceTimer=setTimeout(()=>face(),1100);
+}
 function catAction(kind){if(recState==='recording'||recState==='requesting'||recState==='processing')return;stopDancing();if(kind==='meme'){$('numbers').classList.remove('show');void $('numbers').offsetHeight;$('numbers').classList.add('show');face('meme');message('SIX! SEVEN! 🙌','Mimi is doing the 6–7 dance!');chirp([470,550,470,710,880],.13);confetti(33);playMeme();dancingTimer=setTimeout(()=>{face();$('numbers').classList.remove('show')},1850);}
  else if(kind==='dance'){face('dancing');message('Disco Mimi! 💃🪩','Dance dance dance!');chirp([450,530,610,730,650,530],.12);confetti(23);dancingTimer=setTimeout(()=>{face();message('Phew, that was fun! 😹')},2900)}
  else{happy(kind==='tickle'?'Tee hee hee! 😹':'Boop! 💖');chirp(kind==='tickle'?[820,950,1140]:[510,800]);}}
@@ -350,7 +422,8 @@ function playMeme(){if(muted)return;try{getContext().then(async ac=>{if(!memeBuf
 function buildGameTiles(){$('game-tiles').innerHTML=games.map(([id,label,emoji,note,tint,room])=>`<button type="button" class="game-tile" style="--tile:${tint}" data-game="${id}"><span>${emoji}</span><b>${label}</b><small>${note}</small><span class="room-tag">${(rooms.find(r=>r[0]===room)||rooms[0])[1]}</span></button>`).join('')}
 function renderRooms(){const room=currentRoom(); $('room-grid').innerHTML=rooms.map(([id,name,emoji,desc])=>`<button type="button" class="room-card ${save.room===id?'selected':''}" data-room="${id}"><span class="room-emoji">${emoji}</span><b>${name}</b><small>${desc}</small></button>`).join(''); $('room-scene').textContent=room[2]; $('room-title').textContent=room[1]; $('room-description').textContent=room[3]; $('room-actions').innerHTML=`<button type="button" data-room-game="${room[4]}">Play ${(games.find(g=>g[0]===room[4])||['','Game'])[1]} ➜</button><button type="button" data-room-game="${room[5]}">Play ${(games.find(g=>g[0]===room[5])||['','Game'])[1]} ➜</button><button type="button" data-room-home="true" class="alt">Use this room on Home</button>`;}
 function setRoom(id){if(!rooms.some(r=>r[0]===id))return;save.room=id;store();updateGemUI();renderRooms();toast(`${currentRoom()[2]} ${currentRoom()[1]} selected!`);}
-function closeActivity(){if(activeTimer){clearInterval(activeTimer);clearTimeout(activeTimer);activeTimer=0}activity='';$('activity').hidden=true}
+let extraGameIntervals=[];
+function closeActivity(){if(activeTimer){clearInterval(activeTimer);clearTimeout(activeTimer);activeTimer=0}extraGameIntervals.forEach(clearInterval);extraGameIntervals=[];activity='';$('activity').hidden=true}
 function openActivity(id){closeActivity();const g=games.find(x=>x[0]===id);if(!g)return;activity=id;showPage('play');$('activity').hidden=false;$('activity-title').textContent=`${g[2]} ${g[1]}`;$('activity-info').textContent=g[3];renderActivity();$('activity').scrollIntoView({behavior:'smooth',block:'start'});}
 function awardActivity(n,text='Brilliant!'){reward(n);confetti(18);chirp([523,659,784,1000],.13);if(text)toast(text+` +${n} 💎`);}
 function renderActivity(){const body=$('activity-body');body.innerHTML='';if(activity==='stars')startStars();if(activity==='gifts')startGifts();if(activity==='feed')startFeed();if(activity==='dance')startPartyGame();if(activity==='garden')startGarden();if(activity==='colours')startColours();if(activity==='dare')startDare();if(activity==='hunt')startHunt();if(activity==='bubbles')startBubbles();if(activity==='memory')startMemory();if(activity==='music')startMusic();if(activity==='cookies')startCookies()}
@@ -375,10 +448,10 @@ function startHunt(){let found=0;const goal=6,b=$('activity-body');const chosen=
 }
 
 function startBubbles(){let score=0,time=18;const body=$('activity-body');body.innerHTML='<div class="game-status"><span>🫧 <b id="bubble-score">0</b></span><span>⏱️ <b id="bubble-clock">18</b>s</span></div><div class="star-field" id="bubble-field"></div><p class="activity-note">Pop as many bubbles as you can!</p>';
- const field=$('bubble-field'); function addBubble(){if(activity!=='bubbles')return;const b=document.createElement('button');b.type='button';b.className='star-target';b.textContent=['🫧','💖','✨'][Math.floor(Math.random()*3)];b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px';b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px';b.onclick=()=>{score++;$('bubble-score').textContent=score;chirp([640+(score%4)*70],.05);b.remove();};field.append(b);setTimeout(()=>b.remove(),1400);} const spawner=setInterval(()=>{addBubble();addBubble();},700); activeTimer=setInterval(()=>{time--; $('bubble-clock').textContent=time; if(time<=0){clearInterval(spawner); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🫧</div><h2>You popped ${score} bubbles!</h2><button class="game-again" id="again-bubbles">Play again</button></div>`; awardActivity(Math.max(2,Math.ceil(score/4)),'Bubble burst!'); $('again-bubbles').onclick=startBubbles;}},1000); addBubble();}
-function startMemory(){const icons=['🐱','💖','🌈','⭐','🎀','🎄'];const deck=[...icons,...icons].sort(()=>Math.random()-.5);let first=null, lock=false, matches=0;const body=$('activity-body');body.innerHTML='<p class="activity-note">Match all the pairs!</p><div class="hunt-grid">'+deck.map((icon,i)=>`<button type="button" class="hunt-tile" data-memory="${i}" aria-label="Card ${i+1}">❔</button>`).join('')+'</div><p class="activity-msg" id="memory-msg">Pick a card!</p>'; all('[data-memory]').forEach(btn=>btn.onclick=()=>{if(lock||btn.disabled)return; const idx=Number(btn.dataset.memory); btn.textContent=deck[idx]; if(first===null){first=btn; return;} if(first===btn)return; lock=true; if(first.textContent===btn.textContent){ first.disabled=btn.disabled=true; matches++; $('memory-msg').textContent='Match found! ✨'; reward(2,2); lock=false; first=null; if(matches===icons.length){ confetti(28); $('memory-msg').textContent='You matched them all!'; }} else { $('memory-msg').textContent='Oops! Try again!'; setTimeout(()=>{first.textContent='❔'; btn.textContent='❔'; lock=false; first=null;},650); }});}
+ const field=$('bubble-field'); function addBubble(){if(activity!=='bubbles')return;const b=document.createElement('button');b.type='button';b.className='star-target';b.textContent=['🫧','💖','✨'][Math.floor(Math.random()*3)];b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px';b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px';b.onclick=()=>{score++;$('bubble-score').textContent=score;chirp([640+(score%4)*70],.05);b.remove();};field.append(b);setTimeout(()=>b.remove(),1400);} const spawner=setInterval(()=>{addBubble();addBubble();},700);extraGameIntervals.push(spawner); activeTimer=setInterval(()=>{time--; $('bubble-clock').textContent=time; if(time<=0){clearInterval(spawner); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🫧</div><h2>You popped ${score} bubbles!</h2><button class="game-again" id="again-bubbles">Play again</button></div>`; awardActivity(Math.max(2,Math.ceil(score/4)),'Bubble burst!'); $('again-bubbles').onclick=startBubbles;}},1000); addBubble();}
+function startMemory(){const icons=['🐱','💖','🌈','⭐','🎀','🎄'];const deck=[...icons,...icons].sort(()=>Math.random()-.5);let first=null, lock=false, matches=0;const body=$('activity-body');body.innerHTML='<p class="activity-note">Match all the pairs!</p><div class="hunt-grid">'+deck.map((icon,i)=>`<button type="button" class="hunt-tile" data-memory="${i}" aria-label="Card ${i+1}">❔</button>`).join('')+'</div><p class="activity-msg" id="memory-msg">Pick a card!</p>'; all('[data-memory]').forEach(btn=>btn.onclick=()=>{if(lock||btn.disabled)return; const idx=Number(btn.dataset.memory); btn.textContent=deck[idx]; if(first===null){first=btn; return;} if(first===btn)return; lock=true; if(first.textContent===btn.textContent){ first.disabled=btn.disabled=true; matches++; $('memory-msg').textContent='Match found! ✨'; reward(2,2); lock=false; first=null; if(matches===icons.length){ confetti(28); $('memory-msg').textContent='You matched them all!'; }} else { $('memory-msg').textContent='Oops! Try again!'; setTimeout(()=>{if(activity!=='memory'||!first)return;first.textContent='❔'; btn.textContent='❔'; lock=false; first=null;},650); }});}
 function startMusic(){const body=$('activity-body'); const notes=[['🎵',440],['🎶',554],['🥁',220],['🎹',660],['🪇',770],['🔔',880]]; let taps=0; body.innerHTML='<div class="game-board" style="text-align:center"><h2>Make a tune for Mimi!</h2><div class="choice-grid">'+notes.map(([e,f],i)=>`<button type="button" data-note="${f}">${e}</button>`).join('')+'</div><p id="music-msg" class="activity-msg">Tap 6 sounds to win gems!</p></div>'; all('[data-note]').forEach(btn=>btn.onclick=()=>{taps++; chirp([Number(btn.dataset.note), Number(btn.dataset.note)+110],.07); $('music-msg').textContent=`${taps} sounds played`; if(taps>0 && taps%6===0){awardActivity(3,'Music magic!')}});}
-function startCookies(){let caught=0,time=18;const body=$('activity-body'); body.innerHTML='<div class="game-status"><span>🍪 <b id="cookie-score">0</b></span><span>⏱️ <b id="cookie-clock">18</b>s</span></div><div class="star-field" id="cookie-field"></div><p class="activity-note">Tap the cookies before they disappear!</p>'; const field=$('cookie-field'); function drop(){if(activity!=='cookies')return; const b=document.createElement('button'); b.type='button'; b.className='star-target'; b.textContent=['🍪','🧁','🍓'][Math.floor(Math.random()*3)]; b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px'; b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px'; b.onclick=()=>{caught++; $('cookie-score').textContent=caught; chirp([520,700],.06); b.remove();}; field.append(b); setTimeout(()=>{if(b.isConnected)b.remove();},1300);} const rain=setInterval(drop,600); activeTimer=setInterval(()=>{time--; $('cookie-clock').textContent=time; if(time<=0){clearInterval(rain); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🍪</div><h2>You caught ${caught} treats!</h2><button class="game-again" id="again-cookies">Play again</button></div>`; awardActivity(Math.max(1,Math.ceil(caught/3)),'Treat time!'); $('again-cookies').onclick=startCookies;}},1000); drop();}
+function startCookies(){let caught=0,time=18;const body=$('activity-body'); body.innerHTML='<div class="game-status"><span>🍪 <b id="cookie-score">0</b></span><span>⏱️ <b id="cookie-clock">18</b>s</span></div><div class="star-field" id="cookie-field"></div><p class="activity-note">Tap the cookies before they disappear!</p>'; const field=$('cookie-field'); function drop(){if(activity!=='cookies')return; const b=document.createElement('button'); b.type='button'; b.className='star-target'; b.textContent=['🍪','🧁','🍓'][Math.floor(Math.random()*3)]; b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px'; b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px'; b.onclick=()=>{caught++; $('cookie-score').textContent=caught; chirp([520,700],.06); b.remove();}; field.append(b); setTimeout(()=>{if(b.isConnected)b.remove();},1300);} const rain=setInterval(drop,600);extraGameIntervals.push(rain); activeTimer=setInterval(()=>{time--; $('cookie-clock').textContent=time; if(time<=0){clearInterval(rain); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🍪</div><h2>You caught ${caught} treats!</h2><button class="game-again" id="again-cookies">Play again</button></div>`; awardActivity(Math.max(1,Math.ceil(caught/3)),'Treat time!'); $('again-cookies').onclick=startCookies;}},1000); drop();}
 // Event wiring is done after every required element exists: a missing optional element cannot block other buttons.
 all('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 all('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
@@ -386,7 +459,7 @@ $('gem-shortcut').onclick=()=>showPage('gems');$('gem-hunt').onclick=()=>{showPa
 $('room-grid').addEventListener('click',e=>{const b=e.target.closest('[data-room]');if(b)setRoom(b.dataset.room)});
 $('room-actions').addEventListener('click',e=>{const g=e.target.closest('[data-room-game]'); if(g){showPage('play'); openActivity(g.dataset.roomGame); return;} if(e.target.closest('[data-room-home]')){showPage('home');}});
 all('[data-dress-tab]').forEach(b=>b.onclick=()=>{dressTab=b.dataset.dressTab;renderWardrobe()});
-$('wardrobe-content').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.jumpShop){showPage('shop')}else if(b.dataset.magicDress)selectLook('outfit',b.dataset.magicDress);else if(b.dataset.magicWand)selectLook('wand',b.dataset.magicWand);else if(b.dataset.wand)selectLook('wand',b.dataset.wand);else if(b.dataset.season){season=b.dataset.season;renderWardrobe()}else if(b.dataset.outfit)selectLook('outfit',b.dataset.outfit);else if(b.dataset.hair)selectLook('hair',b.dataset.hair);else if(b.dataset.hat)selectLook('hat',b.dataset.hat);else if(b.dataset.fur)selectLook('fur',b.dataset.fur);else if(b.dataset.hairColour)selectLook('hairColour',b.dataset.hairColour)});
+$('wardrobe-content').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.jumpShop){showPage('shop')}else if(b.dataset.magicDress)selectLook('outfit',b.dataset.magicDress);else if(b.dataset.magicWand)selectLook('wand',b.dataset.magicWand);else if(b.dataset.magicHair)selectLook('hair',b.dataset.magicHair);else if(b.dataset.magicHat)selectLook('hat',b.dataset.magicHat);else if(b.dataset.magicWings)selectLook('wings',b.dataset.magicWings);else if(b.dataset.wings)selectLook('wings',b.dataset.wings);else if(b.dataset.wand)selectLook('wand',b.dataset.wand);else if(b.dataset.season){season=b.dataset.season;renderWardrobe()}else if(b.dataset.outfit)selectLook('outfit',b.dataset.outfit);else if(b.dataset.hair)selectLook('hair',b.dataset.hair);else if(b.dataset.hat)selectLook('hat',b.dataset.hat);else if(b.dataset.fur)selectLook('fur',b.dataset.fur);else if(b.dataset.hairColour)selectLook('hairColour',b.dataset.hairColour)});
 $('random-look').onclick=()=>{const get=a=>a[Math.floor(Math.random()*a.length)];save.outfit=get(Object.values(outfits).flat())[0];save.hair=get(hairstyle)[0];save.hairColour=get(hairColours)[0];save.hat=get(hats)[0];store();applyLook();renderWardrobe();confetti(18);toast('🎲 Surprise outfit!')};
 $('clear-look').onclick=()=>{save.outfit='daisy';save.hair='none';save.hat='none';store();applyLook();renderWardrobe();toast('Back to fluffy Mimi! 🐱')};
 $('voice-grid').addEventListener('click',e=>{const b=e.target.closest('[data-voice]');if(b)setVoice(b.dataset.voice)});$('quick-voice').addEventListener('click',e=>{const b=e.target.closest('[data-voice]');if(b)setVoice(b.dataset.voice)});
@@ -399,7 +472,7 @@ $('gem-album').addEventListener('click',e=>{const b=e.target.closest('[data-gem-
 $('try-voice').onclick=()=>showPage('home');$('voice-test').onclick=()=>chirp([430,880,570,1020,620],.12);
 $('game-tiles').addEventListener('click',e=>{const b=e.target.closest('[data-game]');if(b)openActivity(b.dataset.game)});$('activity-close').onclick=closeActivity;
 recBtn.onclick=()=>{if(recState==='recording')endRecording();else if(recState==='idle')beginRecording()};replay.onclick=playLatest;
-$('tickle').onclick=()=>catAction('tickle');$('boop').onclick=()=>catAction('boop');$('meme').onclick=()=>catAction('meme');$('home-dance').onclick=()=>catAction('dance');wrap.onclick=()=>catAction('tickle');wrap.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();catAction('tickle')}};
+$('fart').onclick=doFart;$('tickle').onclick=()=>catAction('tickle');$('boop').onclick=()=>catAction('boop');$('meme').onclick=()=>catAction('meme');$('home-dance').onclick=()=>catAction('dance');wrap.onclick=()=>catAction('tickle');wrap.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();catAction('tickle')}};
 $('sound-toggle').onclick=()=>{muted=!muted;$('sound-toggle').textContent=muted?'🔇 Effects off':'🔊 Effects on';$('sound-toggle').setAttribute('aria-pressed',String(!muted));if(!muted)chirp()};
 $('reset-save').onclick=()=>{if(!window.confirm('Grown-ups only: clear all saved gems and outfits on this device?'))return;save={...defaults,album:[],unlocked:[]};store();applyLook();renderWardrobe();renderVoice();renderSpeed();updateGemUI();renderShop();renderRooms();toast('Collection reset')};
 window.addEventListener('pagehide',()=>{cancelRecording();discardVoice();stopDancing();closeActivity();if(ctx){ctx.close().catch(()=>{});ctx=null}});
