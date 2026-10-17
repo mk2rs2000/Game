@@ -5,7 +5,7 @@ const $ = id => document.getElementById(id);
 const all = sel => Array.from(document.querySelectorAll(sel));
 const safeGet = (k) => { try{return localStorage.getItem(k)}catch{return null} };
 const safeSet = (k,v) => {try{localStorage.setItem(k,v)}catch{}};
-const stateKey='mimi-playhouse-v4';
+const stateKey='mimi-playhouse-v6';
 const outfits={
  Everyday:[
  ['daisy','Daisy Dress','🌼','#ffafd4','🌼'],['rainbow','Rainbow','🌈','#ffbfe4','🌈'],['princess','Princess','👸','#c6a6ff','💖'],['unicorn','Unicorn','🦄','#b0eefb','🦄'],
@@ -51,39 +51,58 @@ const voices=[
 // Gem-shop items are bought ONLY with pretend gems earned by playing; no payments/network.
 // [id, name, emoji, price, colour, accent, visual theme]
 const magicDresses=[
- ['stardust','Stardust Princess','🌟',12,'#ab8cff','#fff2aa','stars'],
- ['frostglow','Snowglow Fairy','❄️',18,'#9fdcf9','#e6fdff','snow'],
- ['fairyglow','Fairy Light Dress','🧚',22,'#ffa6cc','#e9ffba','stars'],
- ['christmaslights','Christmas Tree Lights','🎄',25,'#36a873','#ffef83','lights'],
- ['candyglow','Candy Cane Twinkle','🍭',30,'#e85670','#fff5ef','lights'],
- ['pumpkinglow','Pumpkin Glow Dress','🎃',32,'#d580ef','#ffe57e','pumpkin'],
- ['winterqueen','Winter Queen','👑',38,'#a4c5ff','#f9fbff','snow'],
- ['elfglimmer','Christmas Elf Sparkle','🧝',40,'#71c684','#ffd87a','lights'],
- ['rainbowmagic','Rainbow Magic Gown','🌈',45,'#ef97e5','#8af3f2','rainbow'],
- ['moonwish','Moonlight Dream Dress','🌙',48,'#6968c9','#f5dcff','stars'],
- ['royaltree','Christmas Tree Princess','🎄',55,'#28784e','#ffd85c','lights'],
- ['galaxydream','Galaxy Princess','🌌',65,'#604ea9','#b9a6ff','stars']
-];
+ ['stardust','Stardust Princess','🌟',12,'#ab8cff','#fff2aa','stars',1],
+ ['frostglow','Snowglow Fairy','❄️',18,'#9fdcf9','#e6fdff','snow',1],
+ ['fairyglow','Fairy Light Dress','🧚',22,'#ffa6cc','#e9ffba','stars',2],
+ ['christmaslights','Christmas Tree Lights','🎄',25,'#36a873','#ffef83','lights',2],
+ ['candyglow','Candy Cane Twinkle','🍭',30,'#e85670','#fff5ef','lights',3],
+ ['pumpkinglow','Pumpkin Glow Dress','🎃',32,'#d580ef','#ffe57e','pumpkin',3],
+ ['winterqueen','Winter Queen','👑',38,'#a4c5ff','#f9fbff','snow',4],
+ ['elfglimmer','Christmas Elf Sparkle','🧝',40,'#71c684','#ffd87a','lights',4],
+ ['rainbowmagic','Rainbow Magic Gown','🌈',45,'#ef97e5','#8af3f2','rainbow',5],
+ ['moonwish','Moonlight Dream Dress','🌙',48,'#6968c9','#f5dcff','stars',5],
+ ['royaltree','Christmas Tree Princess','🎄',55,'#28784e','#ffd85c','lights',6],
+ ['galaxydream','Galaxy Princess','🌌',65,'#604ea9','#b9a6ff','stars',7],
+ ['sugarplum','Sugar Plum Ballet','🩰',72,'#ff9bd2','#fff0f8','stars',8],
+ ['candlewish','Holiday Candle Glow','🕯️',78,'#ffcb7a','#fff6cf','lights',8],
+ ['icecastle','Ice Castle Ballgown','🏰',86,'#a9d7ff','#f7fdff','snow',9],
+ ['sunbeam','Sunbeam Sparkle','☀️',92,'#ffc75f','#fff2a8','stars',9],
+ ['mermaidmagic','Mermaid Magic Dress','🧜',99,'#61d8df','#d7fffb','rainbow',10],
+ ['twinklewitch','Twinkle Witch Dress','🧙',108,'#8f6be6','#ffd1ff','pumpkin',11]
+]
 // [id, name, emoji, price, glow colour]
 const magicWands=[
- ['starwand','Star Wand','⭐',8,'#ffcf4a'],
- ['heartwand','Heart Wand','💖',12,'#ff8cc3'],
- ['snowwand','Snowflake Wand','❄️',15,'#7ed9f7'],
- ['fairywand','Fairy Wand','🧚',20,'#c898ff'],
- ['pumpkinwand','Pumpkin Wand','🎃',22,'#ffb568'],
- ['hollywand','Christmas Holly Wand','🎄',25,'#8ce59c'],
- ['moonwand','Moon Wand','🌙',30,'#d1a8ff'],
- ['rainbowwand','Rainbow Wand','🌈',35,'#ffb7e4'],
- ['treewand','Twinkling Tree Wand','🎄',42,'#ffe97d']
-];
+ ['starwand','Star Wand','⭐',8,'#ffcf4a',1],
+ ['heartwand','Heart Wand','💖',12,'#ff8cc3',1],
+ ['snowwand','Snowflake Wand','❄️',15,'#7ed9f7',2],
+ ['fairywand','Fairy Wand','🧚',20,'#c898ff',2],
+ ['pumpkinwand','Pumpkin Wand','🎃',22,'#ffb568',3],
+ ['hollywand','Christmas Holly Wand','🎄',25,'#8ce59c',3],
+ ['moonwand','Moon Wand','🌙',30,'#d1a8ff',4],
+ ['rainbowwand','Rainbow Wand','🌈',35,'#ffb7e4',4],
+ ['treewand','Twinkling Tree Wand','🎄',42,'#ffe97d',5],
+ ['candywand','Candy Cane Wand','🍭',48,'#ff7999',6],
+ ['starlightwand','Starlight Scepter','🌟',55,'#ffe47c',7],
+ ['aurorawand','Aurora Wand','✨',62,'#90f0ff',8],
+ ['royalwand','Royal Heart Scepter','👑',70,'#ff94d7',9],
+ ['galaxywand','Galaxy Wand','🌌',82,'#9d8dff',10]
+]
 const allMagic=[...magicDresses.map(x=>({type:'dress',data:x})),...magicWands.map(x=>({type:'wand',data:x}))];
 const gems=[
  ['ruby','Ruby','❤️','Red sparkle'],['sapphire','Sapphire','💙','Ocean gem'],['emerald','Emerald','💚','Forest gem'],['amethyst','Amethyst','💜','Purple power'],['topaz','Golden Topaz','💛','Sunny shine'],['rose','Rose Quartz','🩷','Heart gem'],
  ['diamond','Diamond','💎','Shiny crystal'],['moon','Moonstone','🌙','Moon magic'],['rainbow','Rainbow','🌈','Colour splash'],['star','Starlight','🌟','Twinkle star'],['snow','Snow Crystal','❄️','Winter wish'],['pumpkin','Pumpkin Gem','🎃','Spooky fun'],
  ['holly','Holly Gem','🎄','Festive joy'],['butterfly','Butterfly','🦋','Spring wings'],['ocean','Ocean Pearl','🫧','Bubbly'],['unicorn','Unicorn Gem','🦄','Wish magic'],['sun','Sunstone','☀️','Summer days'],['royal','Royal Heart','👑','Princess shine']
 ];
-const games=[['stars','Star Pop','⭐','Tap the stars!','#ffe0ae'],['gifts','Mystery Gifts','🎁','Pick a present!','#fcd4df'],['feed','Feed Mimi','🍓','Funny snacks!','#d1f7c7'],['dance','Dance Party','🪩','Kitty disco!','#e0d5ff'],['garden','Magic Garden','🌷','Grow flowers!','#d8f7f0'],['colours','Colour Magic','🎨','Match colours!','#ffe1e6'],['dare','Silly Dares','🎲','Make Mimi giggle!','#f1ddff'],['hunt','Gem Hunt','💎','Find treasure!','#d7e8ff']];
-const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',wand:'none',voice:'squeaky',speed:1,total:0,album:[],actions:0,unlocked:[],discoverySteps:0};
+const rooms=[
+ ['dance','Dance Room','🪩','A sparkly room full of disco fun.','dance','music'],
+ ['bedroom','Dream Bedroom','🛏️','Cosy pillows, silly dares and bedtime games.','memory','gifts'],
+ ['garden','Magic Garden','🌷','Grow flowers and pick pretty colours.','garden','colours'],
+ ['kitchen','Treat Kitchen','🧁','Feed Mimi and catch tasty treats.','feed','cookies'],
+ ['gem','Gem Cave','💎','Hidden treasure and shiny special gems.','hunt','stars'],
+ ['art','Art Studio','🎨','Painty colours and creative play.','colours','bubbles']
+];
+const games=[['stars','Star Pop','⭐','Tap the stars!','#ffe0ae','dance'],['gifts','Mystery Gifts','🎁','Pick a present!','#fcd4df','bedroom'],['feed','Feed Mimi','🍓','Funny snacks!','#d1f7c7','kitchen'],['dance','Dance Party','🪩','Kitty disco!','#e0d5ff','dance'],['garden','Magic Garden','🌷','Grow flowers!','#d8f7f0','garden'],['colours','Colour Magic','🎨','Match colours!','#ffe1e6','art'],['dare','Silly Dares','🎲','Make Mimi giggle!','#f1ddff','bedroom'],['hunt','Gem Hunt','💎','Find treasure!','#d7e8ff','gem'],['bubbles','Bubble Pop','🫧','Pop the floating bubbles!','#dff7ff','art'],['memory','Memory Match','🧠','Match the cute cards!','#f4e6ff','bedroom'],['music','Music Mixer','🎵','Make a fun tune!','#fff0c9','dance'],['cookies','Cookie Catch','🍪','Catch sweet treats!','#ffe4d1','kitchen']]
+const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',wand:'none',voice:'squeaky',speed:1,total:0,album:[],actions:0,unlocked:[],discoverySteps:0,xp:0,room:'dance'};
 let save={...defaults};try{const old=JSON.parse(safeGet(stateKey)||'null');if(old&&typeof old==='object')save={...defaults,...old};}catch{}
 if(!Array.isArray(save.album))save.album=[];
 if(!Array.isArray(save.unlocked))save.unlocked=[];
@@ -92,8 +111,10 @@ save.unlocked=[...new Set(save.unlocked.filter(id=>allMagic.some(m=>m.data[0]===
 save.total=Math.max(0,Math.floor(Number(save.total)||0));
 save.actions=Math.max(0,Math.floor(Number(save.actions)||0));
 save.discoverySteps=Math.max(0,Math.floor(Number(save.discoverySteps)||0));
+save.xp=Math.max(0,Math.floor(Number(save.xp)||0));
 save.speed=Math.max(.5,Math.min(1.75,Number(save.speed)||1));
 if(save.wand!=='none'&&!save.unlocked.includes(save.wand))save.wand='none';
+if(!rooms.some(r=>r[0]===save.room))save.room='dance';
 function store(){safeSet(stateKey,JSON.stringify(save));}
 const choice=(items,key,def)=>items.some(it=>it[0]===key)?key:def;
 save.voice=choice(voices,save.voice,'squeaky');save.fur=choice(furs,save.fur,'lavender');save.hair=choice(hairstyle,save.hair,'none');save.hat=choice(hats,save.hat,'none');save.hairColour=choice(hairColours,save.hairColour,'chocolate');
@@ -106,27 +127,40 @@ function toast(txt){const el=$('toast');el.textContent=txt;el.hidden=false;clear
 function confetti(num=14){const colours=['#ff8dba','#ffcc4e','#9d7eef','#7bdfbd','#fff','#79cdea'];for(let i=0;i<num;i++){const c=document.createElement('i');c.className='confetti';c.style.background=colours[i%colours.length];c.style.left=(20+Math.random()*60)+'%';c.style.top=(25+Math.random()*55)+'%';c.style.setProperty('--dx',(Math.random()*420-210)+'px');c.style.setProperty('--dy',(Math.random()*320-220)+'px');c.style.setProperty('--spin',(Math.random()*850)+'deg');wrap.append(c);setTimeout(()=>c.remove(),1350);}}
 function face(kind=''){wrap.classList.remove('is-giggling','is-meme','is-listening','is-talking','is-dancing');if(kind)wrap.classList.add('is-'+kind);}
 function happy(txt='Yay! 🎉'){clearTimeout(faceTimer);message(txt);face('giggling');confetti(12);faceTimer=setTimeout(()=>face(),1100);}
+function levelInfo(){const level=Math.max(1,Math.floor(save.xp/20)+1);const prev=(level-1)*20;const next=level*20;const current=save.xp-prev;const need=Math.max(1,next-prev);return {level,current,need,pct:Math.max(0,Math.min(100,current/need*100)),nextLevel:level+1};}
+function currentRoom(){return rooms.find(r=>r[0]===save.room)||rooms[0];}
+function roomClass(){return 'room-'+currentRoom()[0];}
 function updateGemUI(){
+ const info=levelInfo(), room=currentRoom();
  $('gem-count').textContent=save.total;
  $('gem-total').textContent=save.total;
  $('shop-balance').textContent=save.total;
  $('gem-found').textContent=`${save.album.length} / ${gems.length}`;
  $('album-caption').textContent=`${gems.length-save.album.length} left to discover`;
+ if($('level-count'))$('level-count').textContent=info.level;
+ if($('level-title'))$('level-title').textContent=`Level ${info.level}`;
+ if($('level-copy'))$('level-copy').textContent=`Play games with Mimi to unlock more shop items. ${Math.max(0,20-info.current)} XP to go!`;
+ if($('xp-copy'))$('xp-copy').textContent=`${info.current} / ${info.need} XP to level ${info.nextLevel}`;
+ if($('xp-bar-fill'))$('xp-bar-fill').style.width=info.pct+'%';
+ if($('shop-level'))$('shop-level').textContent=`Level ${info.level}`;
+ if($('current-room-name'))$('current-room-name').textContent=`${room[2]} ${room[1]}`;
+ if($('current-room-copy'))$('current-room-copy').textContent=room[3];
+ const stage=$('stage'); if(stage){stage.classList.remove('room-dance','room-bedroom','room-garden','room-kitchen','room-gem','room-art');stage.classList.add(roomClass());}
  const countdown=save.discoverySteps===0?1:(save.discoverySteps%2===0?1:2);
  $('discovery-next').textContent=save.album.length===gems.length?'🏆 You found all 18 special gems!':countdown===1?'🌟 One more game reward to find a special gem!':'✨ Two more game rewards to find a special gem!';
  $('discovery-bar-fill').style.width=(countdown===1?50:0)+'%';
- $('gem-album').innerHTML=gems.map(([key,name,emoji,note],index)=>{const owned=save.album.includes(key);return `<button type="button" class="gem-entry ${owned?'gem-owned':''}" data-gem-info="${key}" aria-label="${name}, ${owned?'collected':'not yet found'}"><span class="gem-art ${owned?'':'locked'}">${owned?emoji:'💎'}</span><b>${name}</b><small>${owned?'✅ Collected!':'🔒 Find in games'}</small></button>`}).join('');
+ $('gem-album').innerHTML=gems.map(([key,name,emoji,note])=>{const owned=save.album.includes(key);return `<button type="button" class="gem-entry ${owned?'gem-owned':''}" data-gem-info="${key}" aria-label="${name}, ${owned?'collected':'not yet found'}"><span class="gem-art ${owned?'':'locked'}">${owned?emoji:'💎'}</span><b>${name}</b><small>${owned?'✅ Collected!':'🔒 Find in games'}</small></button>`}).join('');
 }
-function reward(points=1){
- save.total+=points;save.actions++;save.discoverySteps++;
+function reward(points=1,xpGain=points){
+ save.total+=points;save.actions++;save.discoverySteps++;save.xp+=xpGain;
  let found='';
  if(save.album.length<gems.length && save.discoverySteps%2===1){
    const left=gems.filter(g=>!save.album.includes(g[0]));
    const pick=left[(save.album.length*7+3)%left.length];
    found=pick[0];save.album.push(found);
  }
- store();updateGemUI();renderShop();
- toast(found?`💎 +${points} gems! ✨ NEW special gem: ${gems.find(g=>g[0]===found)[1]}!`:`💎 +${points} gems! One step closer to your next special gem!`);
+ store();updateGemUI();renderShop();renderRooms();
+ toast(found?`💎 +${points} gems! ✨ NEW special gem: ${gems.find(g=>g[0]===found)[1]}!`:`💎 +${points} gems! +${xpGain} XP!`);
 }
 
 function outfitSVG(info){if(!info)return '';
@@ -193,9 +227,9 @@ function renderWardrobe(){all('[data-dress-tab]').forEach(b=>{b.classList.toggle
  if(dressTab==='outfit'){
   html='<p>Pick the perfect costume — mix it with any hair or hat!</p><div class="season-tabs">'+Object.keys(outfits).map(s=>`<button type="button" class="${season===s?'selected':''}" data-season="${s}">${({Everyday:'🌈',Halloween:'🎃',Christmas:'🎄',Seasons:'☀️'})[s]} ${s}</button>`).join('')+'</div><h3 class="subhead">'+season+' outfits</h3><div class="wardrobe-grid">'+outfits[season].map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-outfit="${id}" aria-pressed="${save.outfit===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div>';
  }else if(dressTab==='magic'){
- html='<p>✨ These glowing dresses can only be unlocked using gems from the Magic Shop!</p><div class="wardrobe-grid">'+magicDresses.map(([id,label,emoji,price])=>{const owned=save.unlocked.includes(id);return `<button type="button" class="wardrobe-item ${owned?'magical-tile':'locked-wardrobe'}" data-magic-dress="${id}" aria-pressed="${save.outfit===id}"><span>${emoji}</span><b>${label}</b><small>${owned?'✨ Wear it':'🔒 '+price+' 💎'}</small></button>`}).join('')+'</div><button type="button" class="shop-shortcut" data-jump-shop="true">🪄 Visit Magic Shop ➜</button>';
+ html='<p>✨ These glowing dresses can only be unlocked using gems from the Magic Shop!</p><div class="wardrobe-grid">'+magicDresses.map(([id,label,emoji,price,col,accent,theme,req])=>{const owned=save.unlocked.includes(id);return `<button type="button" class="wardrobe-item ${owned?'magical-tile':'locked-wardrobe'}" data-magic-dress="${id}" aria-pressed="${save.outfit===id}"><span>${emoji}</span><b>${label}</b><small>${owned?'✨ Wear it':'🔒 '+price+' 💎 · Lv '+req}</small></button>`}).join('')+'</div><button type="button" class="shop-shortcut" data-jump-shop="true">🪄 Visit Magic Shop ➜</button>';
  }else if(dressTab==='wand'){
- html='<p>🪄 Wands sparkle in Mimi’s paw. Earn gems to unlock new ones!</p><div class="wardrobe-grid"><button type="button" class="wardrobe-item" data-wand="none" aria-pressed="'+(save.wand==='none')+'"><span>🐾</span><b>No wand</b></button>'+magicWands.map(([id,label,emoji,price])=>{const owned=save.unlocked.includes(id);return `<button type="button" class="wardrobe-item ${owned?'magical-tile':'locked-wardrobe'}" data-magic-wand="${id}" aria-pressed="${save.wand===id}"><span>${emoji}</span><b>${label}</b><small>${owned?'✨ Hold it':'🔒 '+price+' 💎'}</small></button>`}).join('')+'</div><button type="button" class="shop-shortcut" data-jump-shop="true">🪄 Visit Magic Shop ➜</button>';
+ html='<p>🪄 Wands sparkle in Mimi’s paw. Earn gems to unlock new ones!</p><div class="wardrobe-grid"><button type="button" class="wardrobe-item" data-wand="none" aria-pressed="'+(save.wand==='none')+'"><span>🐾</span><b>No wand</b></button>'+magicWands.map(([id,label,emoji,price,glow,req])=>{const owned=save.unlocked.includes(id);return `<button type="button" class="wardrobe-item ${owned?'magical-tile':'locked-wardrobe'}" data-magic-wand="${id}" aria-pressed="${save.wand===id}"><span>${emoji}</span><b>${label}</b><small>${owned?'✨ Hold it':'🔒 '+price+' 💎 · Lv '+req}</small></button>`}).join('')+'</div><button type="button" class="shop-shortcut" data-jump-shop="true">🪄 Visit Magic Shop ➜</button>';
  }else if(dressTab==='hair'){
   html='<p>Try a hairstyle and choose its colour.</p><h3 class="subhead">Hairstyles</h3><div class="wardrobe-grid">'+hairstyle.map(([id,label,emoji])=>`<button type="button" class="wardrobe-item" data-hair="${id}" aria-pressed="${save.hair===id}"><span>${emoji}</span><b>${label}</b></button>`).join('')+'</div><h3 class="subhead">Hair colours</h3><div class="wardrobe-grid">'+hairColours.map(([id,label,colour])=>`<button type="button" class="wardrobe-item colour-choice" data-hair-colour="${id}" aria-pressed="${save.hairColour===id}"><span class="colour-dot" style="background:${colour}"></span><b>${label}</b></button>`).join('')+'</div>';
  }else if(dressTab==='hat'){
@@ -207,24 +241,40 @@ function renderWardrobe(){all('[data-dress-tab]').forEach(b=>{b.classList.toggle
 }
 function renderShop(){
  const selected=shopTab==='dress'?magicDresses:magicWands;
+ const info=levelInfo();
  all('[data-shop-tab]').forEach(b=>{const yes=b.dataset.shopTab===shopTab;b.classList.toggle('selected',yes);b.setAttribute('aria-pressed',String(yes));});
  $('shop-balance').textContent=save.total;
  $('shop-progress').textContent=`${selected.filter(item=>save.unlocked.includes(item[0])).length} of ${selected.length} unlocked`;
- $('shop-items').innerHTML=selected.map(([id,name,icon,price,col,accent,theme])=>{
-  const bought=save.unlocked.includes(id),equipped=(shopTab==='dress'?save.outfit:save.wand)===id,afford=save.total>=price;
-  return `<article class="shop-card ${bought?'owned':''}"><div class="shop-art ${shopTab==='dress'?'dress-art':'wand-art'} ${theme==='lights'?'xmas-lights':''}" style="--item-tint:${col};--item-glow:${accent||col}"><span class="shop-emoji">${icon}</span><span class="shop-spark s1">✦</span><span class="shop-spark s2">✨</span><span class="shop-spark s3">✦</span>${theme==='lights'?'<span class="mini-light">🔴🟢🟡🔵</span>':''}</div><h3>${name}</h3><p>${shopTab==='dress'?'✨ Glowing magical dress':'🪄 Sparkling magic wand'}</p><button type="button" data-shop-buy="${id}" ${equipped?'disabled':''} class="shop-buy ${bought?'equip':''}" aria-label="${bought?(equipped?'Wearing ':'Equip '):'Unlock '}${name}${bought?'':' for '+price+' gems'}">${equipped?'✓ Equipped':bought?'✨ Wear it!':afford?'💎 '+price+' · Unlock':'🔒 '+price+' 💎'}</button></article>`
+ if($('shop-level'))$('shop-level').textContent=`Level ${info.level}`;
+ $('shop-items').innerHTML=selected.map(item=>{
+  const [id,name,icon,price,...rest]=item;
+  const req=shopTab==='dress'?rest[3]:rest[1];
+  const theme=shopTab==='dress'?rest[2]:'';
+  const col=rest[0], accent=shopTab==='dress'?rest[1]:rest[0];
+  const bought=save.unlocked.includes(id),equipped=(shopTab==='dress'?save.outfit:save.wand)===id,afford=save.total>=price,levelOk=info.level>=req;
+  let label='';
+  if(equipped) label='✓ Equipped';
+  else if(bought) label=shopTab==='dress'?'✨ Wear it!':'🪄 Hold it!';
+  else if(!levelOk) label=`⭐ Lv ${req}`;
+  else if(afford) label=`💎 ${price} · Unlock`;
+  else label=`🔒 ${price} 💎`;
+  return `<article class="shop-card ${bought?'owned':''}"><div class="shop-art ${shopTab==='dress'?'dress-art':'wand-art'} ${theme==='lights'?'xmas-lights':''}" style="--item-tint:${col};--item-glow:${accent||col}"><span class="shop-emoji">${icon}</span><span class="shop-spark s1">✦</span><span class="shop-spark s2">✨</span><span class="shop-spark s3">✦</span>${theme==='lights'?'<span class="mini-light">🔴🟢🟡🔵</span>':''}</div><h3>${name}</h3><p>${shopTab==='dress'?'✨ Glowing magical dress':'🪄 Sparkling magic wand'}<span class="req">Requires level ${req}</span></p><button type="button" data-shop-buy="${id}" ${equipped?'disabled':''} class="shop-buy ${bought?'equip':''}">${label}</button></article>`;
  }).join('');
 }
 function buyOrEquip(id){
  const item=allMagic.find(m=>m.data[0]===id);if(!item)return;
- const [key,name,icon,price]=item.data;
+ const [key,name,icon,price,...rest]=item.data;
+ const req=item.type==='dress'?rest[3]:rest[1];
+ const info=levelInfo();
  if(!save.unlocked.includes(key)){
+  if(info.level<req){toast(`⭐ Reach level ${req} to unlock ${name}!`);chirp([390,330]);return;}
   if(save.total<price){toast(`💎 You need ${price-save.total} more gems! Play games to earn them.`);chirp([350,285]);return;}
   save.total-=price;save.unlocked.push(key);confetti(32);chirp([523,659,784,1046],.14);toast(`🎉 ${name} unlocked!`);
  }else{toast(`✨ Mimi is wearing ${name}!`);}
  if(item.type==='dress')save.outfit=key;else save.wand=key;
  store();applyLook();updateGemUI();renderWardrobe();renderShop();
 }
+
 function renderSpeed(){
  const value=Number(save.speed).toFixed(2)+'×';
  all('[data-speed-readout]').forEach(el=>el.textContent=value);
@@ -236,10 +286,10 @@ function renderVoice(){ $('voice-grid').innerHTML=voices.map(([id,label,emoji,no
  $('quick-voice').innerHTML=voices.filter(v=>['squeaky','alien','giant','robot','baby','dinosaur'].includes(v[0])).map(([id,label,emoji])=>`<button type="button" class="quick-chip ${save.voice===id?'selected':''}" data-voice="${id}" aria-pressed="${save.voice===id}">${emoji} ${label}</button>`).join('');
 }
 function setVoice(id){save.voice=choice(voices,id,'squeaky');store();renderVoice();chirp([550,840]);const v=voices.find(x=>x[0]===save.voice);toast(`${v[2]} ${v[1]} voice selected!`);if(lastBuffer||lastBlob){replay.hidden=false;$('voice-replay').hidden=false;}}
-function showPage(id){if(!['home','wardrobe','play','voices','gems','shop'].includes(id))return;
+function showPage(id){if(!['home','rooms','wardrobe','play','voices','gems','shop'].includes(id))return;
  if(page==='home' && id!=='home' && (recState==='recording'||recState==='requesting'||recState==='processing'))cancelRecording();
  if(page==='home' && id!=='home' && recState==='playing')stopPlayback();
- page=id;if(id==='shop')renderShop();if(id==='voices')$('voice-replay').hidden=!(lastBuffer||lastBlob);all('.page').forEach(p=>{const yes=p.id===`page-${id}`;p.hidden=!yes;p.classList.toggle('active',yes)});all('[data-page]').forEach(b=>{b.classList.toggle('selected',b.dataset.page===id);b.setAttribute('aria-selected',String(b.dataset.page===id));});if(id!=='play')closeActivity();window.scrollTo({top:0,behavior:'auto'});}
+ page=id;if(id==='shop')renderShop();if(id==='voices')$('voice-replay').hidden=!(lastBuffer||lastBlob);if(id==='rooms')renderRooms();all('.page').forEach(p=>{const yes=p.id===`page-${id}`;p.hidden=!yes;p.classList.toggle('active',yes)});all('[data-page]').forEach(b=>{b.classList.toggle('selected',b.dataset.page===id);b.setAttribute('aria-selected',String(b.dataset.page===id));});if(id!=='play')closeActivity();window.scrollTo({top:0,behavior:'auto'});}
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
 let ctx=null;
 async function getContext(){if(!AudioCtx)throw new Error('Web Audio is not available.');if(!ctx)ctx=new AudioCtx();if(ctx.state==='suspended')await ctx.resume();return ctx;}
@@ -297,11 +347,13 @@ function catAction(kind){if(recState==='recording'||recState==='requesting'||rec
  else{happy(kind==='tickle'?'Tee hee hee! 😹':'Boop! 💖');chirp(kind==='tickle'?[820,950,1140]:[510,800]);}}
 let memeBufferPromise=null;
 function playMeme(){if(muted)return;try{getContext().then(async ac=>{if(!memeBufferPromise)memeBufferPromise=fetch('./six-seven.wav').then(r=>{if(!r.ok)throw new Error('Missing sound');return r.arrayBuffer()}).then(bytes=>ac.decodeAudioData(bytes)).catch(()=>null);const buffer=await memeBufferPromise;if(!buffer)return;const src=ac.createBufferSource();src.buffer=buffer;src.playbackRate.value=1.12;src.connect(ac.destination);src.start();}).catch(()=>{});}catch{}}
-function buildGameTiles(){$('game-tiles').innerHTML=games.map(([id,label,emoji,note,tint])=>`<button type="button" class="game-tile" style="--tile:${tint}" data-game="${id}"><span>${emoji}</span><b>${label}</b><small>${note}</small></button>`).join('')}
+function buildGameTiles(){$('game-tiles').innerHTML=games.map(([id,label,emoji,note,tint,room])=>`<button type="button" class="game-tile" style="--tile:${tint}" data-game="${id}"><span>${emoji}</span><b>${label}</b><small>${note}</small><span class="room-tag">${(rooms.find(r=>r[0]===room)||rooms[0])[1]}</span></button>`).join('')}
+function renderRooms(){const room=currentRoom(); $('room-grid').innerHTML=rooms.map(([id,name,emoji,desc])=>`<button type="button" class="room-card ${save.room===id?'selected':''}" data-room="${id}"><span class="room-emoji">${emoji}</span><b>${name}</b><small>${desc}</small></button>`).join(''); $('room-scene').textContent=room[2]; $('room-title').textContent=room[1]; $('room-description').textContent=room[3]; $('room-actions').innerHTML=`<button type="button" data-room-game="${room[4]}">Play ${(games.find(g=>g[0]===room[4])||['','Game'])[1]} ➜</button><button type="button" data-room-game="${room[5]}">Play ${(games.find(g=>g[0]===room[5])||['','Game'])[1]} ➜</button><button type="button" data-room-home="true" class="alt">Use this room on Home</button>`;}
+function setRoom(id){if(!rooms.some(r=>r[0]===id))return;save.room=id;store();updateGemUI();renderRooms();toast(`${currentRoom()[2]} ${currentRoom()[1]} selected!`);}
 function closeActivity(){if(activeTimer){clearInterval(activeTimer);clearTimeout(activeTimer);activeTimer=0}activity='';$('activity').hidden=true}
 function openActivity(id){closeActivity();const g=games.find(x=>x[0]===id);if(!g)return;activity=id;showPage('play');$('activity').hidden=false;$('activity-title').textContent=`${g[2]} ${g[1]}`;$('activity-info').textContent=g[3];renderActivity();$('activity').scrollIntoView({behavior:'smooth',block:'start'});}
 function awardActivity(n,text='Brilliant!'){reward(n);confetti(18);chirp([523,659,784,1000],.13);if(text)toast(text+` +${n} 💎`);}
-function renderActivity(){const body=$('activity-body');body.innerHTML='';if(activity==='stars')startStars();if(activity==='gifts')startGifts();if(activity==='feed')startFeed();if(activity==='dance')startPartyGame();if(activity==='garden')startGarden();if(activity==='colours')startColours();if(activity==='dare')startDare();if(activity==='hunt')startHunt()}
+function renderActivity(){const body=$('activity-body');body.innerHTML='';if(activity==='stars')startStars();if(activity==='gifts')startGifts();if(activity==='feed')startFeed();if(activity==='dance')startPartyGame();if(activity==='garden')startGarden();if(activity==='colours')startColours();if(activity==='dare')startDare();if(activity==='hunt')startHunt();if(activity==='bubbles')startBubbles();if(activity==='memory')startMemory();if(activity==='music')startMusic();if(activity==='cookies')startCookies()}
 function startStars(){let score=0,time=15;const body=$('activity-body');body.innerHTML='<div class="game-status"><span>⭐ <b id="star-score">0</b></span><span>⏱️ <b id="star-clock">15</b>s</span></div><div class="star-field" id="star-field"><button type="button" class="star-target" id="star-target">⭐</button></div><p class="activity-note">Tap the star before it moves!</p>';
  const target=$('star-target'),field=$('star-field');function move(){const maxX=Math.max(1,field.clientWidth-82),maxY=Math.max(1,field.clientHeight-80);target.style.left=Math.floor(Math.random()*maxX)+'px';target.style.top=Math.floor(Math.random()*maxY)+'px';target.textContent=['⭐','🌟','💖','✨'][Math.floor(Math.random()*4)]}move();target.onclick=()=>{if(activity!=='stars'||time<=0)return;score++;$('star-score').textContent=score;move();chirp([610+(score%5)*85],.065);if(score%4===0)confetti(5)};
  activeTimer=setInterval(()=>{if(activity!=='stars')return;time--;$('star-clock').textContent=time;if(time<=0){clearInterval(activeTimer);activeTimer=0;body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🌟</div><h2>You popped ${score} stars!</h2><p>You're a superstar!</p><button class="game-again" id="again-stars">Play again</button></div>`;awardActivity(Math.max(1,Math.min(10,Math.ceil(score/3))),'Star power!');$('again-stars').onclick=startStars;}},1000);
@@ -321,10 +373,18 @@ function startDare(){const b=$('activity-body');let last=-1;b.innerHTML='<div cl
 function startHunt(){let found=0;const goal=6,b=$('activity-body');const chosen=[...Array(12).keys()].sort(()=>Math.random()-.5).slice(0,goal);b.innerHTML='<p class="activity-note">Tap the tiles to find 6 hidden gems! ✨</p><div class="hunt-grid">'+[...Array(12)].map((_,i)=>`<button type="button" class="hunt-tile" data-hunt="${i}" aria-label="Open tile ${i+1}">❔</button>`).join('')+'</div><p class="activity-msg" id="hunt-progress">0 of 6 gems</p><div class="game-action"><button class="game-again" id="hunt-again">Shuffle 🪄</button></div>';
  all('[data-hunt]').forEach(tile=>tile.onclick=()=>{if(tile.disabled)return;tile.disabled=true;if(chosen.includes(Number(tile.dataset.hunt))){tile.textContent='💎';tile.classList.add('found');found++;chirp([650,930]);$('hunt-progress').textContent=`${found} of ${goal} gems`;if(found===goal){$('hunt-progress').textContent='You found them ALL! 🎉';reward(6);confetti(33)}}else{tile.textContent='🌼';chirp([420],.07)}});$('hunt-again').onclick=startHunt;
 }
+
+function startBubbles(){let score=0,time=18;const body=$('activity-body');body.innerHTML='<div class="game-status"><span>🫧 <b id="bubble-score">0</b></span><span>⏱️ <b id="bubble-clock">18</b>s</span></div><div class="star-field" id="bubble-field"></div><p class="activity-note">Pop as many bubbles as you can!</p>';
+ const field=$('bubble-field'); function addBubble(){if(activity!=='bubbles')return;const b=document.createElement('button');b.type='button';b.className='star-target';b.textContent=['🫧','💖','✨'][Math.floor(Math.random()*3)];b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px';b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px';b.onclick=()=>{score++;$('bubble-score').textContent=score;chirp([640+(score%4)*70],.05);b.remove();};field.append(b);setTimeout(()=>b.remove(),1400);} const spawner=setInterval(()=>{addBubble();addBubble();},700); activeTimer=setInterval(()=>{time--; $('bubble-clock').textContent=time; if(time<=0){clearInterval(spawner); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🫧</div><h2>You popped ${score} bubbles!</h2><button class="game-again" id="again-bubbles">Play again</button></div>`; awardActivity(Math.max(2,Math.ceil(score/4)),'Bubble burst!'); $('again-bubbles').onclick=startBubbles;}},1000); addBubble();}
+function startMemory(){const icons=['🐱','💖','🌈','⭐','🎀','🎄'];const deck=[...icons,...icons].sort(()=>Math.random()-.5);let first=null, lock=false, matches=0;const body=$('activity-body');body.innerHTML='<p class="activity-note">Match all the pairs!</p><div class="hunt-grid">'+deck.map((icon,i)=>`<button type="button" class="hunt-tile" data-memory="${i}" aria-label="Card ${i+1}">❔</button>`).join('')+'</div><p class="activity-msg" id="memory-msg">Pick a card!</p>'; all('[data-memory]').forEach(btn=>btn.onclick=()=>{if(lock||btn.disabled)return; const idx=Number(btn.dataset.memory); btn.textContent=deck[idx]; if(first===null){first=btn; return;} if(first===btn)return; lock=true; if(first.textContent===btn.textContent){ first.disabled=btn.disabled=true; matches++; $('memory-msg').textContent='Match found! ✨'; reward(2,2); lock=false; first=null; if(matches===icons.length){ confetti(28); $('memory-msg').textContent='You matched them all!'; }} else { $('memory-msg').textContent='Oops! Try again!'; setTimeout(()=>{first.textContent='❔'; btn.textContent='❔'; lock=false; first=null;},650); }});}
+function startMusic(){const body=$('activity-body'); const notes=[['🎵',440],['🎶',554],['🥁',220],['🎹',660],['🪇',770],['🔔',880]]; let taps=0; body.innerHTML='<div class="game-board" style="text-align:center"><h2>Make a tune for Mimi!</h2><div class="choice-grid">'+notes.map(([e,f],i)=>`<button type="button" data-note="${f}">${e}</button>`).join('')+'</div><p id="music-msg" class="activity-msg">Tap 6 sounds to win gems!</p></div>'; all('[data-note]').forEach(btn=>btn.onclick=()=>{taps++; chirp([Number(btn.dataset.note), Number(btn.dataset.note)+110],.07); $('music-msg').textContent=`${taps} sounds played`; if(taps>0 && taps%6===0){awardActivity(3,'Music magic!')}});}
+function startCookies(){let caught=0,time=18;const body=$('activity-body'); body.innerHTML='<div class="game-status"><span>🍪 <b id="cookie-score">0</b></span><span>⏱️ <b id="cookie-clock">18</b>s</span></div><div class="star-field" id="cookie-field"></div><p class="activity-note">Tap the cookies before they disappear!</p>'; const field=$('cookie-field'); function drop(){if(activity!=='cookies')return; const b=document.createElement('button'); b.type='button'; b.className='star-target'; b.textContent=['🍪','🧁','🍓'][Math.floor(Math.random()*3)]; b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px'; b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px'; b.onclick=()=>{caught++; $('cookie-score').textContent=caught; chirp([520,700],.06); b.remove();}; field.append(b); setTimeout(()=>{if(b.isConnected)b.remove();},1300);} const rain=setInterval(drop,600); activeTimer=setInterval(()=>{time--; $('cookie-clock').textContent=time; if(time<=0){clearInterval(rain); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🍪</div><h2>You caught ${caught} treats!</h2><button class="game-again" id="again-cookies">Play again</button></div>`; awardActivity(Math.max(1,Math.ceil(caught/3)),'Treat time!'); $('again-cookies').onclick=startCookies;}},1000); drop();}
 // Event wiring is done after every required element exists: a missing optional element cannot block other buttons.
 all('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 all('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
 $('gem-shortcut').onclick=()=>showPage('gems');$('gem-hunt').onclick=()=>{showPage('play');openActivity('hunt');};
+$('room-grid').addEventListener('click',e=>{const b=e.target.closest('[data-room]');if(b)setRoom(b.dataset.room)});
+$('room-actions').addEventListener('click',e=>{const g=e.target.closest('[data-room-game]'); if(g){showPage('play'); openActivity(g.dataset.roomGame); return;} if(e.target.closest('[data-room-home]')){showPage('home');}});
 all('[data-dress-tab]').forEach(b=>b.onclick=()=>{dressTab=b.dataset.dressTab;renderWardrobe()});
 $('wardrobe-content').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.jumpShop){showPage('shop')}else if(b.dataset.magicDress)selectLook('outfit',b.dataset.magicDress);else if(b.dataset.magicWand)selectLook('wand',b.dataset.magicWand);else if(b.dataset.wand)selectLook('wand',b.dataset.wand);else if(b.dataset.season){season=b.dataset.season;renderWardrobe()}else if(b.dataset.outfit)selectLook('outfit',b.dataset.outfit);else if(b.dataset.hair)selectLook('hair',b.dataset.hair);else if(b.dataset.hat)selectLook('hat',b.dataset.hat);else if(b.dataset.fur)selectLook('fur',b.dataset.fur);else if(b.dataset.hairColour)selectLook('hairColour',b.dataset.hairColour)});
 $('random-look').onclick=()=>{const get=a=>a[Math.floor(Math.random()*a.length)];save.outfit=get(Object.values(outfits).flat())[0];save.hair=get(hairstyle)[0];save.hairColour=get(hairColours)[0];save.hat=get(hats)[0];store();applyLook();renderWardrobe();confetti(18);toast('🎲 Surprise outfit!')};
@@ -341,8 +401,8 @@ $('game-tiles').addEventListener('click',e=>{const b=e.target.closest('[data-gam
 recBtn.onclick=()=>{if(recState==='recording')endRecording();else if(recState==='idle')beginRecording()};replay.onclick=playLatest;
 $('tickle').onclick=()=>catAction('tickle');$('boop').onclick=()=>catAction('boop');$('meme').onclick=()=>catAction('meme');$('home-dance').onclick=()=>catAction('dance');wrap.onclick=()=>catAction('tickle');wrap.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();catAction('tickle')}};
 $('sound-toggle').onclick=()=>{muted=!muted;$('sound-toggle').textContent=muted?'🔇 Effects off':'🔊 Effects on';$('sound-toggle').setAttribute('aria-pressed',String(!muted));if(!muted)chirp()};
-$('reset-save').onclick=()=>{if(!window.confirm('Grown-ups only: clear all saved gems and outfits on this device?'))return;save={...defaults,album:[],unlocked:[]};store();applyLook();renderWardrobe();renderVoice();renderSpeed();updateGemUI();renderShop();toast('Collection reset')};
+$('reset-save').onclick=()=>{if(!window.confirm('Grown-ups only: clear all saved gems and outfits on this device?'))return;save={...defaults,album:[],unlocked:[]};store();applyLook();renderWardrobe();renderVoice();renderSpeed();updateGemUI();renderShop();renderRooms();toast('Collection reset')};
 window.addEventListener('pagehide',()=>{cancelRecording();discardVoice();stopDancing();closeActivity();if(ctx){ctx.close().catch(()=>{});ctx=null}});
-applyLook();renderWardrobe();renderVoice();renderSpeed();buildGameTiles();updateGemUI();renderShop();recordingLabel();
+applyLook();renderWardrobe();renderVoice();renderSpeed();buildGameTiles();updateGemUI();renderShop();renderRooms();recordingLabel();
 if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
 })();
