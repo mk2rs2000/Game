@@ -1,175 +1,25 @@
 <!doctype html>
-<html lang="en-GB">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#aa8ae7">
-  <meta name="description" content="Mimi is a private talking cat with dress-up, mini-games and silly surprises. Your voice stays on your device.">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Mimi & Me">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <title>Mimi & Me — The Kitty Playhouse (Fixed V3)</title>
-  <style>
-    :root {
-      color-scheme: light;
-      --ink:#352f57; --muted:#666086; --card:#fffdfd; --purple:#6949c6;
-      --cat-fur:#d4a9ff; --cat-fur-dark:#ad7ed8; --cat-ear:#ef87b6;
-      --cat-belly:#ffedf8; --cat-shadow:rgba(106,58,172,.25);
-    }
-    * { box-sizing: border-box; }
-    html { min-height: 100%; background: #d9c7ff; }
-    body { margin:0; min-height:100dvh; font-family: ui-rounded, 'Arial Rounded MT Bold', 'Trebuchet MS', -apple-system, BlinkMacSystemFont, sans-serif; color:var(--ink); background:radial-gradient(circle at 15% 4%, #fff7c0 0,transparent 25%),radial-gradient(circle at 98% 75%, #b0edff 0,transparent 30%), linear-gradient(148deg,#e3cfff 0%,#f3e6ff 50%,#c0e8ff 100%); -webkit-tap-highlight-color:transparent; }
-    button {font:inherit; cursor:pointer; -webkit-appearance:none; appearance:none; touch-action:manipulation;}
-    button:focus-visible {outline:4px solid #352084; outline-offset:4px;}
-    .app {max-width:545px; margin:0 auto; padding: max(16px, env(safe-area-inset-top)) 17px max(25px, env(safe-area-inset-bottom));}
-    .top {display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 0 2px 12px;}
-    .logo {display:flex;align-items:center;gap:8px; font-weight:1000;font-size:clamp(23px,5.5vw,30px);line-height:1;letter-spacing:-1px;}
-    .logo-star {display:grid;place-items:center;width:37px;height:37px;border-radius:14px;background:white;box-shadow:0 4px 0 #d5c4ef;transform:rotate(-8deg);font-size:22px;}
-    .private-pill {font-size:11px;font-weight:900;background:rgba(255,255,255,.83);padding:10px 11px;border-radius:999px;white-space:nowrap;box-shadow:0 3px 0 #dcd2f1;}
-    .stage {position:relative; border-radius:32px; background:linear-gradient(180deg,#fffdfd 0%,#fbf2ff 63%,#f1e6ff 100%); box-shadow:0 9px 0 #b79dde, 0 17px 35px rgba(79,57,141,.13); overflow:hidden; isolation:isolate; padding:18px 12px 4px; }
-    .stage::before {content:'';position:absolute;left:-20%;right:-20%;bottom:-79px;height:192px;border-radius:50%;background:linear-gradient(180deg,#c5f7c1,#8fddcc);opacity:.7;z-index:-1;}
-    .sparkle {position:absolute;pointer-events:none;user-select:none;font-size:26px;animation:float 3s ease-in-out infinite alternate;opacity:.92;}
-    .sp1 {left:7%;top:28%;color:#ffd26e;} .sp2 {right:7%;top:34%;animation-delay:-1.5s;color:#d5b4ff;} .sp3 {left:16%;top:59%;font-size:18px;animation-delay:-.7s;}
-    h1 {margin:0; text-align:center;font-size:clamp(22px,5.4vw,27px);line-height:1.13;letter-spacing:-.5px;}
-    .subhead {text-align:center;color:var(--muted);margin:5px 0 2px;font-size:13px;font-weight:800;}
-    .bubble {position:relative;z-index:2;min-height:38px;max-width:275px;width:fit-content;margin:8px auto -7px;padding:9px 20px 8px;border-radius:19px;background:#fff;box-shadow:0 4px 0 #eee4f4;border:2px solid #eee4f4;text-align:center;font-weight:900;font-size:15px;display:flex;justify-content:center;align-items:center;}
-    .bubble::after {content:'';position:absolute;width:14px;height:14px;left:calc(50% - 7px);bottom:-9px;transform:rotate(45deg);background:white;border-right:2px solid #eee4f4;border-bottom:2px solid #eee4f4;}
-    .cat-wrap {height:clamp(275px,78vw,365px);margin-top:3px;display:grid;place-items:center; position:relative;overflow:hidden;cursor:pointer;touch-action:manipulation; user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;}
-    .cat {width:min(100%,397px);height:100%;overflow:visible;filter:drop-shadow(0 10px 7px var(--cat-shadow)); transform-origin:50% 85%;animation:breathe 2.6s ease-in-out infinite;}
-    .cat .fur {fill:var(--cat-fur);} .cat .fur-dark {fill:var(--cat-fur-dark);} .cat .ear {fill:var(--cat-ear);} .cat .belly {fill:var(--cat-belly);}
-    .head-group {transform-origin:50% 42%;} .cat .left-arm {transform-origin:31% 65%;} .cat .right-arm {transform-origin:69% 65%;}
-    .eyes {transform-origin:50% 45%;animation:blink 5.8s ease-in-out infinite;}
-    .mouth-open {opacity:0;transform:scaleY(.25);transform-origin:50% 52%;} .mouth-smile {opacity:1;}
-    .cat-wrap.is-talking .cat {animation:chat-bob .25s ease-in-out infinite alternate;}
-    .cat-wrap.is-talking .mouth-open {opacity:1;animation:chatter .17s ease-in-out infinite alternate;}
-    .cat-wrap.is-talking .mouth-smile {opacity:0;}
-    .cat-wrap.is-listening .cat {animation:breathe 1.1s ease-in-out infinite;}
-    .cat-wrap.is-listening .ears-group {animation:listen-ears .45s ease-in-out infinite alternate;transform-origin:50% 35%;}
-    .cat-wrap.is-giggling .cat {animation:giggle .16s ease-in-out 6 alternate;}
-    .cat-wrap.is-meme .cat {animation:meme-jump .37s ease-in-out 5 alternate;}
-    .cat-wrap.is-meme .left-arm {animation:arm-one .25s ease-in-out 8 alternate;}
-    .cat-wrap.is-meme .right-arm {animation:arm-two .25s ease-in-out 8 alternate;}
-    .numbers {pointer-events:none;position:absolute;z-index:5;top:31%;left:0;right:0;text-align:center;font-size:clamp(78px,22vw,125px);font-weight:1000;letter-spacing:-8px;color:#ffca35;-webkit-text-stroke:4px white;text-shadow:5px 9px 0 #8e57cc,0 12px 20px #8056a9;opacity:0;transform:scale(.35) rotate(-15deg);}
-    .numbers.show {animation:number-pop 1.65s ease-out forwards;}
-    .meme-hand {display:inline-block;font-size:42px;vertical-align:middle;-webkit-text-stroke:0;animation:hand-bop .33s infinite alternate;}
-    .confetti {position:absolute;pointer-events:none;z-index:8;width:11px;height:17px;border-radius:3px;animation:confetti-fly 1.25s ease-out forwards;}
-    .progress-bg {height:7px;width:71%;background:#e6dbf5;border-radius:20px;overflow:hidden;margin:2px auto 11px;}
-    .progress-fill {height:100%;width:0%;background:linear-gradient(90deg,#ffa1bc,#8c71ed);border-radius:20px;transition:width .08s linear;}
-    .instructions {text-align:center;font-weight:900;font-size:13px;min-height:18px;color:#655786;margin-bottom:15px;}
-    .actions {display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:13px;margin-top:18px;}
-    .action {border:0;border-radius:24px;min-height:106px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;transition:transform .12s,box-shadow .12s;}
-    .action:active {transform:translateY(5px);box-shadow:none;}
-    .record {color:white;background:linear-gradient(155deg,#a27efb,#7954d8);box-shadow:0 7px 0 #5334a5, 0 9px 14px #5f4aa433;}
-    .record.is-recording {background:linear-gradient(155deg,#ff819d,#e84d79);box-shadow:0 7px 0 #b83361;}
-    .record.is-recording .btn-emoji {animation:mic-pulse .65s ease-in-out infinite alternate;}
-    .meme {color:#694b1f;background:linear-gradient(155deg,#ffe789,#ffc148);box-shadow:0 7px 0 #d9982b,0 9px 14px #b67f3633;}
-    .btn-emoji {font-size:32px;line-height:1.08;} .action-title {font-size:18px;font-weight:1000;} .action-small {font-size:11px;font-weight:850;opacity:.9;}
-    .secondary {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:17px 0 14px;}
-    .little-btn {border:2px solid rgba(255,255,255,.9);background:rgba(255,255,255,.76);color:#4c416d;border-radius:18px;padding:14px 6px;font-size:15px;font-weight:1000;box-shadow:0 4px 0 #cbc0e0;}
-    .little-btn:active {transform:translateY(3px);box-shadow:0 1px 0 #cbc0e0;}
-    .choices {display:flex;align-items:center;justify-content:center;gap:10px;margin:9px 0 11px;font-size:13px;font-weight:950;color:#615180;}
-    .colour {width:29px;height:29px;border-radius:50%;border:3px solid white;box-shadow:0 2px 0 #c8bae0;position:relative;}
-    .colour[aria-pressed="true"]::after {content:'✓';position:absolute;inset:0;display:grid;place-items:center;color:#3b265f;text-shadow:0 0 2px white;font-size:16px;}
-    .privacy {font-size:12px;text-align:center;line-height:1.5;font-weight:750;color:#5a507b;padding:1px 8px 0;}
-    .privacy strong {color:#45366f;} .privacy details {margin-top:7px;} .privacy summary {cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-    .privacy p {margin:7px 0;}
-    .replay-row {min-height:35px;display:flex;justify-content:center;align-items:center;}
-    .replay {border:0;border-radius:15px;padding:8px 16px;background:#fff;box-shadow:0 3px 0 #c4abd9;color:#483670;font-size:14px;font-weight:900;}
-    /* Mimi's Playhouse: kid-sized touch targets and activities */
-    .play-title {display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 3px 9px;}
-    .play-title h2 {font-size:21px;margin:0;letter-spacing:-.6px;}
-    .play-title span {font-size:12px;color:#645585;font-weight:850;}
-    .voice-select {margin:14px 0 4px;border-radius:22px;background:rgba(255,255,255,.76);padding:12px 13px 14px;box-shadow:0 4px 0 #d5c7e7;}
-    .voice-head {display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
-    .voice-head strong {font-size:14px;}
-    .voice-head small {font-size:11px;color:#6b6082;font-weight:800;}
-    .voice-buttons {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
-    .voice-button {border:2px solid #e8ddf7;background:white;border-radius:14px;min-height:56px;color:#413661;font-weight:900;font-size:13px;line-height:1.2;padding:6px 1px;box-shadow:0 3px 0 #d4c5e6;}
-    .voice-button[aria-pressed="true"] {border-color:#7a57d6;background:#eadfff;box-shadow:0 3px 0 #a58bd7;}
-    .voice-button .voice-icon {display:block;font-size:22px;margin-bottom:3px;}
-    .play-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;}
-    .game-tile {border:2px solid rgba(255,255,255,.85);border-radius:22px;min-height:112px;background:linear-gradient(145deg,#fffefe,#f7eeff);box-shadow:0 5px 0 #c4b2dc;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#443661;font-size:13px;font-weight:1000;padding:9px 4px;line-height:1.1;}
-    .game-tile:nth-child(2){background:linear-gradient(145deg,#fff7dc,#ffe4a8);box-shadow:0 5px 0 #dabe83}
-    .game-tile:nth-child(3){background:linear-gradient(145deg,#e4fff8,#d0f6e8);box-shadow:0 5px 0 #9ecdbc}
-    .game-tile:nth-child(4){background:linear-gradient(145deg,#ffe8f6,#ffd2e7);box-shadow:0 5px 0 #e6aac6}
-    .game-tile:nth-child(5){background:linear-gradient(145deg,#dbf3ff,#b8e5ff);box-shadow:0 5px 0 #8ebfdb}
-    .game-tile:nth-child(6){background:linear-gradient(145deg,#f7eaff,#ead2ff);box-shadow:0 5px 0 #bea0d8}
-    .game-tile:active {transform:translateY(4px);box-shadow:0 1px 0 #aa9dbf;}
-    .tile-emoji {font-size:40px;line-height:1.2;filter:drop-shadow(0 3px 0 rgba(255,255,255,.8));}
-    .play-panel {margin:15px 0 10px;border-radius:26px;background:#fffdfd;border:3px solid #ffffff;box-shadow:0 7px 0 #c1a7dc,0 15px 23px #6e47902b;padding:16px 13px 18px;}
-    .panel-top {display:flex;align-items:center;justify-content:space-between;gap:8px;}
-    .panel-top h3 {margin:0;font-size:21px;}
-    .close-panel {border:0;background:#f2e8ff;border-radius:100%;width:42px;height:42px;font-size:23px;color:#6a4ca5;font-weight:900;}
-    .panel-info {font-size:14px;font-weight:800;color:#65557f;margin:8px 0 12px;text-align:center;min-height:20px;}
-    .panel-metrics {display:flex;justify-content:space-around;align-items:center;gap:10px;font-weight:1000;font-size:17px;margin-bottom:7px;}
-    .star-field {height:245px;position:relative;background:radial-gradient(circle at 70% 10%,#fffcd6,transparent 40%),linear-gradient(180deg,#c0a8f6,#9cd9ee);border-radius:22px;overflow:hidden;touch-action:manipulation;}
-    .star-target {border:0;background:none;position:absolute;width:65px;height:65px;font-size:54px;filter:drop-shadow(1px 5px 0 #9173c1);padding:0;transition:top .12s,left .12s;}
-    .star-target:active{transform:scale(.84)}
-    .game-done {display:grid;place-items:center;gap:12px;position:absolute;inset:0;background:rgba(244,232,255,.95);z-index:3;font-size:19px;font-weight:1000;text-align:center;padding:10px;}
-    .again {border:0;border-radius:17px;background:#7854d4;color:white;padding:13px 23px;box-shadow:0 4px 0 #523696;font-size:16px;font-weight:950;min-height:48px;}
-    .box-grid {display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-    .mystery-box {font-size:63px;min-height:118px;border:2px solid #f0e0fa;background:#f8edff;border-radius:20px;padding:10px;}
-    .mystery-box:active{transform:scale(.92)}
-    .choose-row {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;}
-    .mini-preview {position:relative;height:171px;margin:7px 0 14px;border-radius:23px;background:radial-gradient(circle at 50% 38%,#fffefc 0,#f1e4ff 65%,#d7f4ea 100%);overflow:hidden;}
-    .mini-preview svg.cat {position:absolute;bottom:-11px;left:calc(50% - 85px);width:170px;height:170px;}
-    .mini-accessory {position:absolute;z-index:5;font-size:48px;line-height:1;pointer-events:none;left:50%;top:6px;transform:translateX(-50%);}
-    .mini-accessory.bow {left:35%;top:5px;transform:rotate(-24deg)}
-    .mini-accessory.glasses {top:47px;font-size:49px}
-    .mini-snack {position:absolute;top:37px;left:50%;z-index:6;font-size:57px;pointer-events:none;opacity:0}
-    .mini-snack.show{animation:food-drop .95s ease-out both;}
-    .choose-button {border:2px solid #f0e2f7;border-radius:18px;background:#fff3fc;min-height:89px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:900;color:#4e4065;padding:3px;}
-    .choose-button .food-emoji {font-size:37px;}
-    .choose-button[aria-pressed="true"] {border-color:#9872df;background:#ebe0ff;}
-    .food-float {position:absolute;z-index:7;left:50%;top:44%;font-size:75px;pointer-events:none;opacity:0;transform:translate(-50%,15px) scale(.4);}
-    .food-float.show {animation:food-drop .95s ease-out both;}
-    .cat-accessory {position:absolute;z-index:5;font-size:clamp(65px,18vw,95px);line-height:1;pointer-events:none;filter:drop-shadow(0 5px 0 #6d4c9d25);}
-    .cat-accessory.bow {left:20%;top:11%;transform:rotate(-24deg);}
-    .cat-accessory.crown {left:50%;top:6%;transform:translateX(-50%) rotate(-8deg);}
-    .cat-accessory.glasses {left:50%;top:34%;transform:translateX(-50%);font-size:clamp(70px,19vw,100px);}
-    .cat-accessory.partyhat {left:50%;top:4%;transform:translateX(-50%) rotate(12deg);}
-    .stage.is-party {background:linear-gradient(145deg,#fff2b7,#e2c9ff,#c1ebff,#ffcfeb);background-size:300% 300%;animation:party-bg 3.4s ease-in-out infinite alternate;}
-    .cat-wrap.is-party .cat {animation:meme-jump .45s ease-in-out infinite alternate;}
-    .cat-wrap.is-eating .cat {animation:chat-bob .24s ease-in-out 6 alternate;}
-    .cat-wrap.is-surprise .cat {animation:giggle .18s ease-in-out 8 alternate;}
-    .sound-toggle {border:0;border-radius:15px;background:#fff9ff;color:#5b4a7c;box-shadow:0 2px 0 #d0bee1;min-height:39px;padding:7px 11px;font-size:12px;font-weight:950;}
-    .rainbow-label {padding:4px 8px;border-radius:999px;background:#fff7c9;color:#786030;font-size:11px;font-weight:950;}
-    @keyframes food-drop {0%{opacity:0;transform:translate(-50%,-40px) scale(1.1)}35%{opacity:1}70%{opacity:1;transform:translate(-50%,22px) scale(.75)}100%{opacity:0;transform:translate(-50%,65px) scale(.1)}}
-    @keyframes party-bg{to{background-position:100% 80%}}
-    @media(max-width:375px){.play-grid{gap:8px}.game-tile{min-height:100px;font-size:12px}.tile-emoji{font-size:34px}.voice-button{font-size:12px}}
-    @media(prefers-reduced-motion:reduce){.stage.is-party,.cat-wrap.is-party .cat,.cat-wrap.is-surprise .cat {animation:none}}
-    [hidden] {display:none!important;}
-    @keyframes float {to{transform:translateY(-11px) rotate(10deg)}}
-    @keyframes breathe {50%{transform:translateY(-4px) scale(1.008)}}
-    @keyframes blink {0%,43%,45%,81%,83%,100%{transform:scaleY(1)}44%,82%{transform:scaleY(.07)}}
-    @keyframes chat-bob {to{transform:translateY(-8px) rotate(1.5deg)}}
-    @keyframes chatter {to{transform:scaleY(1.35)}}
-    @keyframes giggle {to{transform:rotate(-4deg) translateX(-7px)}}
-    @keyframes listen-ears {to{transform:rotate(-3deg)}}
-    @keyframes meme-jump {to{transform:translateY(-25px) rotate(5deg) scale(1.04)}}
-    @keyframes arm-one {to{transform:rotate(32deg)}}
-    @keyframes arm-two {to{transform:rotate(-32deg)}}
-    @keyframes number-pop {0%{opacity:0;transform:scale(.35) rotate(-15deg)}16%{opacity:1;transform:scale(1.12) rotate(8deg)}25%{transform:scale(.95) rotate(-6deg)}73%{opacity:1;transform:scale(1.02) rotate(3deg)}100%{opacity:0;transform:scale(1.65) translateY(-35px)}}
-    @keyframes hand-bop {to{transform:rotate(35deg) translateY(-12px)}}
-    @keyframes confetti-fly {to{transform:translate(var(--dx),var(--dy)) rotate(var(--rotation));opacity:0}}
-    @keyframes mic-pulse {to{transform:scale(1.25)}}
-    @media(max-width:375px){.app{padding-left:12px;padding-right:12px}.private-pill{font-size:10px;padding:9px 8px}.logo{font-size:23px}.cat-wrap{height:285px}.action-title{font-size:16px}}
-    @media(max-height:710px){.cat-wrap{height:290px}.stage{padding-top:13px}}
-    @media(prefers-reduced-motion:reduce){.sparkle,.cat,.eyes,.cat-wrap.is-meme .cat,.cat-wrap.is-giggling .cat{animation-duration:1.5s;animation-iteration-count:1}}
-  </style>
-</head>
-<body>
-  <main class="app">
-    <header class="top"><div class="logo"><span class="logo-star" aria-hidden="true">🐾</span> Mimi &amp; Me</div><span class="private-pill">🔒 Voice stays here</span></header>
-    <section id="stage" class="stage" aria-label="Play with Mimi the cat">
-      <span class="sparkle sp1" aria-hidden="true">✦</span><span class="sparkle sp2" aria-hidden="true">✳</span><span class="sparkle sp3" aria-hidden="true">✦</span>
-      <h1>Say hello to Mimi! <span aria-hidden="true">💖</span></h1>
-      <p class="subhead">Your silly, giggly talking kitty</p>
-      <div class="bubble" id="bubble" role="status" aria-live="polite">Tap the mic and say hi!</div>
-      <div class="cat-wrap" id="cat-wrap" role="button" tabindex="0" aria-label="Tickle Mimi the cat">
-        <svg class="cat" viewBox="0 0 420 420" role="img" aria-label="A smiling lavender cartoon kitten">
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#c5a7fa"><meta name="description" content="A private, colourful offline-friendly talking cat playhouse for little ones. No ads, no accounts, no uploads.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Mimi Playhouse"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css?v=4.3">
+<title>Mimi's Magic Playhouse</title></head><body>
+<div class="app-shell">
+<header class="topbar"><div class="brand"><span class="brand-icon">🐾</span><span>Mimi's <em>Magic</em><small>Playhouse</small></span></div><div class="top-actions"><button type="button" class="gem-balance" id="gem-shortcut" aria-label="View your gem collection">💎 <span id="gem-count">0</span></button><span class="privacy-pill">🔒 Private</span></div></header>
+<nav class="nav" role="tablist" aria-label="Playhouse pages">
+<button type="button" role="tab" aria-selected="true" class="nav-btn selected" data-page="home"><span>🏡</span>Home</button>
+<button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="wardrobe"><span>👗</span>Dress Up</button>
+<button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="play"><span>🎮</span>Games</button>
+<button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="voices"><span>🎤</span>Voices</button>
+<button type="button" role="tab" aria-selected="false" class="nav-btn" data-page="gems"><span>💎</span>Gems</button>
+</nav>
+<main id="main">
+<section class="page active" id="page-home" role="tabpanel" aria-label="Home">
+ <div class="home-grid"><div class="stage-card" id="stage">
+  <div class="stage-sparkles" aria-hidden="true">✦ &nbsp; ⭐ &nbsp; ✨</div><h1>Hi, I'm Mimi! <span>💖</span></h1>
+  <div id="bubble" class="speech-bubble" role="status" aria-live="polite">Tap the mic and say hello!</div>
+  <div id="cat-wrap" class="cat-wrap" tabindex="0" role="button" aria-label="Tickle Mimi the cat"><svg class="cat" viewBox="0 0 420 420" role="img" aria-label="A smiling lavender cartoon kitten">
           <ellipse cx="211" cy="391" rx="119" ry="15" fill="#77b99b" opacity=".28" />
           <path d="M286 289 C364 260, 385 315, 353 351 C339 369, 320 368, 307 351" fill="none" stroke="var(--cat-fur-dark)" stroke-width="34" stroke-linecap="round" />
           <path d="M286 289 C364 260, 385 315, 353 351 C339 369, 320 368, 307 351" fill="none" stroke="var(--cat-fur)" stroke-width="25" stroke-linecap="round" />
@@ -214,511 +64,98 @@
             </g>
             <path d="M187 94 Q196 99 208 94 Q221 100 230 93" stroke="#ecb3ed" stroke-width="6" fill="none" stroke-linecap="round" opacity=".7" />
           </g>
-        </svg>
-        <span id="accessory" class="cat-accessory" aria-hidden="true" hidden></span>
-        <span id="food-float" class="food-float" aria-hidden="true"></span>
-        <div id="numbers" class="numbers" aria-hidden="true">6<span class="meme-hand">🙌</span>7</div>
-      </div>
-      <div class="progress-bg" aria-hidden="true"><div id="progress" class="progress-fill"></div></div>
-      <div id="hint" class="instructions">Mimi repeats your voice in a funny squeak!</div>
-    </section>
-    <div class="actions">
-      <button type="button" id="record" class="action record" aria-label="Start recording your voice"><span class="btn-emoji" id="mic-emoji" aria-hidden="true">🎤</span><span class="action-title" id="record-label">Tap to talk</span><span class="action-small" id="record-detail">Tap again to repeat</span></button>
-      <button type="button" id="meme" class="action meme"><span class="btn-emoji" aria-hidden="true">🙌</span><span class="action-title">SIX! SEVEN!</span><span class="action-small">The meme button!</span></button>
-    </div>
-    <div class="voice-select" aria-label="Choose Mimi's silly voice">
-      <div class="voice-head"><strong>🎙️ Pick Mimi’s funny voice</strong><small>Choose before talking</small></div>
-      <div class="voice-buttons">
-        <button type="button" class="voice-button" data-voice="squeaky" aria-pressed="true"><span class="voice-icon" aria-hidden="true">🐭</span>Squeaky</button>
-        <button type="button" class="voice-button" data-voice="alien" aria-pressed="false"><span class="voice-icon" aria-hidden="true">👽</span>Alien</button>
-        <button type="button" class="voice-button" data-voice="giant" aria-pressed="false"><span class="voice-icon" aria-hidden="true">🦖</span>Giant</button>
-      </div>
-    </div>
-    <div class="secondary"><button type="button" class="little-btn" id="tickle">😹 Tickle Mimi</button><button type="button" class="little-btn" id="boop">🐽 Boop nose</button></div>
-    <div class="play-title"><h2>🌈 Mimi's Playhouse</h2><button id="sound-toggle" type="button" class="sound-toggle" aria-pressed="true">🔊 Sounds on</button></div>
-    <div class="play-grid" aria-label="Games and activities">
-      <button type="button" class="game-tile" data-open="stars"><span class="tile-emoji">⭐</span>Star Pop</button>
-      <button type="button" class="game-tile" data-open="boxes"><span class="tile-emoji">🎁</span>Lucky Boxes</button>
-      <button type="button" class="game-tile" data-open="food"><span class="tile-emoji">🍓</span>Feed Mimi</button>
-      <button type="button" class="game-tile" data-open="dress"><span class="tile-emoji">🎀</span>Dress Up</button>
-      <button type="button" class="game-tile" id="dance"><span class="tile-emoji">💃</span><span id="dance-label">Dance Party</span></button>
-      <button type="button" class="game-tile" id="challenge"><span class="tile-emoji">🎲</span>Silly Dare</button>
-    </div>
-    <section id="play-panel" class="play-panel" aria-label="Activity area" hidden>
-      <div class="panel-top"><h3 id="panel-title">Let's play!</h3><button type="button" class="close-panel" id="panel-close" aria-label="Close game">×</button></div>
-      <p class="panel-info" id="panel-info">Choose your game!</p>
-      <div id="mini-preview" class="mini-preview" aria-hidden="true" hidden><span id="mini-accessory" class="mini-accessory" hidden></span><span id="mini-snack" class="mini-snack"></span></div>
-      <div id="stars-game" hidden>
-        <div class="panel-metrics"><span>⭐ <span id="star-score">0</span> popped</span><span>⏱️ <span id="star-time">15</span>s</span></div>
-        <div id="star-field" class="star-field" aria-label="Tap the moving star"><button type="button" class="star-target" id="star-target" aria-label="Pop the star">⭐</button>
-          <div id="star-done" class="game-done" hidden><span id="star-finish">You did it! 🌟</span><button type="button" class="again" id="star-again">Play again</button></div>
-        </div>
-      </div>
-      <div id="boxes-game" hidden>
-        <div class="box-grid" id="box-grid">
-          <button type="button" class="mystery-box" data-box="0" aria-label="Open mystery present one">🎁</button>
-          <button type="button" class="mystery-box" data-box="1" aria-label="Open mystery present two">🎁</button>
-          <button type="button" class="mystery-box" data-box="2" aria-label="Open mystery present three">🎁</button>
-        </div>
-        <div style="text-align:center;margin-top:14px"><button type="button" class="again" id="boxes-again">Shuffle presents 🔀</button></div>
-      </div>
-      <div id="food-game" hidden><div class="choose-row">
-        <button class="choose-button" data-food="🐟" type="button"><span class="food-emoji">🐟</span>Fish</button>
-        <button class="choose-button" data-food="🍓" type="button"><span class="food-emoji">🍓</span>Berry</button>
-        <button class="choose-button" data-food="🥦" type="button"><span class="food-emoji">🥦</span>Broccoli</button>
-        <button class="choose-button" data-food="🧁" type="button"><span class="food-emoji">🧁</span>Cupcake</button>
-      </div></div>
-      <div id="dress-game" hidden><div class="choose-row">
-        <button class="choose-button" data-outfit="bow" type="button"><span class="food-emoji">🎀</span>Bow</button>
-        <button class="choose-button" data-outfit="crown" type="button"><span class="food-emoji">👑</span>Crown</button>
-        <button class="choose-button" data-outfit="glasses" type="button"><span class="food-emoji">😎</span>Glasses</button>
-        <button class="choose-button" data-outfit="partyhat" type="button"><span class="food-emoji">🥳</span>Party hat</button>
-      </div><div style="text-align:center;margin-top:14px"><button type="button" class="again" id="dress-clear">Take it off 🐱</button></div></div>
-    </section>
-    <div class="choices" aria-label="Pick Mimi's colour"><span>Pick a colour:</span><button class="colour" type="button" data-colour="purple" style="background:#d4a9ff" aria-pressed="true" aria-label="Lavender cat"></button><button class="colour" type="button" data-colour="pink" style="background:#ffacd0" aria-pressed="false" aria-label="Pink cat"></button><button class="colour" type="button" data-colour="orange" style="background:#ffd18c" aria-pressed="false" aria-label="Ginger cat"></button></div>
-    <div class="replay-row"><button id="replay" type="button" class="replay" hidden>🔊 Hear Mimi!</button></div>
-    <footer class="privacy"><strong>Little voices stay private.</strong> No sign-in, no adverts, no tracking, no saved conversations.
-      <details><summary>How it protects your voice</summary><p>Microphone audio is processed inside this browser, replayed once, then discarded. It is never sent to a server. Safari will ask before using your microphone. You can stop access in Safari settings. The app itself does not save your recordings, use cookies or send analytics. Your web host may still receive ordinary website requests when the page loads.</p></details>
-    </footer>
-  </main>
-  <audio id="meme-audio" preload="auto" src="six-seven.mp3"></audio>
-  <script>
-  (() => {
-    'use strict';
-    const $ = (id) => document.getElementById(id);
-    const wrap = $('cat-wrap'), bubble = $('bubble'), hint = $('hint');
-    const recordButton = $('record'), recordLabel = $('record-label'), recordDetail = $('record-detail');
-    const replayButton = $('replay'), memeAudio = $('meme-audio'), progress = $('progress');
-    const maximumMs = 8000;
-    let state = 'idle', ctx = null, stream = null, recorder = null, chunks = [];
-    let isFallback = false, proc = null, micSource = null, silentGain = null, pcmParts = [], sampleCount = 0;
-    let startedAt = 0, stopTimer = 0, raf = 0, activeSource = null, fallbackAudio = null, objectUrl = null;
-    let replayBlob = null, waitingBuffer = null, memeTimer = 0, moodTimer = 0;
-    let voiceMode='squeaky', effectsMuted=false, currentPanel='', starClock=0, starSeconds=15, starScore=0;
-    let giftAnswer=0, giftOpened=false, partyTimer=0, partyBeat=0, lastOpenButton=null;
-    const voiceRates={squeaky:1.42,alien:1.85,giant:0.78};
-    // Small second view of Mimi for feeding and dress-up (no image downloads).
-    const miniCat=document.querySelector('.stage svg.cat').cloneNode(true);
-    miniCat.removeAttribute('role');miniCat.removeAttribute('aria-label');
-    $('mini-preview').insertBefore(miniCat,$('mini-preview').firstChild);
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    function setMessage(message, extra='') { bubble.textContent = message; hint.textContent = extra || 'Mimi repeats your voice in a funny squeak!'; }
-    function face(mode) {
-      for (const m of ['is-talking','is-listening','is-giggling','is-meme','is-eating','is-surprise']) wrap.classList.remove(m);
-      if (mode) wrap.classList.add('is-' + mode);
-    }
-    function ready() {
-      state = 'idle'; recordButton.disabled = false; recordButton.classList.remove('is-recording');
-      recordLabel.textContent = 'Tap to talk'; recordDetail.textContent = 'Tap again to repeat';
-      recordButton.setAttribute('aria-label', 'Start recording your voice'); $('mic-emoji').textContent = '🎤';
-      progress.style.width = '0%'; face('');
-    }
-    async function getContext() {
-      if (!AudioCtx) throw new Error('Your browser cannot play this sound.');
-      if (!ctx) ctx = new AudioCtx();
-      if (ctx.state === 'suspended') await ctx.resume();
-      return ctx;
-    }
-    function chirp(notes=[650, 850, 700], duration=0.095) {
-      if (effectsMuted || !ctx || ctx.state !== 'running') return;
-      const t = ctx.currentTime;
-      notes.forEach((hz,i) => {
-        const osc=ctx.createOscillator(), gain=ctx.createGain();
-        osc.type='sine';osc.frequency.setValueAtTime(hz,t+i*duration);
-        osc.frequency.exponentialRampToValueAtTime(hz*1.15,t+i*duration+duration*.8);
-        gain.gain.setValueAtTime(.0001,t+i*duration);
-        gain.gain.exponentialRampToValueAtTime(.15,t+i*duration+.012);
-        gain.gain.exponentialRampToValueAtTime(.0001,t+(i+1)*duration);
-        osc.connect(gain);gain.connect(ctx.destination);
-        osc.start(t+i*duration);osc.stop(t+(i+1)*duration+.01);
-      });
-    }
-    function confetti(count=16) {
-      const colors=['#ff8dba','#ffcd43','#9a7aef','#74dec7','#fff','#ff98a7'];
-      for(let i=0;i<count;i++){
-        const elem=document.createElement('i');elem.className='confetti';
-        elem.style.left=(20+Math.random()*60)+'%';elem.style.top=(21+Math.random()*55)+'%';
-        elem.style.background=colors[i%colors.length];
-        elem.style.setProperty('--dx', ((Math.random()-.5)*340)+'px');
-        elem.style.setProperty('--dy', ((Math.random()-.75)*340)+'px');
-        elem.style.setProperty('--rotation',(Math.random()*720)+'deg');
-        wrap.appendChild(elem);setTimeout(()=>elem.remove(),1350);
-      }
-    }
-    function clearRecordingTimers() {
-      if(stopTimer)clearTimeout(stopTimer);stopTimer=0;
-      if(raf)cancelAnimationFrame(raf);raf=0;
-    }
-    function clearStream() {
-      if(proc){proc.onaudioprocess=null;try{proc.disconnect();}catch{}proc=null;}
-      if(micSource){try{micSource.disconnect();}catch{}micSource=null;}
-      if(silentGain){try{silentGain.disconnect();}catch{}silentGain=null;}
-      if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
-    }
-    function dropPlayback(){
-      if(activeSource){try{activeSource.onended=null;activeSource.stop();activeSource.disconnect();}catch{}activeSource=null;}
-      if(fallbackAudio){fallbackAudio.pause();fallbackAudio.src='';fallbackAudio=null;}
-      if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}
-      replayBlob=null;waitingBuffer=null;replayButton.hidden=true;
-      try{memeAudio.pause();memeAudio.currentTime=0;}catch{}
-    }
-    function dismissMood(){if(moodTimer)clearTimeout(moodTimer);moodTimer=0;if(memeTimer)clearTimeout(memeTimer);memeTimer=0;$('numbers').classList.remove('show');}
-    async function start() {
-      if(state!=='idle')return;
-      stopParty(); stopStarGame(); dismissMood();dropPlayback();clearRecordingTimers();
-      state='requesting';recordButton.disabled=true;
-      setMessage('Mimi is waking up… 🐾','Safari may ask for microphone permission.');
-      try {
-        await getContext();
-        if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('Safari needs a secure HTTPS page to use the microphone.');
-        const mic = await navigator.mediaDevices.getUserMedia({ audio:{echoCancellation:true,noiseSuppression:true,channelCount:1}, video:false });
-        if(state!=='requesting'){mic.getTracks().forEach(t=>t.stop());return;}
-        stream=mic;chunks=[];pcmParts=[];sampleCount=0;isFallback=false;
-        if (window.MediaRecorder) {
-          let mime = '';
-          for(const m of ['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus']){
-            if(MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)){mime=m;break;}
-          }
-          try {recorder = mime ? new MediaRecorder(stream,{mimeType:mime}) : new MediaRecorder(stream);}
-          catch {recorder=null;}
-        }
-        if(recorder){
-          recorder.ondataavailable=(evt)=>{if(evt.data && evt.data.size)chunks.push(evt.data);};
-          recorder.onerror=()=>{setMessage('Oops! Try the mic again.','A recording error occurred.');cancelCapture();};
-          // Safari is more dependable when it emits one complete recording on stop.
-          const recorderType = recorder.mimeType || 'audio/mp4';
-          recorder.onstop=async()=>{
-            const parts=chunks; chunks=[];
-            recorder=null;
-            clearStream();
-            if(state!=='processing')return;
-            const type=(parts[0] && parts[0].type) || recorderType;
-            const blob=new Blob(parts,{type});
-            if(blob.size>0)await playCapturedBlob(blob);
-            else {ready();setMessage('I missed that! 🐱','Try speaking a little longer.');}
-          };
-          recorder.start();
-        } else {
-          // Browser compatibility fallback: sample mic into RAM only. No saved WAV/file.
-          isFallback=true;
-          micSource=ctx.createMediaStreamSource(stream);
-          proc=ctx.createScriptProcessor(2048,1,1);
-          silentGain=ctx.createGain();silentGain.gain.value=0;
-          proc.onaudioprocess=(e)=>{
-            if(state!=='recording')return;
-            const samples=e.inputBuffer.getChannelData(0);
-            pcmParts.push(new Float32Array(samples));sampleCount+=samples.length;
-            e.outputBuffer.getChannelData(0).fill(0);
-          };
-          micSource.connect(proc);proc.connect(silentGain);silentGain.connect(ctx.destination);
-        }
-        startedAt=performance.now();state='recording';recordButton.disabled=false;
-        recordButton.classList.add('is-recording');$('mic-emoji').textContent='⏹️';
-        recordLabel.textContent='Stop & repeat';recordDetail.textContent='Mimi is listening…';
-        recordButton.setAttribute('aria-label','Stop recording and hear Mimi');
-        face('listening');setMessage("I'm all ears! 👂",'Talk now — up to 8 seconds.');
-        function updateProgress(){if(state!=='recording')return;progress.style.width=Math.min(100,((performance.now()-startedAt)/maximumMs)*100)+'%';raf=requestAnimationFrame(updateProgress);}
-        updateProgress();stopTimer=setTimeout(finish,maximumMs);
-      }catch(err){cancelCapture();setMessage('Microphone needs permission 🎤','Open this page over HTTPS and allow the mic in Safari.');console.warn('Microphone unavailable:',err && err.name);}
-    }
-    function finish() {
-      if(state!=='recording')return;
-      const elapsed=performance.now()-startedAt;
-      clearRecordingTimers();state='processing';recordButton.disabled=true;
-      recordLabel.textContent='Mimi is thinking…';recordDetail.textContent='Just a moment!';face('');
-      if(elapsed<350){cancelCapture();setMessage('A tiny bit longer! 🐱','Tap the mic and say something.');return;}
-      if(isFallback){
-        const parts=pcmParts; const total=sampleCount;pcmParts=[];sampleCount=0;
-        clearStream();
-        if(total){const buffer=ctx.createBuffer(1,total,ctx.sampleRate),data=buffer.getChannelData(0);let offset=0;for(const p of parts){data.set(p,offset);offset+=p.length;}playBuffer(buffer);}
-        else{ready();setMessage('I missed that! 🐱','Please try again.');}
-      } else if(recorder && recorder.state!=='inactive') {
-        // Keep the audio session awake while Safari finalises the recording.
-        if(ctx && ctx.state==='suspended')ctx.resume().catch(()=>{});
-        try {recorder.stop();}catch{cancelCapture();}
-        // The onstop event stops the mic after the final data arrives.
-      } else {cancelCapture();}
-    }
-    function cancelCapture(){
-      clearRecordingTimers();
-      if(recorder){recorder.onstop=null;recorder.ondataavailable=null;try{if(recorder.state!=='inactive')recorder.stop();}catch{}recorder=null;}
-      chunks=[];pcmParts=[];sampleCount=0;clearStream();ready();
-    }
-    function markPlaying(){
-      state='playing';recordButton.disabled=true;recordLabel.textContent='Mimi is talking!';
-      recordDetail.textContent=voiceMode==='giant'?'ROAR ROAR!':voiceMode==='alien'?'Bleep bloop!':'Squeaky squeaky…';
-      face('talking');
-      setMessage(voiceMode==='giant'?'Mimi the GIANT! 🦖':voiceMode==='alien'?'Mimi from SPACE! 👽':'Hee hee! That’s you! 😹',
-        'Mimi is repeating your voice!');
-      confetti(9);
-    }
-    function donePlaying(){if(state!=='playing')return;dropPlayback();ready();setMessage('That was funny! 💕','Tap the mic for another go.');}
-    function askToPlay(message='Tap to hear Mimi! 🔊') {
-      state='needs-tap';recordButton.disabled=false;
-      recordLabel.textContent='Tap to talk';recordDetail.textContent='Or hear your voice';
-      face('');replayButton.hidden=false;replayButton.textContent='🔊 Hear Mimi!';
-      setMessage(message,'Tap the white Hear Mimi button to listen.');
-    }
-    function playBuffer(buffer){
-      if(!ctx){askToPlay();return;}
-      // Do not discard the recorded buffer until playback has actually begun.
-      waitingBuffer=buffer;
-      if(ctx.state!=='running'){askToPlay();return;}
-      const source=ctx.createBufferSource();source.buffer=buffer;
-      source.playbackRate.value=voiceRates[voiceMode];
-      source.connect(ctx.destination);
-      activeSource=source;
-      source.onended=()=>{if(activeSource===source)donePlaying();};
-      try{
-        source.start(0);
-        markPlaying();
-        // Audio is held only in memory and discarded when Mimi finishes talking.
-        waitingBuffer=null;replayBlob=null;replayButton.hidden=true;
-      }catch{try{source.disconnect();}catch{}activeSource=null;askToPlay();}
-    }
-    async function playCapturedBlob(blob){
-      if(state!=='processing')return;
-      replayBlob=blob;
-      try {
-        // Resampling speed changes both pitch and speed without uploading audio.
-        const buffer=await ctx.decodeAudioData(await blob.arrayBuffer());
-        if(state==='processing')playBuffer(buffer);
-      } catch(err) {
-        if(state!=='processing')return;
-        try {
-          // Native iOS audio element fallback if Web Audio cannot decode AAC.
-          if(objectUrl)URL.revokeObjectURL(objectUrl);
-          objectUrl=URL.createObjectURL(blob);
-          fallbackAudio=new Audio(objectUrl);
-          fallbackAudio.preservesPitch=false;
-          fallbackAudio.webkitPreservesPitch=false;
-          fallbackAudio.mozPreservesPitch=false;
-          fallbackAudio.playbackRate=voiceRates[voiceMode];
-          fallbackAudio.onended=donePlaying;
-          await fallbackAudio.play();
-          markPlaying();replayButton.hidden=true;
-        } catch {
-          askToPlay();
-        }
-      }
-    }
-    recordButton.addEventListener('click',()=>{
-      if(state==='recording')finish();
-      else if(state==='idle' || state==='needs-tap'){
-        if(state==='needs-tap'){dropPlayback();ready();}
-        start();
-      }
-    });
-    replayButton.addEventListener('click',async()=>{
-      if(!replayBlob && !fallbackAudio && !waitingBuffer)return;
-      try {
-        await getContext();
-        if(waitingBuffer){
-          const saved=waitingBuffer;
-          playBuffer(saved);
-        }else if(fallbackAudio){
-          fallbackAudio.playbackRate=voiceRates[voiceMode];
-          fallbackAudio.preservesPitch=false;fallbackAudio.webkitPreservesPitch=false;
-          await fallbackAudio.play();markPlaying();replayButton.hidden=true;
-        }else if(replayBlob){
-          state='processing';await playCapturedBlob(replayBlob);
-        }
-      }catch{askToPlay('Safari needs one more tap 🔊');}
-    });
-    function fun(mood) {
-      stopParty();
-      if(state==='requesting'||state==='processing'||state==='recording')return;
-      dismissMood();dropPlayback();if(state!=='idle')ready();
-      getContext().then(()=>chirp(mood==='tickle'?[830,1050,920,1200]:[520,740])).catch(()=>{});
-      face('giggling');confetti(mood==='tickle'?10:5);
-      setMessage(mood==='tickle'?'Tee hee hee! 😹':'Boop! 💗',mood==='tickle'?'That tickles!':'You found Mimi’s nose!');
-      moodTimer=setTimeout(()=>{face('');},950);
-    }
-    $('tickle').addEventListener('click',()=>fun('tickle'));
-    $('boop').addEventListener('click',()=>fun('boop'));
-    wrap.addEventListener('click',()=>fun('tickle'));
-    wrap.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fun('tickle');}});
-    $('meme').addEventListener('click',()=>{
-      stopParty();
-      if(state==='recording'||state==='requesting'||state==='processing')cancelCapture();
-      dismissMood();dropPlayback();ready();face('meme');
-      setMessage('SIX! SEVEN! 🙌','Mimi knows the meme!');
-      const el=$('numbers');el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
-      confetti(25);
-      memeAudio.muted=effectsMuted;
-      memeAudio.currentTime=0;
-      // This prerecorded sound was generated offline and is shipped with the app.
-      memeAudio.play().catch(()=>{
-        getContext().then(()=>chirp([430,520,670,850],.13)).catch(()=>{});
-      });
-      memeTimer=setTimeout(()=>{face('');el.classList.remove('show');},1950);
-    });
-    const themes={
-      purple:['#d4a9ff','#ad7ed8','#ef87b6','#ffedf8'],
-      pink:['#ffacd0','#dd7fab','#ee7ea8','#fff1f5'],
-      orange:['#ffd18c','#eaaa61','#ef9da8','#fff4dc']
-    };
-    document.querySelectorAll('.colour').forEach(button=>button.addEventListener('click',()=>{
-      const c=themes[button.dataset.colour];if(!c)return;
-      ['--cat-fur','--cat-fur-dark','--cat-ear','--cat-belly'].forEach((key,i)=>document.documentElement.style.setProperty(key,c[i]));
-      document.querySelectorAll('.colour').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));
-      if(state==='idle')setMessage('Ooh, a new colour! 🌈','Tap the kitty to say hello!');
-    }));
-    // Entirely local play; no accounts, game scores, or voice data are saved.
-    document.querySelectorAll('[data-voice]').forEach(button => button.addEventListener('click',()=>{
-      voiceMode=button.dataset.voice;
-      document.querySelectorAll('[data-voice]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
-      if(state==='idle' || state==='needs-tap')setMessage(voiceMode==='alien'?'Bleep bloop! 👽':voiceMode==='giant'?'ROOOAR! 🦖':'Squeak squeak! 🐭','Now tap the mic and say something silly!');
-      if(state==='needs-tap' && fallbackAudio){fallbackAudio.playbackRate=voiceRates[voiceMode];}
-      getContext().then(()=>chirp(voiceMode==='giant'?[240,180]:voiceMode==='alien'?[510,860,410]:[820,990])).catch(()=>{});
-    }));
-    $('sound-toggle').addEventListener('click',()=>{
-      effectsMuted=!effectsMuted;
-      const b=$('sound-toggle');b.setAttribute('aria-pressed',String(!effectsMuted));
-      b.textContent=effectsMuted?'🔇 Sounds off':'🔊 Sounds on';
-      if(effectsMuted){memeAudio.pause();}
-      else getContext().then(()=>chirp([650,900])).catch(()=>{});
-    });
-    function showPanel(key,clicked){
-      if(state==='recording'||state==='requesting'||state==='processing')cancelCapture();
-      stopParty();stopStarGame();dismissMood();
-      if(state==='playing'||state==='needs-tap'){dropPlayback();ready();}
-      currentPanel=key;lastOpenButton=clicked;
-      $('play-panel').hidden=false;
-      for(const id of ['stars','boxes','food','dress'])$(id+'-game').hidden=id!==key;
-      const titles={stars:'⭐ Star Pop!',boxes:'🎁 Lucky Boxes!',food:'🍓 Feed Mimi!',dress:'🎀 Dress Up!'};
-      const info={stars:'Pop as many stars as you can in 15 seconds!',boxes:'Pick a present! Where is the magic star?',food:'What yummy snack should Mimi try?',dress:'Make Mimi look extra fabulous!'};
-      $('panel-title').textContent=titles[key];$('panel-info').textContent=info[key];
-      $('mini-preview').hidden=key!=='food'&&key!=='dress';
-      if(key==='stars')startStarGame();
-      if(key==='boxes')resetBoxes();
-      if(key==='dress')refreshOutfitButtons();
-      $('play-panel').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'nearest'});
-    }
-    document.querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>showPanel(button.dataset.open,button)));
-    function hidePanel(){stopStarGame();currentPanel='';$('play-panel').hidden=true;['stars','boxes','food','dress'].forEach(id=>$(id+'-game').hidden=true);if(lastOpenButton)lastOpenButton.focus();}
-    $('panel-close').addEventListener('click',hidePanel);
-    function stopStarGame(){if(starClock){clearInterval(starClock);starClock=0;}}
-    function putStar(){
-      const field=$('star-field'),star=$('star-target');
-      const w=Math.max(0,field.clientWidth-68),h=Math.max(0,field.clientHeight-68);
-      star.style.left=Math.floor(Math.random()*w)+'px';star.style.top=Math.floor(Math.random()*h)+'px';
-      star.textContent=['⭐','🌟','💖','✨'][Math.floor(Math.random()*4)];
-    }
-    function endStarGame(){
-      stopStarGame();$('star-target').hidden=true;$('star-done').hidden=false;
-      $('star-finish').textContent=`Hooray! You popped ${starScore} stars! 🌈`;
-      setMessage('You’re a SUPERSTAR! 🌟','Mimi is so proud of you!');
-      face('giggling');confetti(32);
-      getContext().then(()=>chirp([523,659,784,1047],.14)).catch(()=>{});
-      setTimeout(()=>{if(state==='idle')face('');},900);
-    }
-    function startStarGame(){
-      stopStarGame();starScore=0;starSeconds=15;
-      $('star-score').textContent='0';$('star-time').textContent='15';
-      $('star-done').hidden=true;$('star-target').hidden=false;
-      requestAnimationFrame(putStar);
-      starClock=setInterval(()=>{
-        if(currentPanel!=='stars'){stopStarGame();return;}
-        starSeconds--; $('star-time').textContent=String(starSeconds);
-        if(starSeconds<=0)endStarGame();
-      },1000);
-    }
-    $('star-target').addEventListener('click',()=>{
-      if(!starClock)return;
-      starScore++;$('star-score').textContent=String(starScore);
-      getContext().then(()=>chirp([600+(starScore%5)*100],.09)).catch(()=>{});
-      if(starScore%5===0)confetti(8);
-      putStar();
-    });
-    $('star-again').addEventListener('click',startStarGame);
-    function resetBoxes(){
-      giftAnswer=Math.floor(Math.random()*3);giftOpened=false;
-      document.querySelectorAll('[data-box]').forEach(b=>{b.textContent='🎁';b.disabled=false;});
-      $('panel-info').textContent='Pick a present! Where is the magic star?';
-    }
-    document.querySelectorAll('[data-box]').forEach(b=>b.addEventListener('click',()=>{
-      if(giftOpened)return;
-      giftOpened=true;const picked=Number(b.dataset.box),found=picked===giftAnswer;
-      document.querySelectorAll('[data-box]').forEach(button=>{
-        const i=Number(button.dataset.box);button.textContent=i===giftAnswer?'🌟':i===picked?'🐸':'🎁';button.disabled=true;
-      });
-      $('panel-info').textContent=found?'YAY! You found the magic star! 🌟':'A silly frog! 🐸 The star was hiding over there!';
-      setMessage(found?'Ta-da! 🌟':'Ribbit ribbit! 🐸', 'Give it another go!');
-      confetti(found?25:9);
-      getContext().then(()=>chirp(found?[540,780,1050]:[400,320,540],.11)).catch(()=>{});
-    }));
-    $('boxes-again').addEventListener('click',resetBoxes);
-    let foodAnimTimer=0;
-    document.querySelectorAll('[data-food]').forEach(b=>b.addEventListener('click',()=>{
-      const food=b.dataset.food,f=$('food-float');clearTimeout(foodAnimTimer);
-      f.classList.remove('show');f.textContent=food;void f.offsetWidth;f.classList.add('show');
-      const f2=$('mini-snack');f2.classList.remove('show');f2.textContent=food;void f2.offsetWidth;f2.classList.add('show');
-      face('eating');
-      const sayings={'🐟':['Yummy fish! 🐟','Mimi says MEOW!'],'🍓':['So sweet! 🍓','Mimi loves berries!'],'🥦':['Crunch crunch! 🥦','Green moustache!'],'🧁':['Cupcake party! 🧁','Sprinkles everywhere!']};
-      setMessage(...sayings[food]);confetti(5);
-      getContext().then(()=>chirp([560,680,560,810],.075)).catch(()=>{});
-      foodAnimTimer=setTimeout(()=>{f.classList.remove('show');f2.classList.remove('show');face('');},950);
-    }));
-    let outfit='none';
-    function refreshOutfitButtons(){document.querySelectorAll('[data-outfit]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.outfit===outfit)));}
-    function setOutfit(next){
-      outfit=next;const elem=$('accessory');
-      const things={bow:'🎀',crown:'👑',glasses:'😎',partyhat:'🥳'};
-      elem.hidden=next==='none';elem.className='cat-accessory '+(next==='none'?'':next);
-      elem.textContent=things[next]||'';
-      const mini=$('mini-accessory');mini.hidden=next==='none';mini.className='mini-accessory '+(next==='none'?'':next);mini.textContent=things[next]||'';
-      refreshOutfitButtons();
-      setMessage(next==='none'?'Back to fluffy Mimi! 🐱':'Oooh, so fancy! ✨','Tap another outfit to try it on.');
-      getContext().then(()=>chirp([700,950],.09)).catch(()=>{});
-      confetti(7);
-    }
-    document.querySelectorAll('[data-outfit]').forEach(b=>b.addEventListener('click',()=>setOutfit(b.dataset.outfit)));
-    $('dress-clear').addEventListener('click',()=>setOutfit('none'));
-    function stopParty(){
-      if(partyTimer){clearTimeout(partyTimer);partyTimer=0;}
-      if(partyBeat){clearInterval(partyBeat);partyBeat=0;}
-      $('dance-label').textContent='Dance Party';
-      $('stage').classList.remove('is-party');wrap.classList.remove('is-party');
-    }
-    $('dance').addEventListener('click',()=>{
-      if(partyTimer){stopParty();setMessage('Phew! That was fun! 😸','What shall we play next?');return;}
-      if(state==='recording'||state==='requesting'||state==='processing')cancelCapture();
-      if(state==='playing'||state==='needs-tap'){dropPlayback();ready();}
-      stopStarGame();hidePanel();dismissMood();
-      $('stage').classList.add('is-party');wrap.classList.add('is-party');
-      $('dance-label').textContent='Stop dancing';
-      setMessage('DISCO MIMI! 💃🪩','Tap Dance Party again to stop!');confetti(30);
-      getContext().then(()=>chirp([400,520,650,790,650,520],.125)).catch(()=>{});
-      partyBeat=setInterval(()=>{confetti(6);getContext().then(()=>chirp([400,600],.11)).catch(()=>{});},1600);
-      partyTimer=setTimeout(()=>{stopParty();setMessage('Best dance EVER! 🎉','Mimi needs to catch her breath!');},8500);
-    });
-    const challenges=[
-      ['Can you ROAR like a dinosaur? 🦖','Tap the mic and show Mimi!'],
-      ['Say “SILLY SAUSAGES!” 🌭','How silly can you sound?'],
-      ['Meow like a teeny kitten! 🐱','Now let Mimi copy you!'],
-      ['Can you say “banana pajamas”? 🍌','As fast as you can!'],
-      ['Make the funniest alien noise! 👽','Bloop blip bleep!'],
-      ['Sing a tiny happy tune! 🎵','Mimi wants to sing too!'],
-      ['Count 1, 2, 3, 4, 5! 🌟','Try a funny squeaky voice!'],
-      ['Give Mimi your best pirate ARRR! 🏴‍☠️','Ahoy, captain!']
-    ];
-    let lastChallenge=-1;
-    $('challenge').addEventListener('click',()=>{
-      let n=Math.floor(Math.random()*challenges.length);
-      if(n===lastChallenge)n=(n+1)%challenges.length;
-      lastChallenge=n;
-      setMessage(...challenges[n]);confetti(6);
-      getContext().then(()=>chirp([740,940])).catch(()=>{});
-      $('record').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'nearest'});
-    });
-    // Prevent surprise animation/sounds continuing when the page is left.
-    // Never persist user speech or any personal data; discard RAM objects on exit.
-    window.addEventListener('pagehide',()=>{stopStarGame();stopParty();cancelCapture();dropPlayback();dismissMood();if(ctx){ctx.close().catch(()=>{});ctx=null;}});
-    if('serviceWorker' in navigator && location.protocol==='https:'){
-      window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-    }
-  })();
-  </script>
-</body>
-</html>
+        <g class="dress-layer"></g><g class="hair-layer"></g><g class="hat-layer"></g></svg></div>
+  <div id="numbers" class="number-burst" aria-hidden="true">6 🙌 7</div>
+  <div class="timer-rail"><span id="progress" class="timer-fill"></span></div>
+  <p class="hint" id="hint">She repeats your own voice. No AI, no uploads!</p>
+ </div><div class="home-controls">
+  <div class="hello-card"><h2>🎙️ Let's have a chat!</h2><p>Mimi copies you in a silly voice!</p>
+    <button id="record" type="button" class="primary-mic"><span id="mic-emoji">🎤</span><span><strong id="record-label">Tap to talk</strong><small id="record-detail">Tap again to hear Mimi</small></span></button>
+    <button type="button" class="replay-btn" id="replay" hidden>🔊 Hear that again!</button>
+    <div class="quick-voice" id="quick-voice" aria-label="Voice effect"></div>
+  </div>
+  <div class="action-grid"><button type="button" id="meme" class="action-card gold"><span>🙌</span><b>SIX! SEVEN!</b><small>Dance &amp; giggle</small></button>
+    <button type="button" id="tickle" class="action-card pink"><span>😹</span><b>Tickle!</b><small>Mimi laughs</small></button>
+    <button type="button" id="boop" class="action-card aqua"><span>🐽</span><b>Boop!</b><small>Tap her nose</small></button>
+    <button type="button" id="home-dance" class="action-card lilac"><span>🪩</span><b>Dance!</b><small>Disco kitty</small></button>
+  </div>
+  <button type="button" class="explore-banner" data-goto="wardrobe">✨ New! Christmas, Halloween and 30+ outfits <span>➜</span></button>
+ </div></div>
+</section>
+<section class="page" id="page-wardrobe" role="tabpanel" aria-label="Dress Up" hidden>
+ <div class="section-heading"><div><span class="eyebrow">✨ THE MAGIC CLOSET</span><h1>Dress up Mimi!</h1><p>Mix costumes, hair and sparkly hats.</p></div><span class="heading-sticker">👑</span></div>
+ <div class="wardrobe-layout"><div class="outfit-preview"><div id="mirror" class="mirror"><div class="mirror-stars">✨ 🌟 ✨</div><svg class="cat mini-cat" viewBox="0 0 420 420" role="img" aria-label="A smiling lavender cartoon kitten">
+          <ellipse cx="211" cy="391" rx="119" ry="15" fill="#77b99b" opacity=".28" />
+          <path d="M286 289 C364 260, 385 315, 353 351 C339 369, 320 368, 307 351" fill="none" stroke="var(--cat-fur-dark)" stroke-width="34" stroke-linecap="round" />
+          <path d="M286 289 C364 260, 385 315, 353 351 C339 369, 320 368, 307 351" fill="none" stroke="var(--cat-fur)" stroke-width="25" stroke-linecap="round" />
+          <ellipse class="fur-dark" cx="212" cy="299" rx="99" ry="94" />
+          <ellipse class="fur" cx="208" cy="294" rx="99" ry="94" />
+          <ellipse class="belly" cx="207" cy="311" rx="62" ry="70" />
+          <path d="M191 291 Q207 304 223 291" fill="none" stroke="#efc9e9" stroke-width="5" stroke-linecap="round" />
+          <g class="left-arm"><ellipse class="fur-dark" cx="133" cy="290" rx="27" ry="55" transform="rotate(26 133 290)"/><ellipse class="fur" cx="129" cy="285" rx="24" ry="51" transform="rotate(26 129 285)"/></g>
+          <g class="right-arm"><ellipse class="fur-dark" cx="290" cy="291" rx="27" ry="55" transform="rotate(-26 290 291)"/><ellipse class="fur" cx="290" cy="285" rx="24" ry="51" transform="rotate(-26 290 285)"/></g>
+          <ellipse class="fur-dark" cx="156" cy="373" rx="46" ry="26" transform="rotate(-12 156 373)" />
+          <ellipse class="fur-dark" cx="260" cy="373" rx="46" ry="26" transform="rotate(12 260 373)" />
+          <ellipse class="fur" cx="153" cy="369" rx="44" ry="25" transform="rotate(-12 153 369)" />
+          <ellipse class="fur" cx="265" cy="369" rx="44" ry="25" transform="rotate(12 265 369)" />
+          <g opacity=".6" fill="none" stroke="#bb88df" stroke-width="4" stroke-linecap="round"><path d="M132 372 l3 -10 M150 375 l2 -12 M170 372 l-2 -11 M246 373 l2 -12 M265 375 l2 -12 M282 371 l-2 -11" /></g>
+          <g class="head-group">
+            <g class="ears-group">
+              <path class="fur-dark" d="M91 159 Q78 87 84 40 Q139 54 164 94 Z"/>
+              <path class="fur-dark" d="M256 94 Q296 51 344 39 Q347 92 322 165 Z"/>
+              <path class="fur" d="M99 157 Q86 93 94 53 Q141 76 158 110 Z" />
+              <path class="fur" d="M262 107 Q297 66 335 51 Q334 104 311 157 Z"/>
+              <path class="ear" d="M111 134 Q103 93 105 78 Q133 93 144 116 Z"/>
+              <path class="ear" d="M277 117 Q303 88 324 78 Q321 107 302 135 Z"/>
+            </g>
+            <ellipse class="fur-dark" cx="212" cy="175" rx="132" ry="112" />
+            <ellipse class="fur" cx="208" cy="171" rx="131" ry="111" />
+            <ellipse cx="208" cy="208" rx="80" ry="43" fill="#f7d9f1" opacity=".65" />
+            <ellipse cx="131" cy="199" rx="25" ry="15" fill="#f394c1" opacity=".75" />
+            <ellipse cx="286" cy="199" rx="25" ry="15" fill="#f394c1" opacity=".75" />
+            <g class="eyes">
+              <ellipse cx="162" cy="162" rx="19" ry="30" fill="#3e2c58" />
+              <ellipse cx="255" cy="162" rx="19" ry="30" fill="#3e2c58" />
+              <ellipse cx="156" cy="151" rx="8" ry="11" fill="#fff" />
+              <ellipse cx="249" cy="151" rx="8" ry="11" fill="#fff" />
+              <circle cx="168" cy="171" r="4" fill="#fff" opacity=".7" />
+              <circle cx="261" cy="171" r="4" fill="#fff" opacity=".7" />
+            </g>
+            <path d="M193 194 Q208 187 224 194 Q209 211 208 211 Q205 211 193 194" fill="#a9558e"/>
+            <path class="mouth-smile" d="M207 208 Q189 231 173 213 M208 208 Q223 232 243 213" fill="none" stroke="#67466e" stroke-width="5" stroke-linecap="round" />
+            <g class="mouth-open"><ellipse cx="208" cy="225" rx="23" ry="25" fill="#5d355f"/><ellipse cx="208" cy="239" rx="14" ry="8" fill="#f58cba" /></g>
+            <g fill="none" stroke="#8b6aa0" stroke-width="3.2" stroke-linecap="round" opacity=".9">
+              <path d="M130 212 Q92 199 72 201 M130 222 Q92 226 75 237 M287 212 Q324 197 347 201 M286 222 Q325 226 345 238"/>
+            </g>
+            <path d="M187 94 Q196 99 208 94 Q221 100 230 93" stroke="#ecb3ed" stroke-width="6" fill="none" stroke-linecap="round" opacity=".7" />
+          </g>
+        <g class="dress-layer"></g><g class="hair-layer"></g><g class="hat-layer"></g></svg></div><div class="wearing" id="wearing">Mimi's fabulous look</div><button class="small-outline" id="random-look" type="button">🎲 Surprise me!</button></div>
+ <div class="wardrobe-panel"><div class="subnav" id="dress-tabs" role="tablist" aria-label="Wardrobe categories">
+    <button type="button" role="tab" aria-selected="true" class="selected" data-dress-tab="outfit">👗 Outfits</button><button type="button" role="tab" aria-selected="false" data-dress-tab="hair">💇 Hair</button><button type="button" role="tab" aria-selected="false" data-dress-tab="hat">🎩 Extras</button><button type="button" role="tab" aria-selected="false" data-dress-tab="fur">🎨 Fur</button></div>
+  <div id="wardrobe-content"></div><button class="small-outline" id="clear-look" type="button">🐱 Reset outfit</button></div></div>
+</section>
+<section class="page" id="page-play" role="tabpanel" aria-label="Games" hidden>
+ <div class="section-heading"><div><span class="eyebrow">🎡 MORE FUN!</span><h1>Let's play!</h1><p>Earn gems by playing — all free.</p></div><span class="heading-sticker">🎮</span></div>
+ <div class="game-tiles" id="game-tiles"></div>
+ <div class="activity" id="activity" hidden><div class="activity-top"><h2 id="activity-title">Let's play!</h2><button type="button" class="close-button" id="activity-close" aria-label="Close game">✕</button></div><p id="activity-info" class="activity-info"></p><div id="activity-body"></div></div>
+</section>
+<section class="page" id="page-voices" role="tabpanel" aria-label="Voices" hidden>
+ <div class="section-heading"><div><span class="eyebrow">🎤 SILLY SOUNDS</span><h1>Funny voice studio</h1><p>Pick a voice, then say something on Home!</p></div><span class="heading-sticker">👽</span></div>
+ <div class="info-strip">💡 Each voice changes the pitch or sound of your own recording. Your words are never sent anywhere.</div>
+ <div id="voice-grid" class="voice-grid"></div>
+ <button id="try-voice" type="button" class="wide-button">🎤 Let's talk to Mimi!</button>
+ <button type="button" class="small-outline" id="voice-test">🎵 Preview a silly sound</button>
+</section>
+<section class="page" id="page-gems" role="tabpanel" aria-label="Gems" hidden>
+ <div class="section-heading"><div><span class="eyebrow">💎 YOUR TREASURE BOX</span><h1>Gem collection</h1><p>Play games to discover colourful treasures!</p></div><span class="heading-sticker">🪄</span></div>
+ <div class="gem-summary"><div><span class="gem-big">💎</span><div><small>Total sparkle points</small><b id="gem-total">0</b></div></div><div><span class="gem-big">🏆</span><div><small>Different gems found</small><b id="gem-found">0 / 18</b></div></div></div>
+ <div class="treasure-intro"><span>🗺️</span><div><b>Hunt for hidden gems!</b><p>Play Gem Hunt, Star Pop and other games to fill your treasure chest.</p></div><button type="button" id="gem-hunt">Play hunt ➜</button></div>
+ <div class="album-head"><h2>✨ Your gemstone album</h2><span id="album-caption">18 to discover</span></div><div id="gem-album" class="gem-album"></div>
+ <details class="settings"><summary>🔐 Grown-up settings &amp; privacy</summary><p>Only gems and dress-up choices are stored on this device. Voice clips are held temporarily in memory for playback and aren't saved or uploaded. No accounts, trackers, adverts, payments or chat.</p><button id="reset-save" class="danger-button" type="button">Reset local collection and outfits</button></details>
+</section>
+</main>
+<footer class="foot">Made for little imaginations 🧸 · No ads · No accounts · No microphone uploads <button id="sound-toggle" type="button" aria-pressed="true">🔊 Effects on</button></footer>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="app.js?v=4.3" defer></script>
+</body></html>

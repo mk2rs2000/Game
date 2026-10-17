@@ -1,20 +1,13 @@
-// Cache only public static game files. Never store microphone recordings.
-const CACHE='mimi-me-v3-fixed';
-const FILES=['./','./index.html','./six-seven.mp3','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
-self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
-});
-self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('mimi-me-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
-});
+/* Offline-friendly files. Never caches or intercepts microphone recordings. */
+const CACHE='mimi-magic-playhouse-v4-3';
+const ASSETS=['./','./index.html','./style.css?v=4.3','./app.js?v=4.3','./six-seven.wav','./icon-192.png','./icon-512.png','./manifest.webmanifest'];
+self.addEventListener('install', event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()))});
+self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('mimi-magic-playhouse-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',event=>{
-  if(event.request.method!=='GET'||new URL(event.request.url).origin!==self.location.origin)return;
-  if(event.request.mode==='navigate'){
-    event.respondWith(fetch(event.request).then(response=>{
-      if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put('./index.html',copy));}
-      return response;
-    }).catch(()=>caches.match('./index.html')));
-  }else{
-    event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request)));
+  const req=event.request;
+  if(req.method!=='GET'||new URL(req.url).origin!==self.location.origin)return;
+  if(req.mode==='navigate'){
+    event.respondWith(fetch(req).catch(()=>caches.match('./index.html')));return;
   }
+  event.respondWith(caches.match(req).then(cached=>cached||fetch(req)));
 });
