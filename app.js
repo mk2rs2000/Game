@@ -179,6 +179,8 @@ function updateGemUI(){
  if($('shop-level'))$('shop-level').textContent=`Level ${info.level}`;
  if($('current-room-name'))$('current-room-name').textContent=`${room[2]} ${room[1]}`;
  if($('current-room-copy'))$('current-room-copy').textContent=room[3];
+ if($('room-location'))$('room-location').textContent=`${room[2]} ${room[1]}`;
+ const background=$('room-background-image'); if(background){ const target=`rooms/${room[0]}.svg`; if(background.getAttribute('src')!==target) background.setAttribute('src',target); }
  const stage=$('stage'); if(stage){stage.classList.remove('room-dance','room-bedroom','room-garden','room-kitchen','room-gem','room-art');stage.classList.add(roomClass());}
  const countdown=save.discoverySteps===0?1:(save.discoverySteps%2===0?1:2);
  $('discovery-next').textContent=save.album.length===gems.length?'🏆 You found all 18 special gems!':countdown===1?'🌟 One more game reward to find a special gem!':'✨ Two more game rewards to find a special gem!';
@@ -420,7 +422,14 @@ function catAction(kind){if(recState==='recording'||recState==='requesting'||rec
 let memeBufferPromise=null;
 function playMeme(){if(muted)return;try{getContext().then(async ac=>{if(!memeBufferPromise)memeBufferPromise=fetch('./six-seven.wav').then(r=>{if(!r.ok)throw new Error('Missing sound');return r.arrayBuffer()}).then(bytes=>ac.decodeAudioData(bytes)).catch(()=>null);const buffer=await memeBufferPromise;if(!buffer)return;const src=ac.createBufferSource();src.buffer=buffer;src.playbackRate.value=1.12;src.connect(ac.destination);src.start();}).catch(()=>{});}catch{}}
 function buildGameTiles(){$('game-tiles').innerHTML=games.map(([id,label,emoji,note,tint,room])=>`<button type="button" class="game-tile" style="--tile:${tint}" data-game="${id}"><span>${emoji}</span><b>${label}</b><small>${note}</small><span class="room-tag">${(rooms.find(r=>r[0]===room)||rooms[0])[1]}</span></button>`).join('')}
-function renderRooms(){const room=currentRoom(); $('room-grid').innerHTML=rooms.map(([id,name,emoji,desc])=>`<button type="button" class="room-card ${save.room===id?'selected':''}" data-room="${id}"><span class="room-emoji">${emoji}</span><b>${name}</b><small>${desc}</small></button>`).join(''); $('room-scene').textContent=room[2]; $('room-title').textContent=room[1]; $('room-description').textContent=room[3]; $('room-actions').innerHTML=`<button type="button" data-room-game="${room[4]}">Play ${(games.find(g=>g[0]===room[4])||['','Game'])[1]} ➜</button><button type="button" data-room-game="${room[5]}">Play ${(games.find(g=>g[0]===room[5])||['','Game'])[1]} ➜</button><button type="button" data-room-home="true" class="alt">Use this room on Home</button>`;}
+function renderRooms(){
+ const room=currentRoom();
+ $('room-grid').innerHTML=rooms.map(([id,name,emoji,desc])=>`<button type="button" class="room-card ${save.room===id?'selected':''}" data-room="${id}" aria-pressed="${save.room===id}"><img class="room-thumb" src="rooms/${id}.svg" alt="" loading="lazy" draggable="false"><span class="room-card-label"><span class="room-emoji">${emoji}</span><span><b>${name}</b><small>${desc}</small></span></span></button>`).join('');
+ const image=$('room-scene-image'); if(image){image.setAttribute('src',`rooms/${room[0]}.svg`);image.setAttribute('alt',`Illustrated ${room[1]}`);}
+ $('room-title').textContent=`${room[2]} ${room[1]}`;
+ $('room-description').textContent=room[3];
+ $('room-actions').innerHTML=`<button type="button" data-room-home="true" class="room-main-action">🐱 See Mimi in this room!</button><button type="button" data-room-game="${room[4]}">Play ${(games.find(g=>g[0]===room[4])||['','Game'])[1]} ➜</button><button type="button" data-room-game="${room[5]}">Play ${(games.find(g=>g[0]===room[5])||['','Game'])[1]} ➜</button>`;
+}
 function setRoom(id){if(!rooms.some(r=>r[0]===id))return;save.room=id;store();updateGemUI();renderRooms();toast(`${currentRoom()[2]} ${currentRoom()[1]} selected!`);}
 let extraGameIntervals=[];
 function closeActivity(){if(activeTimer){clearInterval(activeTimer);clearTimeout(activeTimer);activeTimer=0}extraGameIntervals.forEach(clearInterval);extraGameIntervals=[];activity='';$('activity').hidden=true}

@@ -3,8 +3,8 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#c5a7fa"><meta name="description" content="A private, colourful offline-friendly talking cat playhouse for little ones. No ads, no accounts, no uploads.">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Mimi Playhouse"><meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css?v=6.1">
-<title>Mimi's Magic Playhouse — Fairy Boutique & Rooms</title></head><body>
+<link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css?v=6.2">
+<title>Mimi's Magic Playhouse — Real Rooms V6.2</title></head><body>
 <div class="app-shell">
 <header class="topbar"><div class="brand"><span class="brand-icon">🐾</span><span>Mimi's <em>Magic</em><small>Playhouse</small></span></div><div class="top-actions"><div class="mini-level" aria-label="Current level">⭐ Lv <span id="level-count">1</span></div><button type="button" class="gem-balance" id="gem-shortcut" aria-label="View your gem collection">💎 <span id="gem-count">0</span></button><span class="privacy-pill">🔒 Private</span></div></header>
 <nav class="nav" role="tablist" aria-label="Playhouse pages">
@@ -18,7 +18,8 @@
 </nav>
 <main id="main">
 <section class="page active" id="page-home" role="tabpanel" aria-label="Home">
- <div class="home-grid"><div class="stage-card" id="stage">
+ <div class="home-grid"><div class="stage-card room-dance" id="stage">
+  <div class="room-backdrop" id="room-backdrop" aria-hidden="true"><img id="room-background-image" src="rooms/dance.svg" alt="" draggable="false"></div>
   <div class="stage-sparkles" aria-hidden="true">✦ &nbsp; ⭐ &nbsp; ✨</div><h1>Hi, I'm Mimi! <span>💖</span></h1>
   <div id="bubble" class="speech-bubble" role="status" aria-live="polite">Tap the mic and say hello!</div>
   <div id="cat-wrap" class="cat-wrap" tabindex="0" role="button" aria-label="Tickle Mimi the cat"><svg class="cat" viewBox="0 0 420 420" role="img" aria-label="A smiling lavender cartoon kitten">
@@ -67,6 +68,7 @@
             <path d="M187 94 Q196 99 208 94 Q221 100 230 93" stroke="#ecb3ed" stroke-width="6" fill="none" stroke-linecap="round" opacity=".7" />
           </g>
         <g class="dress-layer"></g><g class="hair-layer"></g><g class="hat-layer"></g><g class="wand-layer"></g></svg></div>
+  <div class="room-location" id="room-location">🪩 Dance Room</div>
   <div id="numbers" class="number-burst" aria-hidden="true">6 🙌 7</div>
   <div class="timer-rail"><span id="progress" class="timer-fill"></span></div>
   <p class="hint" id="hint">She repeats your own voice. No AI, no uploads!</p>
@@ -145,7 +147,7 @@
 <section class="page" id="page-rooms" role="tabpanel" aria-label="Rooms" hidden>
  <div class="section-heading"><div><span class="eyebrow">🏠 MIMI'S WORLD</span><h1>Choose a room!</h1><p>Each room has its own mood and mini games.</p></div><span class="heading-sticker">🪩</span></div>
  <div class="rooms-grid" id="room-grid"></div>
- <div class="room-detail" id="room-detail"><div class="room-scene" id="room-scene">🪩</div><div class="room-copy"><small id="room-type">Current room</small><h2 id="room-title">Dance Room</h2><p id="room-description">Disco sparkles and party music all around Mimi.</p><div class="room-actions" id="room-actions"></div></div></div>
+ <div class="room-detail" id="room-detail"><div class="room-scene" id="room-scene"><img id="room-scene-image" src="rooms/dance.svg" alt="Illustrated dance room" draggable="false"></div><div class="room-copy"><small id="room-type">Current room</small><h2 id="room-title">Dance Room</h2><p id="room-description">Disco sparkles and party music all around Mimi.</p><div class="room-actions" id="room-actions"></div></div></div>
 </section>
 <section class="page" id="page-play" role="tabpanel" aria-label="Games" hidden>
  <div class="section-heading"><div><span class="eyebrow">🎡 MORE FUN!</span><h1>Let's play!</h1><p>Earn gems by playing — all free.</p></div><span class="heading-sticker">🎮</span></div>
@@ -183,5 +185,5 @@
 <footer class="foot">Made for little imaginations 🧸 · No ads · No accounts · No microphone uploads <button id="sound-toggle" type="button" aria-pressed="true">🔊 Effects on</button></footer>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-<script src="app.js?v=6.1" defer></script>
+<script src="app.js?v=6.2" defer></script>
 </body></html>
