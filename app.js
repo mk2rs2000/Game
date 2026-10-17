@@ -143,14 +143,14 @@ const gems=[
  ['holly','Holly Gem','🎄','Festive joy'],['butterfly','Butterfly','🦋','Spring wings'],['ocean','Ocean Pearl','🫧','Bubbly'],['unicorn','Unicorn Gem','🦄','Wish magic'],['sun','Sunstone','☀️','Summer days'],['royal','Royal Heart','👑','Princess shine']
 ];
 const rooms=[
- ['dance','Dance Room','🪩','A sparkly room full of disco fun.','dance','music'],
- ['bedroom','Dream Bedroom','🛏️','Cosy pillows, silly dares and bedtime games.','memory','gifts'],
+ ['dance','Dance Room','🪩','A sparkly room full of disco fun.','race','dance'],
+ ['bedroom','Dream Bedroom','🛏️','Cosy pillows, silly dares and bedtime games.','noughts','memory'],
  ['garden','Magic Garden','🌷','Grow flowers and pick pretty colours.','garden','colours'],
  ['kitchen','Treat Kitchen','🧁','Feed Mimi and catch tasty treats.','feed','cookies'],
  ['gem','Gem Cave','💎','Hidden treasure and shiny special gems.','hunt','stars'],
  ['art','Art Studio','🎨','Painty colours and creative play.','colours','bubbles']
 ];
-const games=[['stars','Star Pop','⭐','Tap the stars!','#ffe0ae','dance'],['gifts','Mystery Gifts','🎁','Pick a present!','#fcd4df','bedroom'],['feed','Feed Mimi','🍓','Funny snacks!','#d1f7c7','kitchen'],['dance','Dance Party','🪩','Kitty disco!','#e0d5ff','dance'],['garden','Magic Garden','🌷','Grow flowers!','#d8f7f0','garden'],['colours','Colour Magic','🎨','Match colours!','#ffe1e6','art'],['dare','Silly Dares','🎲','Make Mimi giggle!','#f1ddff','bedroom'],['hunt','Gem Hunt','💎','Find treasure!','#d7e8ff','gem'],['bubbles','Bubble Pop','🫧','Pop the floating bubbles!','#dff7ff','art'],['memory','Memory Match','🧠','Match the cute cards!','#f4e6ff','bedroom'],['music','Music Mixer','🎵','Make a fun tune!','#fff0c9','dance'],['cookies','Cookie Catch','🍪','Catch sweet treats!','#ffe4d1','kitchen']]
+const games=[['stars','Star Pop','⭐','Tap the stars!','#ffe0ae','dance'],['gifts','Mystery Gifts','🎁','Pick a present!','#fcd4df','bedroom'],['feed','Feed Mimi','🍓','Funny snacks!','#d1f7c7','kitchen'],['dance','Dance Party','🪩','Kitty disco!','#e0d5ff','dance'],['garden','Magic Garden','🌷','Grow flowers!','#d8f7f0','garden'],['colours','Colour Magic','🎨','Match colours!','#ffe1e6','art'],['dare','Silly Dares','🎲','Make Mimi giggle!','#f1ddff','bedroom'],['hunt','Gem Hunt','💎','Find treasure!','#d7e8ff','gem'],['bubbles','Bubble Pop','🫧','Pop the floating bubbles!','#dff7ff','art'],['memory','Memory Match','🧠','Match the cute cards!','#f4e6ff','bedroom'],['music','Music Mixer','🎵','Make a fun tune!','#fff0c9','dance'],['cookies','Cookie Catch','🍪','Catch sweet treats!','#ffe4d1','kitchen'],['noughts','Noughts & Crosses','❌','Beat a friendly cat bot!','#f3e6ff','bedroom'],['race','Mimi’s Flappy Race','🏁','Tap to flap past racing bots!','#d4f5ff','dance']]
 const defaults={fur:'lavender',outfit:'daisy',hair:'none',hairColour:'chocolate',hat:'bow',wand:'none',voice:'squeaky',speed:1,total:0,album:[],actions:0,unlocked:[],discoverySteps:0,xp:0,room:'dance',wings:'none',toy:'none',friend:'none',eggsHatched:[],incubating:null,activeKitten:'none',completedChallenges:0};
 let save={...defaults};try{const old=JSON.parse(safeGet(stateKey)||safeGet('mimi-playhouse-v4')||'null');if(old&&typeof old==='object')save={...defaults,...old};}catch{}
 if(!Array.isArray(save.album))save.album=[];
@@ -499,7 +499,7 @@ let extraGameIntervals=[];
 function closeActivity(){if(activeTimer){clearInterval(activeTimer);clearTimeout(activeTimer);activeTimer=0}extraGameIntervals.forEach(x=>{if(typeof x==='object'&&x?.rhythmCleanup)x.rhythmCleanup();else {clearInterval(x);clearTimeout(x)}});extraGameIntervals=[];activity='';$('activity').hidden=true}
 function openActivity(id){closeActivity();const g=games.find(x=>x[0]===id);if(!g)return;activity=id;showPage('play');$('activity').hidden=false;$('activity-title').textContent=`${g[2]} ${g[1]}`;$('activity-info').textContent=g[3];renderActivity();$('activity').scrollIntoView({behavior:'smooth',block:'start'});}
 function awardActivity(n,text='Brilliant!'){reward(n);confetti(18);chirp([523,659,784,1000],.13);if(text)toast(text+` +${n} 💎`);}
-function renderActivity(){const body=$('activity-body');body.innerHTML='';if(activity==='stars')startStars();if(activity==='gifts')startGifts();if(activity==='feed')startFeed();if(activity==='dance')startPartyGame();if(activity==='garden')startGarden();if(activity==='colours')startColours();if(activity==='dare')startDare();if(activity==='hunt')startHunt();if(activity==='bubbles')startBubbles();if(activity==='memory')startMemory();if(activity==='music')startMusic();if(activity==='cookies')startCookies()}
+function renderActivity(){const body=$('activity-body');body.innerHTML='';if(activity==='stars')startStars();if(activity==='gifts')startGifts();if(activity==='feed')startFeed();if(activity==='dance')startPartyGame();if(activity==='garden')startGarden();if(activity==='colours')startColours();if(activity==='dare')startDare();if(activity==='hunt')startHunt();if(activity==='bubbles')startBubbles();if(activity==='memory')startMemory();if(activity==='music')startMusic();if(activity==='cookies')startCookies();if(activity==='noughts')startNoughts();if(activity==='race')startRace()}
 function startStars(){let score=0,time=15;const body=$('activity-body');body.innerHTML='<div class="game-status"><span>⭐ <b id="star-score">0</b></span><span>⏱️ <b id="star-clock">15</b>s</span></div><div class="star-field" id="star-field"><button type="button" class="star-target" id="star-target">⭐</button></div><p class="activity-note">Tap the star before it moves!</p>';
  const target=$('star-target'),field=$('star-field');function move(){const maxX=Math.max(1,field.clientWidth-82),maxY=Math.max(1,field.clientHeight-80);target.style.left=Math.floor(Math.random()*maxX)+'px';target.style.top=Math.floor(Math.random()*maxY)+'px';target.textContent=['⭐','🌟','💖','✨'][Math.floor(Math.random()*4)]}move();target.onclick=()=>{if(activity!=='stars'||time<=0)return;score++;$('star-score').textContent=score;move();chirp([610+(score%5)*85],.065);if(score%4===0)confetti(5)};
  activeTimer=setInterval(()=>{if(activity!=='stars')return;time--;$('star-clock').textContent=time;if(time<=0){clearInterval(activeTimer);activeTimer=0;body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🌟</div><h2>You popped ${score} stars!</h2><p>You're a superstar!</p><button class="game-again" id="again-stars">Play again</button></div>`;if(score>=4)awardActivity(Math.max(1,Math.min(10,Math.ceil(score/3))),'Star power!');if(score>=4)completeQualifiedChallenge('stars');$('again-stars').onclick=startStars;}},1000);
@@ -518,21 +518,43 @@ function startFeed(){
 }
 function startPartyGame(){
  const body=$('activity-body'), arrows=['⬅️','⬆️','⬇️','➡️'];
+ // Easy is slower than V7; Relaxed waits until the player chooses a move.
  const steps=Array.from({length:7},()=>Math.floor(Math.random()*4));
- let beat=-1,correct=0,misses=0,finished=false,answered=false,beatTimeout=0;
- body.innerHTML=`<div class="game-board rhythm-board"><div class="game-status"><span>🎯 <b id="rhythm-points">0</b> / 7</span><span>🎵 Beat <b id="rhythm-beat">0</b> / 7</span></div><h2>Follow Mimi's dance!</h2><p id="rhythm-hint">Watch the arrow. Tap the matching arrow before the next beat.</p><div class="dance-signal" id="dance-signal">🪩</div><div class="rhythm-pad">${arrows.map((x,i)=>`<button type="button" data-dance-arrow="${i}" disabled>${x}</button>`).join('')}</div><p class="activity-msg" id="rhythm-result">Ready for 7 beats?</p><button type="button" id="rhythm-start" class="game-again">▶ Start dance!</button></div>`;
- const buttons=all('[data-dance-arrow]'),clock=()=>performance.now();let startedAt=0;
- function finish(){if(finished)return;finished=true;buttons.forEach(b=>b.disabled=true);clearTimeout(beatTimeout);$('dance-signal').textContent=correct>=5?'🌟':'💜';$('rhythm-start').textContent='🔁 Try a new dance';$('rhythm-start').hidden=false;
-   if(correct>=5&&clock()-startedAt>=5000){const score=correct===7?6:4;awardActivity(score,'Dance complete!');completeQualifiedChallenge('dance');$('rhythm-result').textContent=`Wonderful! ${correct}/7 right. +${score} gems!`;}
-   else{$('rhythm-result').textContent=`${correct}/7 right. Get 5 to win gems — try again!`;chirp([340,300]);}}
- function next(){if(finished)return;beat++;answered=false;if(beat>=steps.length){finish();return;}
-   $('rhythm-beat').textContent=beat+1;$('dance-signal').textContent=arrows[steps[beat]];$('rhythm-result').textContent='Tap the matching arrow!';buttons.forEach(b=>b.disabled=false);
-   chirp([480+beat*70],.06);beatTimeout=setTimeout(()=>{if(!answered){misses++;$('rhythm-result').textContent='Missed it! Keep dancing!';}next();},1150);
+ let beat=-1,correct=0,finished=false,answered=false,beatTimeout=0,nextTimeout=0,mode='easy',startedAt=0;
+ body.innerHTML=`<div class="game-board rhythm-board">
+  <div class="game-status"><span>🎯 <b id="rhythm-points">0</b> / 7</span><span>🎵 Move <b id="rhythm-beat">0</b> / 7</span></div>
+  <h2>💃 Copy Mimi's dance!</h2><p class="activity-note">Match the big arrow. This version gives you lots more time!</p>
+  <div class="rhythm-modes" aria-label="Dance difficulty"><button type="button" data-rhythm-mode="easy" class="selected">🐢 Easy · 3.6 seconds</button><button type="button" data-rhythm-mode="relaxed">💖 Relaxed · no timer</button></div>
+  <div class="dance-signal" id="dance-signal" role="status" aria-live="polite">🪩</div>
+  <div class="dance-beat-progress"><span id="dance-beat-fill"></span></div>
+  <div class="rhythm-pad">${arrows.map((x,i)=>`<button type="button" aria-label="${['Left','Up','Down','Right'][i]} arrow" data-dance-arrow="${i}" disabled>${x}</button>`).join('')}</div>
+  <p class="activity-msg" id="rhythm-result">Get 4 out of 7 moves right to win!</p>
+  <button type="button" id="rhythm-start" class="game-again">▶ Start a dance!</button></div>`;
+ const buttons=all('[data-dance-arrow]'),modes=all('[data-rhythm-mode]');
+ const clearBeats=()=>{clearTimeout(beatTimeout);clearTimeout(nextTimeout);};
+ function finish(){if(finished)return;finished=true;clearBeats();buttons.forEach(b=>b.disabled=true);
+  $('dance-beat-fill').style.width='100%';$('dance-signal').textContent=correct>=4?'🌟':'💗';
+  $('rhythm-start').textContent='🔁 Try another dance';$('rhythm-start').hidden=false;
+  modes.forEach(b=>b.disabled=false);
+  if(correct>=4&&performance.now()-startedAt>=5400){const earned=correct===7?6:4;awardActivity(earned,'Lovely dancing!');completeQualifiedChallenge('dance');$('rhythm-result').textContent=`You got ${correct}/7! 🎉 +${earned} gems and egg progress!`;}
+  else {$('rhythm-result').textContent=`${correct}/7 right. Get 4 to win! Try again, you've got this! 💖`;chirp([360,430]);}
  }
- buttons.forEach(btn=>btn.onclick=()=>{if(answered||finished||beat<0)return;answered=true;buttons.forEach(b=>b.disabled=true);if(Number(btn.dataset.danceArrow)===steps[beat]){correct++;$('rhythm-points').textContent=correct;$('rhythm-result').textContent='✨ Great move!';chirp([670,840],.06);}else{$('rhythm-result').textContent='Oops, wrong arrow!';chirp([330],.08);} });
- $('rhythm-start').onclick=()=>{if(beat>=0){closeActivity();openActivity('dance');return;}startedAt=clock();$('rhythm-start').hidden=true;next();};
- // Beat timeout is cleared when the game is replaced or closed.
- extraGameIntervals.push({rhythmCleanup:()=>{finished=true;clearTimeout(beatTimeout);}});
+ function next(){if(finished||activity!=='dance')return;clearBeats();beat++;answered=false;
+  if(beat>=steps.length){finish();return;}
+  $('rhythm-beat').textContent=beat+1;$('dance-signal').textContent=arrows[steps[beat]];
+  $('rhythm-result').textContent=mode==='relaxed'?'Take your time! Pick the matching arrow.':'You have plenty of time. Match the arrow!';
+  $('dance-beat-fill').style.width=((beat)/steps.length*100)+'%';buttons.forEach(b=>b.disabled=false);
+  chirp([520+beat*43],.065);
+  if(mode==='easy')beatTimeout=setTimeout(()=>{if(answered||finished)return;answered=true;buttons.forEach(b=>b.disabled=true);$('rhythm-result').textContent='Missed one — keep going! 💖';nextTimeout=setTimeout(next,700);},3600);
+ }
+ buttons.forEach(b=>b.onclick=()=>{if(answered||finished||beat<0)return;answered=true;clearTimeout(beatTimeout);buttons.forEach(button=>button.disabled=true);
+  if(Number(b.dataset.danceArrow)===steps[beat]){correct++;$('rhythm-points').textContent=correct;$('rhythm-result').textContent='🌟 Brilliant move!';chirp([630,800],.07);}
+  else {$('rhythm-result').textContent='Oops, different arrow — you can do it!';chirp([350,420],.07);}
+  nextTimeout=setTimeout(next,950);
+ });
+ modes.forEach(b=>b.onclick=()=>{if(beat>=0)return;mode=b.dataset.rhythmMode;modes.forEach(x=>{x.classList.toggle('selected',x===b);x.setAttribute('aria-pressed',String(x===b))});});
+ $('rhythm-start').onclick=()=>{if(beat>=0){closeActivity();openActivity('dance');return;}startedAt=performance.now();$('rhythm-start').hidden=true;modes.forEach(b=>b.disabled=true);next();};
+ extraGameIntervals.push({rhythmCleanup:()=>{finished=true;clearBeats();}});
 }
 function startGarden(){
  const body=$('activity-body');const steps=[['seed','🌰','Plant a seed','First, put a seed in the soil.'],['water','💧','Add water','Seeds need a drink to wake up.'],['sun','☀️','Give sunshine','Warm sunshine helps the sprout grow.'],['magic','✨','Add fairy magic','A pinch of magic makes the flower bloom.']];
@@ -570,6 +592,100 @@ function startMusic(){const body=$('activity-body'); const notes=[['🎵',440],[
  all('[data-music]').forEach(btn=>btn.onclick=()=>{if(playingDemo||completed)return;const choice=Number(btn.dataset.music);chirp([notes[choice][1]],.1);if(choice===seq[cursor]){cursor++;$('music-msg').textContent=`Good! ${cursor}/4 notes`;if(cursor===4){completed=true;awardActivity(4,'Musical memory complete!');$('music-msg').textContent='⭐ Lovely song! +4 gems';$('music-demo').textContent='🔁 Play again';$('music-demo').disabled=false;$('music-demo').onclick=startMusic;}}else{cursor=0;$('music-msg').textContent='Not quite — start from the first note and listen again!';}});
 }
 function startCookies(){let caught=0,time=18;const body=$('activity-body'); body.innerHTML='<div class="game-status"><span>🍪 <b id="cookie-score">0</b></span><span>⏱️ <b id="cookie-clock">18</b>s</span></div><div class="star-field" id="cookie-field"></div><p class="activity-note">Tap the cookies before they disappear!</p>'; const field=$('cookie-field'); function drop(){if(activity!=='cookies')return; const b=document.createElement('button'); b.type='button'; b.className='star-target'; b.textContent=['🍪','🧁','🍓'][Math.floor(Math.random()*3)]; b.style.left=Math.floor(Math.random()*Math.max(20,field.clientWidth-70))+'px'; b.style.top=Math.floor(Math.random()*Math.max(20,field.clientHeight-70))+'px'; b.onclick=()=>{caught++; $('cookie-score').textContent=caught; chirp([520,700],.06); b.remove();}; field.append(b); setTimeout(()=>{if(b.isConnected)b.remove();},1300);} const rain=setInterval(drop,600);extraGameIntervals.push(rain); activeTimer=setInterval(()=>{time--; $('cookie-clock').textContent=time; if(time<=0){clearInterval(rain); clearInterval(activeTimer); activeTimer=0; body.innerHTML=`<div class="game-board" style="text-align:center"><div style="font-size:66px">🍪</div><h2>You caught ${caught} treats!</h2><button class="game-again" id="again-cookies">Play again</button></div>`; awardActivity(Math.max(1,Math.ceil(caught/3)),'Treat time!');if(caught>=4)completeQualifiedChallenge('cookies'); $('again-cookies').onclick=startCookies;}},1000); drop();}
+
+// Noughts and crosses: every cell is one move; the computer bot is deliberately friendly.
+function startNoughts(){
+ const body=$('activity-body');let grid=Array(9).fill(''),turn='child',finished=false,botTimer=0,roundStart=performance.now();
+ body.innerHTML=`<div class="game-board noughts-board"><h2>❌ Noughts & Crosses ⭕</h2><p>Mimi is playing against a friendly kitten bot. Make three in a row!</p>
+ <div class="xo-players"><span>🐱 You: <b>❌</b></span><span>🤖 Pip: <b>⭕</b></span></div>
+ <div class="xo-board" role="group" aria-label="Noughts and crosses board">${Array.from({length:9},(_,i)=>`<button type="button" data-xo="${i}" aria-label="Square ${i+1}, empty"> </button>`).join('')}</div>
+ <p class="activity-msg" id="xo-status" role="status">Your turn! Choose a square. 💖</p>
+ <button type="button" id="xo-again" class="game-again">🔁 New game</button></div>`;
+ const cells=all('[data-xo]'),winLines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+ function winner(){for(const line of winLines){if(grid[line[0]]&&line.every(i=>grid[i]===grid[line[0]]))return grid[line[0]];}return grid.every(Boolean)?'draw':null;}
+ function draw(){cells.forEach((b,i)=>{b.textContent=grid[i]||' ';b.disabled=!!grid[i]||finished||turn!=='child';b.classList.toggle('xo-x',grid[i]==='X');b.classList.toggle('xo-o',grid[i]==='O');b.setAttribute('aria-label',`Square ${i+1}, ${grid[i]==='X'?'cross':grid[i]==='O'?'nought':'empty'}`);});}
+ function finish(result){finished=true;clearTimeout(botTimer);turn='done';draw();
+  if(result==='X'){awardActivity(5,'You beat Pip!');completeQualifiedChallenge('noughts');$('xo-status').textContent='🏆 Three in a row! You win 5 gems!';}
+  else if(result==='draw'){$('xo-status').textContent='🤝 A draw! That was a good game!';reward(2);}
+  else {$('xo-status').textContent='🐾 Pip wins this time! Try again!';chirp([360,420]);}
+ }
+ function smartPick(){const available=grid.map((v,i)=>v?null:i).filter(x=>x!==null);
+  for(const mark of ['O','X']){for(const i of available){grid[i]=mark;const w=winner();grid[i]='';if(w===mark)return i;}}
+  if(!grid[4]&&Math.random()<.45)return 4;
+  return available[Math.floor(Math.random()*available.length)];
+ }
+ function botMove(){if(finished||activity!=='noughts')return;const available=grid.map((v,i)=>v?null:i).filter(x=>x!==null);if(!available.length)return finish('draw');
+  const pick=Math.random()<.5?available[Math.floor(Math.random()*available.length)]:smartPick();grid[pick]='O';const result=winner();if(result)return finish(result);
+  turn='child';draw();$('xo-status').textContent='Your turn! Find the matching line. 💗';}
+ cells.forEach(b=>b.onclick=()=>{const i=Number(b.dataset.xo);if(finished||turn!=='child'||grid[i])return;grid[i]='X';turn='bot';draw();chirp([540,750],.07);
+  const result=winner();if(result)return finish(result);
+  $('xo-status').textContent='Pip is thinking… 🤖';botTimer=setTimeout(botMove,650);
+ });
+ $('xo-again').onclick=()=>{closeActivity();openActivity('noughts')};draw();
+ extraGameIntervals.push({rhythmCleanup:()=>{finished=true;clearTimeout(botTimer)}});
+}
+// Side-scrolling, one-tap Flappy Race. Drawn locally on canvas: no network traffic.
+function startRace(){
+ const body=$('activity-body');let running=false,finished=false,raf=0,lastTime=0,begin=0;
+ const track=1650, speed=117, bots=[{name:'Pip',emoji:'🐰',colour:'#f5a0d4',speed:92,dist:0,finish:0},{name:'Bop',emoji:'🐻',colour:'#e9bc8d',speed:84,dist:0,finish:0}];
+ const obstacles=[235,455,680,905,1140,1390].map((d,i)=>({d,h:[50,64,48,60,52,65][i],passed:false}));
+ let hero={dist:0,y:0,vy:0,flaps:0,cleared:0,hits:0,invincible:0};
+ body.innerHTML=`<div class="game-board race-board">
+  <div class="game-status"><span>🏁 <b id="race-rank">Ready</b></span><span>🪶 Flaps <b id="race-flaps">0</b></span></div>
+  <h2>🏁 Mimi's Flappy Race!</h2><p class="activity-note">Tap the big track or FLAP to jump over the logs. Beat Pip and Bop to the finish line!</p>
+  <div class="race-progress"><div>🐱 Mimi <progress id="race-me-progress" value="0" max="100"></progress></div><div>🐰 Pip <progress id="race-pip-progress" value="0" max="100"></progress></div><div>🐻 Bop <progress id="race-bop-progress" value="0" max="100"></progress></div></div>
+  <canvas id="race-canvas" width="680" height="370" role="button" tabindex="0" aria-label="Race track. Tap to make Mimi flap over obstacles."></canvas>
+  <p class="activity-msg" id="race-message" role="status">Ready, set, FLAP! Tap to start the race.</p>
+  <div class="race-controls"><button type="button" id="race-start" class="game-again">🏁 Start race</button><button type="button" id="race-flap" class="game-again" disabled>🪽 FLAP!</button></div>
+  </div>`;
+ const canvas=$('race-canvas'),ctx2d=canvas.getContext('2d');
+ const message=$('race-message'),startBtn=$('race-start'),flapBtn=$('race-flap');
+ const progMe=$('race-me-progress'),progPip=$('race-pip-progress'),progBop=$('race-bop-progress');
+ const rounded=(x,y,w,h,r,fill)=>{ctx2d.beginPath();ctx2d.roundRect(x,y,w,h,r);ctx2d.fillStyle=fill;ctx2d.fill()};
+ function drawCat(x,y,fur,name,scale=1){ctx2d.save();ctx2d.translate(x,y);ctx2d.scale(scale,scale);
+  ctx2d.fillStyle='#a67ace';ctx2d.beginPath();ctx2d.moveTo(-25,0);ctx2d.lineTo(-22,-32);ctx2d.lineTo(-4,-21);ctx2d.lineTo(14,-35);ctx2d.lineTo(24,0);ctx2d.fill();
+  ctx2d.fillStyle=fur;ctx2d.beginPath();ctx2d.ellipse(0,0,28,26,0,0,Math.PI*2);ctx2d.fill();
+  ctx2d.fillStyle='#49315e';ctx2d.beginPath();ctx2d.ellipse(-10,-4,3.5,5,0,0,Math.PI*2);ctx2d.ellipse(10,-4,3.5,5,0,0,Math.PI*2);ctx2d.fill();
+  ctx2d.fillStyle='#f281b1';ctx2d.beginPath();ctx2d.arc(0,8,5,0,Math.PI*2);ctx2d.fill();
+  ctx2d.fillStyle='#fff';ctx2d.font='bold 18px system-ui';ctx2d.textAlign='center';ctx2d.fillText(name,0,-40);ctx2d.restore();}
+ function paint(){if(!ctx2d)return;const w=canvas.width,h=canvas.height;const camera=hero.dist-170;
+  const sky=ctx2d.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#d3edff');sky.addColorStop(1,'#f8dafa');ctx2d.fillStyle=sky;ctx2d.fillRect(0,0,w,h);
+  for(let i=0;i<9;i++){const x=((i*145-camera*.25)%(w+160)+(w+160))%(w+160)-60;ctx2d.fillStyle='#ffffffa8';ctx2d.beginPath();ctx2d.ellipse(x,55+i%3*37,48,18,0,0,Math.PI*2);ctx2d.fill();}
+  const lanes=[112,198,306];lanes.forEach((y,i)=>{rounded(0,y-30,w,75,17,i===2?'#a6e0a9':'#ffffff75');rounded(0,y+36,w,8,5,i===2?'#63bd88':'#d4cbe8');});
+  ctx2d.font='bold 21px system-ui';ctx2d.fillStyle='#635184';ctx2d.textAlign='left';ctx2d.fillText('🐰',12,117);ctx2d.fillText('🐻',12,204);ctx2d.fillText('🐱',12,320);
+  for(const item of obstacles){const xx=170+(item.d-hero.dist);if(xx<-100||xx>w+80)continue;
+   rounded(xx,335-item.h,38,item.h,8,'#bb7b58');rounded(xx+6,340-item.h,24,6,3,'#f2c68c');ctx2d.fillStyle='#fff9';ctx2d.font='22px system-ui';ctx2d.fillText('🌿',xx+2,339-item.h);}
+  const finishX=170+(track-hero.dist);if(finishX>-12&&finishX<w+30){rounded(finishX,69,10,276,3,'#fff');ctx2d.font='34px system-ui';ctx2d.fillText('🏁',finishX-17,63);}
+  for(let i=0;i<2;i++){const bot=bots[i];const bx=Math.max(60,Math.min(w-42,170+(bot.dist-hero.dist)));drawCat(bx,lanes[i]-1,bot.colour,bot.name,.85);}
+  if(hero.invincible>0&&Math.floor(hero.invincible*10)%2===0)ctx2d.globalAlpha=.45;
+  drawCat(170,305-hero.y,'#cb9bfa','Mimi',1.1);ctx2d.globalAlpha=1;
+  if(!running){rounded(240,136,230,66,18,'#fff9');ctx2d.fillStyle='#76529d';ctx2d.font='bold 26px system-ui';ctx2d.textAlign='center';ctx2d.fillText(finished?'🏆 Race finished!':'🪽 Tap to flap!',355,176);}
+ }
+ function finishRace(){if(finished)return;running=false;finished=true;cancelAnimationFrame(raf);raf=0;flapBtn.disabled=true;const now=performance.now();
+  const place=1+bots.filter(b=>b.finish&&b.finish<now).length; $('race-rank').textContent=`${place}${place===1?'st':place===2?'nd':'rd'} place`;
+  startBtn.textContent='🔁 Race again';startBtn.hidden=false;
+  const qualified=hero.flaps>=3&&hero.cleared>=2;
+  if(qualified){const gems=place===1?8:place===2?5:3;awardActivity(gems,'Race finished!');if(place<=2)completeQualifiedChallenge('race');message.textContent=`🏆 ${place}${place===1?'st':place===2?'nd':'rd'} place! You won ${gems} gems${place<=2?' and earned egg progress':''}!`;
+  }else {message.textContent='🏁 You finished! Try flapping over more logs next time to earn gems. 💜';}
+  paint();}
+ function frame(t){if(!running||finished||activity!=='race')return;const dt=Math.min(.035,(t-lastTime)/1000||.016);lastTime=t;
+  hero.vy-=635*dt;hero.y+=hero.vy*dt;if(hero.y<0){hero.y=0;hero.vy=Math.max(0,hero.vy);}if(hero.y>145){hero.y=145;hero.vy=Math.min(0,hero.vy);}
+  hero.invincible=Math.max(0,hero.invincible-dt);hero.dist+=speed*dt*(hero.invincible>0?.78:1);
+  bots.forEach((b,i)=>{if(b.finish)return;b.dist+=b.speed*dt+Math.sin(t/730+i)*.15;if(b.dist>=track){b.dist=track;b.finish=t;}});
+  for(const obs of obstacles){if(!obs.passed&&hero.dist>=obs.d){obs.passed=true;if(hero.y<obs.h-5&&hero.invincible<=0){hero.dist=Math.max(0,hero.dist-72);hero.invincible=1.15;hero.vy=230;hero.hits++;message.textContent='💥 Bonk! Tap to flap over the logs!';chirp([270,320]);}else{hero.cleared++;if(hero.cleared%2===0)message.textContent=`✨ Nice flying! ${hero.cleared} obstacles cleared!`;}}}
+  progMe.value=Math.min(100,hero.dist/track*100);progPip.value=Math.min(100,bots[0].dist/track*100);progBop.value=Math.min(100,bots[1].dist/track*100);
+  const rank=1+bots.filter(b=>b.dist>hero.dist).length;$('race-rank').textContent=rank===1?'🥇 Leading!':rank===2?'🥈 2nd':'🥉 3rd';paint();
+  if(hero.dist>=track){hero.dist=track;finishRace();return;}
+  raf=requestAnimationFrame(frame);
+ }
+ function start(){if(running)return;if(finished){closeActivity();openActivity('race');return;}
+  running=true;begin=performance.now();lastTime=begin;startBtn.hidden=true;flapBtn.disabled=false;message.textContent='Fly over the logs! Tap the track or FLAP!';raf=requestAnimationFrame(frame);}
+ function flap(){if(!running||finished)return;hero.vy=315;hero.flaps++;$('race-flaps').textContent=hero.flaps;chirp([600,780],.045);}
+ startBtn.onclick=start;flapBtn.onclick=flap;
+ canvas.addEventListener('pointerdown',e=>{e.preventDefault();if(!running)start();else flap();});
+ canvas.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!running)start();else flap();}});
+ extraGameIntervals.push({rhythmCleanup:()=>{running=false;finished=true;cancelAnimationFrame(raf);}});paint();
+}
 // Event wiring is done after every required element exists: a missing optional element cannot block other buttons.
 all('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 all('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
